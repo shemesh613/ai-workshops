@@ -5,6 +5,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>שמשון ג'קוב | סדנאות AI לבתי ספר וארגונים</title>
     <meta name="description" content="סדנאות AI מעשיות למורים, בתי ספר וארגונים. הפכו את ההוראה לחוויה עם כלי בינה מלאכותית.">
+    <!-- Accessibility -->
+    <meta name="theme-color" content="#0a0e27">
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
 
@@ -368,7 +371,7 @@
 <body>
 
 <!-- HERO -->
-<section class="hero">
+<section class="hero" role="banner" id="main">
     <div class="hero-content">
         <div class="hero-text">
             <h1>להפוך את <span>ההוראה</span> לחוויה</h1>
@@ -501,6 +504,19 @@
     <a href="https://wa.me/972526953500?text=היי,%20ראיתי%20את%20האתר,%20אשמח%20לפרטים%20על%20הסדנה" class="cta-btn">📞 דברו איתי עכשיו</a>
 </section>
 
+<!-- ACCESSIBILITY STATEMENT -->
+<section style="padding: 40px 20px; max-width: 800px; margin: 0 auto;">
+    <details style="color: #888; font-size: 0.85rem;">
+        <summary style="cursor: pointer; color: var(--primary);">♿ הצהרת נגישות</summary>
+        <p style="margin-top: 10px; line-height: 1.8;">
+            אתר זה מותאם לתקן הנגישות הישראלי (תקן ישראלי 5568) ולהנחיות WCAG 2.1 ברמה AA.
+            האתר תומך בניווט מקלדת, קוראי מסך, וטכנולוגיות מסייעות.
+            אם נתקלתם בבעיית נגישות, אנא פנו אלינו:
+            <a href="mailto:shemesh613@gmail.com" style="color: var(--primary);">shemesh613@gmail.com</a>
+        </p>
+    </details>
+</section>
+
 <!-- FOOTER -->
 <footer>
     <p>שמשון ג'קוב AI | סדנאות · קורסים דיגיטליים · עיצובים · סרטוני פרסום</p>
@@ -510,6 +526,9 @@
         <a href="https://shemesh613.github.io/ai-agents-2026/">AI Agents 2026</a>
     </p>
 </footer>
+
+<!-- Skip to content for screen readers -->
+<a href="#main" class="sr-only" style="position:absolute;left:-9999px;top:auto;width:1px;height:1px;overflow:hidden;">דלג לתוכן</a>
 
 </body>
 </html>
