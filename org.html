@@ -336,13 +336,18 @@
         footer {
             padding: 40px 20px;
             text-align: center;
-            color: #666;
+            color: #9999aa;
             background: var(--darker);
         }
 
         footer a {
             color: var(--primary);
+            text-decoration: underline;
+        }
+
+        footer a:hover, footer a:focus {
             text-decoration: none;
+            opacity: 0.8;
         }
 
         /* ACCESSIBILITY */
@@ -407,8 +412,10 @@
 
 <a href="#main" class="skip-link">דלג לתוכן</a>
 
+<main id="main">
+
 <!-- HERO -->
-<section class="hero" role="banner" id="main">
+<section class="hero" role="banner" aria-label="מבוא">
     <div class="hero-content">
         <div class="hero-text">
             <h1>להטמיע <span>AI</span> בארגון שלכם</h1>
@@ -425,7 +432,7 @@
 </section>
 
 <!-- STATS -->
-<section class="stats">
+<section class="stats" aria-label="נתונים">
     <div class="stats-grid">
         <div class="stat-item">
             <div class="number">50+</div>
@@ -447,36 +454,36 @@
 </section>
 
 <!-- BENEFITS -->
-<section class="benefits">
+<section class="benefits" aria-label="יתרונות">
     <h2 class="section-title">מה <span>הצוות</span> מקבל?</h2>
     <div class="benefits-grid">
         <div class="benefit-card">
-            <div class="icon">⚡</div>
+            <div class="icon" aria-hidden="true">⚡</div>
             <h3>אוטומציה של תהליכים</h3>
             <p>חיבור Gmail, Google Sheets, ולוח שנה עם AI — תהליכים שרצים לבד.</p>
         </div>
         <div class="benefit-card">
-            <div class="icon">📊</div>
+            <div class="icon" aria-hidden="true">📊</div>
             <h3>ניתוח נתונים חכם</h3>
             <p>ChatGPT, Claude ו-Copilot בעבודה היומיומית — ניתוח, סיכום ודוחות בשניות.</p>
         </div>
         <div class="benefit-card">
-            <div class="icon">📝</div>
+            <div class="icon" aria-hidden="true">📝</div>
             <h3>יצירת תוכן מקצועי</h3>
             <p>מצגות, דוחות, מיילים ומסמכים — בשניות במקום שעות.</p>
         </div>
         <div class="benefit-card">
-            <div class="icon">🤖</div>
+            <div class="icon" aria-hidden="true">🤖</div>
             <h3>כלי AI מתקדמים</h3>
             <p>ChatGPT, Claude, Gemini, Make.com — כל הכלים שכל עובד חייב להכיר ב-2026.</p>
         </div>
         <div class="benefit-card">
-            <div class="icon">🎯</div>
+            <div class="icon" aria-hidden="true">🎯</div>
             <h3>מתאים לכל תפקיד</h3>
             <p>מנהלים, מזכירות, שיווק, כספים, HR — הכלים מתאימים לכולם.</p>
         </div>
         <div class="benefit-card">
-            <div class="icon">🆓</div>
+            <div class="icon" aria-hidden="true">🆓</div>
             <h3>ליווי אחרי הסדנה</h3>
             <p>קבוצת ווטסאפ לשאלות, חומרים מסכמים, וליווי חינם אחרי הסדנה.</p>
         </div>
@@ -484,7 +491,7 @@
 </section>
 
 <!-- GALLERY -->
-<section class="gallery">
+<section class="gallery" aria-label="גלריית תמונות">
     <h2 class="section-title">מהסדנאות <span>שלנו</span></h2>
     <div class="gallery-grid">
         <img src="workshop-hall.jpg" alt="סדנת AI באולם גדול" class="wide">
@@ -495,7 +502,7 @@
 </section>
 
 <!-- SOCIAL PROOF -->
-<section class="social-proof">
+<section class="social-proof" aria-label="לקוחות">
     <h2 class="section-title">ארגונים <span>שסמכו</span> עלינו</h2>
     <div class="logos">
         <div class="logo-item">🏛️ יד ושם</div>
@@ -506,7 +513,7 @@
 </section>
 
 <!-- SERVICES -->
-<section class="services">
+<section class="services" aria-label="תהליך העבודה">
     <h2 class="section-title">איך <span>הסדנה</span> עובדת?</h2>
 
     <div class="service-item">
@@ -535,27 +542,49 @@
 </section>
 
 <!-- CTA -->
-<section class="cta-section">
+<section class="cta-section" aria-label="יצירת קשר">
     <h2>מוכנים לשדרג את הארגון?</h2>
     <p>הכלים שיחסכו לכם שעות עבודה — כבר כאן ✨</p>
     <a href="https://wa.me/972526953500?text=היי,%20ראיתי%20את%20האתר,%20אשמח%20לפרטים%20על%20סדנת%20AI%20לארגון%20שלנו" class="cta-btn">📞 דברו איתי עכשיו</a>
 </section>
 
 <!-- ACCESSIBILITY STATEMENT -->
-<section style="padding: 40px 20px; max-width: 800px; margin: 0 auto;">
-    <details style="color: #888; font-size: 0.85rem;">
-        <summary style="cursor: pointer; color: var(--primary);">♿ הצהרת נגישות</summary>
-        <p style="margin-top: 10px; line-height: 1.8;">
-            אתר זה מותאם לתקן הנגישות הישראלי (תקן ישראלי 5568) ולהנחיות WCAG 2.1 ברמה AA.
-            האתר תומך בניווט מקלדת, קוראי מסך, וטכנולוגיות מסייעות.
-            אם נתקלתם בבעיית נגישות, אנא פנו אלינו:
-            <a href="mailto:shemesh613@gmail.com" style="color: var(--primary);">shemesh613@gmail.com</a>
-        </p>
+<section style="padding: 40px 20px; max-width: 800px; margin: 0 auto;" aria-label="הצהרת נגישות">
+    <details style="color: #9999aa; font-size: 0.85rem;">
+        <summary style="cursor: pointer; color: var(--primary); text-decoration: underline;">♿ הצהרת נגישות</summary>
+        <div style="margin-top: 15px; line-height: 2;">
+            <p><strong>הצהרת נגישות</strong></p>
+            <p>אתר זה מותאם לדרישות תקנות שוויון זכויות לאנשים עם מוגבלות (התאמות נגישות לשירות), התשע"ג-2013, ולתקן הישראלי ת"י 5568 ולהנחיות WCAG 2.1 ברמה AA.</p>
+
+            <p><strong>מה עשינו כדי להנגיש את האתר:</strong></p>
+            <ul style="padding-right: 20px; margin: 10px 0;">
+                <li>ניווט מלא באמצעות מקלדת בלבד</li>
+                <li>תמיכה בקוראי מסך ותוכנות מסייעות</li>
+                <li>תיאור חלופי (alt) לכל התמונות</li>
+                <li>מבנה כותרות היררכי תקין</li>
+                <li>ניגודיות צבעים ברמת AA לפחות</li>
+                <li>תמיכה בהגדלת טקסט ובשינוי גודל תצוגה</li>
+                <li>תמיכה בהפחתת תנועה (prefers-reduced-motion)</li>
+                <li>תמיכה בניגודיות גבוהה (prefers-contrast: high)</li>
+                <li>קישור "דלג לתוכן" לניווט מהיר</li>
+            </ul>
+
+            <p><strong>רכז נגישות:</strong><br>
+            שמשון ג'קוב<br>
+            📱 <a href="tel:+972526953500" style="color: var(--primary);">052-695-3500</a><br>
+            📧 <a href="mailto:shemesh613@gmail.com" style="color: var(--primary);">shemesh613@gmail.com</a></p>
+
+            <p><strong>תאריך עדכון אחרון:</strong> פברואר 2026</p>
+
+            <p>אם נתקלתם בבעיית נגישות באתר, נשמח לשמוע ולתקן. פנו אלינו בטלפון או במייל ונטפל בבקשתכם בהקדם.</p>
+        </div>
     </details>
 </section>
 
+</main>
+
 <!-- FOOTER -->
-<footer>
+<footer role="contentinfo">
     <p>שמשון ג'קוב AI | סדנאות · קורסים דיגיטליים · עיצובים · סרטוני פרסום</p>
     <p style="margin-top: 10px;">
         <a href="https://bsky.app/profile/shimshonai.bsky.social">Bluesky</a> ·
