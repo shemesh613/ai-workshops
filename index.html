@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>שמשון ג'קוב | סדנאות AI לבתי ספר וארגונים</title>
+    <meta name="description" content="סדנאות AI מעשיות למורים, בתי ספר וארגונים. הפכו את ההוראה לחוויה עם כלי בינה מלאכותית.">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --primary: #6C63FF;
+            --secondary: #FF6B9D;
+            --dark: #0a0e27;
+            --darker: #060919;
+            --light: #f0f0ff;
+            --gold: #FFD700;
+        }
+
+        body {
+            font-family: 'Heebo', sans-serif;
+            background: var(--darker);
+            color: #fff;
+            overflow-x: hidden;
+        }
+
+        /* HERO SECTION */
+        .hero {
+            min-height: 100vh;
+            background: linear-gradient(135deg, var(--darker) 0%, #1a1040 50%, var(--dark) 100%);
+            display: flex;
+            align-items: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(108,99,255,0.15) 0%, transparent 70%);
+            top: -100px;
+            left: -100px;
+            border-radius: 50%;
+        }
+
+        .hero::after {
+            content: '';
+            position: absolute;
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(255,107,157,0.1) 0%, transparent 70%);
+            bottom: -50px;
+            right: -50px;
+            border-radius: 50%;
+        }
+
+        .hero-content {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 60px;
+            align-items: center;
+            position: relative;
+            z-index: 1;
+        }
+
+        .hero-text h1 {
+            font-size: 3.2rem;
+            font-weight: 900;
+            line-height: 1.2;
+            margin-bottom: 20px;
+        }
+
+        .hero-text h1 span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .hero-text .subtitle {
+            font-size: 1.4rem;
+            color: #b0b0d0;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+
+        .hero-image {
+            display: flex;
+            justify-content: center;
+        }
+
+        .hero-image img {
+            max-width: 100%;
+            border-radius: 20px;
+            box-shadow: 0 20px 60px rgba(108,99,255,0.3);
+        }
+
+        .cta-btn {
+            display: inline-block;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            color: #fff;
+            padding: 18px 40px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-size: 1.3rem;
+            font-weight: 700;
+            transition: all 0.3s;
+            box-shadow: 0 10px 30px rgba(108,99,255,0.4);
+        }
+
+        .cta-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 15px 40px rgba(108,99,255,0.6);
+        }
+
+        .cta-btn.secondary {
+            background: transparent;
+            border: 2px solid var(--primary);
+            margin-right: 15px;
+            box-shadow: none;
+        }
+
+        /* STATS */
+        .stats {
+            background: linear-gradient(135deg, #1a1040, var(--dark));
+            padding: 60px 20px;
+        }
+
+        .stats-grid {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 30px;
+            text-align: center;
+        }
+
+        .stat-item .number {
+            font-size: 3rem;
+            font-weight: 900;
+            background: linear-gradient(135deg, var(--gold), #FFA500);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .stat-item .label {
+            font-size: 1rem;
+            color: #b0b0d0;
+            margin-top: 5px;
+        }
+
+        /* WHAT YOU GET */
+        .benefits {
+            padding: 80px 20px;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+
+        .section-title {
+            text-align: center;
+            font-size: 2.5rem;
+            font-weight: 900;
+            margin-bottom: 50px;
+        }
+
+        .section-title span {
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .benefits-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 30px;
+        }
+
+        .benefit-card {
+            background: linear-gradient(135deg, rgba(108,99,255,0.1), rgba(255,107,157,0.05));
+            border: 1px solid rgba(108,99,255,0.2);
+            border-radius: 20px;
+            padding: 35px;
+            transition: all 0.3s;
+        }
+
+        .benefit-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--primary);
+            box-shadow: 0 10px 30px rgba(108,99,255,0.2);
+        }
+
+        .benefit-card .icon {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+
+        .benefit-card h3 {
+            font-size: 1.3rem;
+            margin-bottom: 10px;
+            color: var(--primary);
+        }
+
+        .benefit-card p {
+            color: #b0b0d0;
+            line-height: 1.6;
+        }
+
+        /* GALLERY */
+        .gallery {
+            padding: 80px 20px;
+            background: linear-gradient(135deg, #1a1040, var(--dark));
+        }
+
+        .gallery-grid {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .gallery-grid img {
+            width: 100%;
+            height: 280px;
+            object-fit: cover;
+            border-radius: 15px;
+            transition: all 0.3s;
+        }
+
+        .gallery-grid img:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+
+        .gallery-grid .wide {
+            grid-column: span 2;
+        }
+
+        /* TESTIMONIAL */
+        .social-proof {
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .logos {
+            max-width: 800px;
+            margin: 30px auto 0;
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .logo-item {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            padding: 15px 30px;
+            border-radius: 10px;
+            font-size: 1.1rem;
+            color: #b0b0d0;
+        }
+
+        /* SERVICES */
+        .services {
+            padding: 80px 20px;
+            max-width: 1000px;
+            margin: 0 auto;
+        }
+
+        .service-item {
+            display: flex;
+            align-items: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            background: rgba(108,99,255,0.05);
+            border: 1px solid rgba(108,99,255,0.15);
+            border-radius: 20px;
+            padding: 30px;
+        }
+
+        .service-item .number-badge {
+            width: 60px;
+            height: 60px;
+            min-width: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            font-weight: 900;
+        }
+
+        .service-item h3 {
+            font-size: 1.3rem;
+            margin-bottom: 5px;
+        }
+
+        .service-item p {
+            color: #b0b0d0;
+        }
+
+        /* CTA SECTION */
+        .cta-section {
+            padding: 100px 20px;
+            text-align: center;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+        }
+
+        .cta-section h2 {
+            font-size: 2.8rem;
+            margin-bottom: 20px;
+        }
+
+        .cta-section p {
+            font-size: 1.3rem;
+            margin-bottom: 30px;
+            opacity: 0.9;
+        }
+
+        .cta-section .cta-btn {
+            background: #fff;
+            color: var(--primary);
+            font-size: 1.5rem;
+            padding: 20px 50px;
+        }
+
+        .cta-section .cta-btn:hover {
+            background: var(--dark);
+            color: #fff;
+        }
+
+        /* FOOTER */
+        footer {
+            padding: 40px 20px;
+            text-align: center;
+            color: #666;
+            background: var(--darker);
+        }
+
+        footer a {
+            color: var(--primary);
+            text-decoration: none;
+        }
+
+        /* MOBILE */
+        @media (max-width: 768px) {
+            .hero-content {
+                grid-template-columns: 1fr;
+                text-align: center;
+            }
+            .hero-text h1 { font-size: 2.2rem; }
+            .stats-grid { grid-template-columns: repeat(2, 1fr); }
+            .benefits-grid { grid-template-columns: 1fr; }
+            .gallery-grid { grid-template-columns: 1fr; }
+            .gallery-grid .wide { grid-column: span 1; }
+            .cta-section h2 { font-size: 2rem; }
+        }
+    </style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+    <div class="hero-content">
+        <div class="hero-text">
+            <h1>להפוך את <span>ההוראה</span> לחוויה</h1>
+            <p class="subtitle">
+                סדנאות AI מעשיות למורים, בתי ספר וארגונים.<br>
+                הכלים שכל מורה חייב להכיר — בלי שום ידע טכנולוגי מוקדם.
+            </p>
+            <a href="https://wa.me/972526953500?text=היי,%20ראיתי%20את%20האתר,%20אשמח%20לפרטים%20על%20הסדנה" class="cta-btn">📞 לפרטים ותיאום</a>
+        </div>
+        <div class="hero-image">
+            <img src="ad-main.jpg" alt="שמשון ג'קוב - סדנאות AI לחינוך">
+        </div>
+    </div>
+</section>
+
+<!-- STATS -->
+<section class="stats">
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="number">50+</div>
+            <div class="label">סדנאות שהועברו</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">1,000+</div>
+            <div class="label">מורים שהשתתפו</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">100%</div>
+            <div class="label">מעשי ויישומי</div>
+        </div>
+        <div class="stat-item">
+            <div class="number">⭐</div>
+            <div class="label">זוכה חידון התנ"ך העולמי</div>
+        </div>
+    </div>
+</section>
+
+<!-- BENEFITS -->
+<section class="benefits">
+    <h2 class="section-title">מה <span>המורים</span> מקבלים?</h2>
+    <div class="benefits-grid">
+        <div class="benefit-card">
+            <div class="icon">🎨</div>
+            <h3>מצגות ואינפוגרפיקות</h3>
+            <p>בניית מצגות מרהיבות ואינפוגרפיקות מקצועיות בשניות — בלי מעצב גרפי.</p>
+        </div>
+        <div class="benefit-card">
+            <div class="icon">📝</div>
+            <h3>דפי עבודה מדהימים</h3>
+            <p>יצירת דפי עבודה, מבחנים ומשימות מותאמות אישית לכל כיתה ונושא.</p>
+        </div>
+        <div class="benefit-card">
+            <div class="icon">🎮</div>
+            <h3>כלי חזרה חוויתיים</h3>
+            <p>בניית משחקים, חידונים וכלי למידה אינטראקטיביים שהתלמידים אוהבים.</p>
+        </div>
+        <div class="benefit-card">
+            <div class="icon">🤖</div>
+            <h3>אוטומציות חכמות</h3>
+            <p>חיבור כלי AI לגוגל, מייל וטלגרם — חיסכון של שעות עבודה שבועיות.</p>
+        </div>
+        <div class="benefit-card">
+            <div class="icon">🎯</div>
+            <h3>מתאים לכל מקצוע</h3>
+            <p>מתמטיקה, לשון, מדעים, תנ"ך, אנגלית — הכלים עובדים בכל תחום.</p>
+        </div>
+        <div class="benefit-card">
+            <div class="icon">🆓</div>
+            <h3>ליווי אחרי הסדנה</h3>
+            <p>קבוצת ווטסאפ לשאלות, חומרים מסכמים, וליווי חינם אחרי הסדנה.</p>
+        </div>
+    </div>
+</section>
+
+<!-- GALLERY -->
+<section class="gallery">
+    <h2 class="section-title">מהסדנאות <span>שלנו</span></h2>
+    <div class="gallery-grid">
+        <img src="workshop-hall.jpg" alt="סדנת AI באולם גדול" class="wide">
+        <img src="workshop-presenting.jpg" alt="שמשון מציג כלי AI">
+        <img src="workshop-automation.jpg" alt="הדגמת אוטומציות AI">
+        <img src="workshop-class.jpg" alt="סדנה בכיתת מחשבים" class="wide">
+    </div>
+</section>
+
+<!-- SOCIAL PROOF -->
+<section class="social-proof">
+    <h2 class="section-title">ארגונים <span>שסמכו</span> עלינו</h2>
+    <div class="logos">
+        <div class="logo-item">🏛️ יד ושם</div>
+        <div class="logo-item">🏫 בתי ספר</div>
+        <div class="logo-item">🎓 מכללת סלע</div>
+        <div class="logo-item">🏢 ארגונים</div>
+    </div>
+</section>
+
+<!-- SERVICES -->
+<section class="services">
+    <h2 class="section-title">איך <span>הסדנה</span> עובדת?</h2>
+
+    <div class="service-item">
+        <div class="number-badge">1</div>
+        <div>
+            <h3>שיחת תיאום קצרה</h3>
+            <p>מבינים את הצרכים של צוות המורים ומתאימים את התכנים</p>
+        </div>
+    </div>
+
+    <div class="service-item">
+        <div class="number-badge">2</div>
+        <div>
+            <h3>סדנה מעשית (2-4 שעות)</h3>
+            <p>כל משתתף עם מחשב, תרגול בלייב, כלים שעובדים מיד</p>
+        </div>
+    </div>
+
+    <div class="service-item">
+        <div class="number-badge">3</div>
+        <div>
+            <h3>חומרים + ליווי</h3>
+            <p>מדריכים מסכמים, גישה לחומרים, וקבוצת ווטסאפ לשאלות</p>
+        </div>
+    </div>
+</section>
+
+<!-- CTA -->
+<section class="cta-section">
+    <h2>מוכנים להפוך את ההוראה לחוויה?</h2>
+    <p>השנה מלמדים חכם יותר, ומהנה יותר ✨</p>
+    <a href="https://wa.me/972526953500?text=היי,%20ראיתי%20את%20האתר,%20אשמח%20לפרטים%20על%20הסדנה" class="cta-btn">📞 דברו איתי עכשיו</a>
+</section>
+
+<!-- FOOTER -->
+<footer>
+    <p>שמשון ג'קוב AI | סדנאות · קורסים דיגיטליים · עיצובים · סרטוני פרסום</p>
+    <p style="margin-top: 10px;">
+        <a href="https://bsky.app/profile/shimshonai.bsky.social">Bluesky</a> ·
+        <a href="https://shimshonai.hashnode.dev">Blog</a> ·
+        <a href="https://shemesh613.github.io/ai-agents-2026/">AI Agents 2026</a>
+    </p>
+</footer>
+
+</body>
+</html>
