@@ -7,6 +7,9 @@
     <meta name="description" content="סדנאות AI מעשיות למורים, בתי ספר וארגונים. הפכו את ההוראה לחוויה עם כלי בינה מלאכותית.">
     <!-- Accessibility -->
     <meta name="theme-color" content="#0a0e27">
+    <!-- UserWay Accessibility Widget -->
+    <script>(function(d){var s = d.createElement("script");s.setAttribute("data-account", "free");s.setAttribute("src", "https://cdn.userway.org/widget.js");(d.body || d.head).appendChild(s);})(document)</script>
+    <noscript>אתר זה תומך בטכנולוגיות מסייעות. לחוויה מיטבית, הפעילו JavaScript.</noscript>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
@@ -84,6 +87,7 @@
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            color: var(--primary); /* Fallback for screen readers and older browsers */
         }
 
         .hero-text .subtitle {
@@ -176,6 +180,7 @@
             background: linear-gradient(135deg, var(--primary), var(--secondary));
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+            color: var(--primary); /* Fallback */
         }
 
         .benefits-grid {
@@ -431,7 +436,7 @@
                 סדנאות AI מעשיות למורים, בתי ספר וארגונים.<br>
                 הכלים שכל מורה חייב להכיר — בלי שום ידע טכנולוגי מוקדם.
             </p>
-            <a href="https://wa.me/972526953500?text=היי,%20ראיתי%20את%20האתר,%20אשמח%20לפרטים%20על%20הסדנה" class="cta-btn">📞 לפרטים ותיאום</a>
+            <a href="https://wa.me/972526953500?text=היי,%20ראיתי%20את%20האתר,%20אשמח%20לפרטים%20על%20הסדנה" class="cta-btn" role="button" aria-label="יצירת קשר בווטסאפ לפרטים ותיאום סדנה">📞 לפרטים ותיאום</a>
         </div>
         <div class="hero-image">
             <img src="ad-main.jpg" alt="שמשון ג'קוב - סדנאות AI לחינוך">
@@ -441,21 +446,21 @@
 
 <!-- STATS -->
 <section class="stats" aria-label="נתונים">
-    <div class="stats-grid">
-        <div class="stat-item">
-            <div class="number">50+</div>
-            <div class="label">סדנאות שהועברו</div>
+    <div class="stats-grid" role="list" aria-label="נתונים מרכזיים">
+        <div class="stat-item" role="listitem">
+            <div class="number" aria-hidden="true">50+</div>
+            <div class="label">50+ סדנאות שהועברו</div>
         </div>
-        <div class="stat-item">
-            <div class="number">1,000+</div>
-            <div class="label">מורים שהשתתפו</div>
+        <div class="stat-item" role="listitem">
+            <div class="number" aria-hidden="true">1,000+</div>
+            <div class="label">1,000+ מורים שהשתתפו</div>
         </div>
-        <div class="stat-item">
-            <div class="number">100%</div>
-            <div class="label">מעשי ויישומי</div>
+        <div class="stat-item" role="listitem">
+            <div class="number" aria-hidden="true">100%</div>
+            <div class="label">100% מעשי ויישומי</div>
         </div>
-        <div class="stat-item">
-            <div class="number">⭐</div>
+        <div class="stat-item" role="listitem">
+            <div class="number" aria-hidden="true">⭐</div>
             <div class="label">זוכה חידון התנ"ך העולמי</div>
         </div>
     </div>
@@ -513,10 +518,10 @@
 <section class="social-proof" aria-label="לקוחות">
     <h2 class="section-title">ארגונים <span>שסמכו</span> עלינו</h2>
     <div class="logos">
-        <div class="logo-item">🏛️ יד ושם</div>
-        <div class="logo-item">🏫 בתי ספר</div>
-        <div class="logo-item">🎓 מכללת סלע</div>
-        <div class="logo-item">🏢 ארגונים</div>
+        <div class="logo-item"><span aria-hidden="true">🏛️</span> יד ושם</div>
+        <div class="logo-item"><span aria-hidden="true">🏫</span> בתי ספר</div>
+        <div class="logo-item"><span aria-hidden="true">🎓</span> מכללת סלע</div>
+        <div class="logo-item"><span aria-hidden="true">🏢</span> ארגונים</div>
     </div>
 </section>
 
@@ -525,7 +530,7 @@
     <h2 class="section-title">איך <span>הסדנה</span> עובדת?</h2>
 
     <div class="service-item">
-        <div class="number-badge">1</div>
+        <div class="number-badge" aria-hidden="true">1</div>
         <div>
             <h3>שיחת תיאום קצרה</h3>
             <p>מבינים את הצרכים של צוות המורים ומתאימים את התכנים</p>
@@ -533,7 +538,7 @@
     </div>
 
     <div class="service-item">
-        <div class="number-badge">2</div>
+        <div class="number-badge" aria-hidden="true">2</div>
         <div>
             <h3>סדנה מעשית (2-4 שעות)</h3>
             <p>כל משתתף עם מחשב, תרגול בלייב, כלים שעובדים מיד</p>
@@ -541,7 +546,7 @@
     </div>
 
     <div class="service-item">
-        <div class="number-badge">3</div>
+        <div class="number-badge" aria-hidden="true">3</div>
         <div>
             <h3>חומרים + ליווי</h3>
             <p>מדריכים מסכמים, גישה לחומרים, וקבוצת ווטסאפ לשאלות</p>
@@ -553,7 +558,7 @@
 <section class="cta-section" aria-label="יצירת קשר">
     <h2>מוכנים להפוך את ההוראה לחוויה?</h2>
     <p>השנה מלמדים חכם יותר, ומהנה יותר ✨</p>
-    <a href="https://wa.me/972526953500?text=היי,%20ראיתי%20את%20האתר,%20אשמח%20לפרטים%20על%20הסדנה" class="cta-btn">📞 דברו איתי עכשיו</a>
+    <a href="https://wa.me/972526953500?text=היי,%20ראיתי%20את%20האתר,%20אשמח%20לפרטים%20על%20הסדנה" class="cta-btn" role="button" aria-label="יצירת קשר בווטסאפ עכשיו">📞 דברו איתי עכשיו</a>
 </section>
 
 <!-- ACCESSIBILITY STATEMENT -->
