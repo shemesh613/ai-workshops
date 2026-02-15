@@ -9,6 +9,9 @@
     <!-- UserWay Accessibility Widget -->
     <script>(function(d){var s = d.createElement("script");s.setAttribute("data-account", "free");s.setAttribute("src", "https://cdn.userway.org/widget.js");(d.body || d.head).appendChild(s);})(document)</script>
     <noscript>אתר זה תומך בטכנולוגיות מסייעות. לחוויה מיטבית, הפעילו JavaScript.</noscript>
+    <!-- Google Analytics -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-XXXXXXXXXX"></script>
+    <script>window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-XXXXXXXXXX');</script>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🤖</text></svg>">
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;500;700;900&display=swap');
@@ -307,6 +310,100 @@
             color: #b0b0d0;
         }
 
+        /* ABOUT LECTURER */
+        .about-lecturer {
+            padding: 80px 20px;
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .about-card {
+            background: linear-gradient(135deg, rgba(108,99,255,0.08), rgba(255,107,157,0.05));
+            border: 1px solid rgba(108,99,255,0.2);
+            border-radius: 25px;
+            padding: 45px;
+            display: flex;
+            gap: 35px;
+            align-items: center;
+        }
+
+        .about-photo {
+            min-width: 180px;
+            text-align: center;
+        }
+
+        .about-photo .photo-placeholder {
+            width: 160px;
+            height: 160px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 4rem;
+            margin: 0 auto 10px;
+        }
+
+        .about-photo .name {
+            font-size: 1.2rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        .about-info h3 {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+
+        .about-info p {
+            color: #b0b0d0;
+            line-height: 1.8;
+            margin-bottom: 10px;
+        }
+
+        .about-badges {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .about-badge {
+            background: rgba(108,99,255,0.15);
+            border: 1px solid rgba(108,99,255,0.3);
+            border-radius: 50px;
+            padding: 8px 18px;
+            font-size: 0.9rem;
+            color: #d0d0ff;
+        }
+
+        .youtube-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            background: rgba(255, 0, 0, 0.15);
+            border: 1px solid rgba(255, 0, 0, 0.3);
+            border-radius: 50px;
+            padding: 10px 22px;
+            color: #ff6b6b;
+            text-decoration: none;
+            font-weight: 600;
+            margin-top: 15px;
+            transition: all 0.3s;
+        }
+
+        .youtube-link:hover {
+            background: rgba(255, 0, 0, 0.25);
+            transform: translateY(-2px);
+        }
+
+        @media (max-width: 768px) {
+            .about-card {
+                flex-direction: column;
+                text-align: center;
+            }
+        }
+
         /* CTA SECTION */
         .cta-section {
             padding: 100px 20px;
@@ -546,6 +643,31 @@
     </div>
 </section>
 
+<!-- ABOUT LECTURER -->
+<section class="about-lecturer" aria-label="על המרצה">
+    <h2 class="section-title">על <span>המרצה</span></h2>
+    <div class="about-card">
+        <div class="about-photo">
+            <div class="photo-placeholder" aria-hidden="true">👨‍💼</div>
+            <div class="name">שמשון ג'קוב</div>
+        </div>
+        <div class="about-info">
+            <h3>מומחה AI לארגונים — מנגיש טכנולוגיה בשפה עסקית</h3>
+            <p>שמשון ג'קוב הוא מרצה, יוצר תוכן ומומחה בינה מלאכותית עם ניסיון מוכח בהטמעת AI בארגונים, מכללות וחברות. בוגר מדעי המחשב, זוכה חידון התנ"ך העולמי, ומנחה סדנאות AI מעשיות ברחבי הארץ.</p>
+            <p>הגישה שלו: פחות תיאוריה, יותר תרגול. כל משתתף יוצא מהסדנה עם כלים שחוסכים לו שעות עבודה כבר מהיום הראשון.</p>
+            <div class="about-badges">
+                <span class="about-badge" aria-hidden="true">🏆</span><span class="about-badge">זוכה חידון התנ"ך העולמי</span>
+                <span class="about-badge" aria-hidden="true">🎓</span><span class="about-badge">בוגר מדעי המחשב</span>
+                <span class="about-badge" aria-hidden="true">📺</span><span class="about-badge">68 סרטוני AI ביוטיוב</span>
+                <span class="about-badge" aria-hidden="true">🏢</span><span class="about-badge">50+ סדנאות בארגונים</span>
+            </div>
+            <a href="https://www.youtube.com/@shemesh613" target="_blank" rel="noopener" class="youtube-link" aria-label="צפו בערוץ היוטיוב של שמשון">
+                <span aria-hidden="true">▶️</span> צפו בערוץ היוטיוב שלי
+            </a>
+        </div>
+    </div>
+</section>
+
 <!-- CTA -->
 <section class="cta-section" aria-label="יצירת קשר">
     <h2>מוכנים לשדרג את הארגון?</h2>
@@ -592,6 +714,7 @@
 <footer role="contentinfo">
     <p>שמשון ג'קוב AI | סדנאות · קורסים דיגיטליים · עיצובים · סרטוני פרסום</p>
     <p style="margin-top: 10px;">
+        <a href="https://www.youtube.com/@shemesh613">YouTube</a> ·
         <a href="https://bsky.app/profile/shimshonai.bsky.social">Bluesky</a> ·
         <a href="https://shimshonai.hashnode.dev">Blog</a> ·
         <a href="https://shemesh613.github.io/ai-workshops/">סדנאות לבתי ספר</a>
