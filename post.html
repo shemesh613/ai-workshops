@@ -9,11 +9,12 @@
 *{margin:0;padding:0;box-sizing:border-box}
 body{font-family:'Heebo',sans-serif;background:#0a0e27;color:#fff;min-height:100vh;padding:20px}
 h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90deg,#00e5ff,#7c4dff,#ff4081);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
-.subtitle{text-align:center;color:#aab;margin-bottom:30px;font-size:15px}
+.subtitle{text-align:center;color:#aab;margin-bottom:10px;font-size:15px}
+.date{text-align:center;color:#667;margin-bottom:30px;font-size:12px}
 .card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px;margin-bottom:20px;max-width:700px;margin-left:auto;margin-right:auto}
 .card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
 .platform{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px}
-.fb{color:#1877f2}.tw{color:#1da1f2}.li{color:#0a66c2}
+.fb{color:#1877f2}.tw{color:#1da1f2}.li{color:#0a66c2}.bs{color:#0085ff}
 .post-text{background:rgba(0,0,0,0.3);border-radius:10px;padding:14px;font-size:14px;line-height:1.8;white-space:pre-wrap;color:#dde;margin-bottom:14px;max-height:200px;overflow-y:auto}
 .buttons{display:flex;gap:10px;flex-wrap:wrap}
 .btn{padding:12px 24px;border:none;border-radius:10px;font-family:'Heebo',sans-serif;font-size:15px;font-weight:700;cursor:pointer;text-decoration:none;display:inline-flex;align-items:center;gap:6px;transition:transform 0.15s}
@@ -22,38 +23,34 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 .btn-post-fb{background:#1877f2;color:#fff}
 .btn-post-tw{background:#1da1f2;color:#fff}
 .btn-post-li{background:#0a66c2;color:#fff}
+.btn-post-bs{background:#0085ff;color:#fff}
 .copied{background:#ffd600!important;color:#1a1a2e!important}
 .tip{text-align:center;color:#7ecfcf;font-size:13px;margin-top:6px}
+.divider{text-align:center;color:#445;font-size:12px;margin:30px 0;border-top:1px solid rgba(255,255,255,0.05);padding-top:15px}
 </style>
 </head>
 <body>
 
 <h1>🚀 פרסם בלחיצה אחת</h1>
 <p class="subtitle">העתק → לחץ על הכפתור → הדבק → פרסם!</p>
+<p class="date" id="update-date"></p>
 
 <!-- FACEBOOK -->
 <div class="card">
 <div class="card-header">
 <span class="platform fb">📘 פייסבוק</span>
 </div>
-<div class="post-text" id="fb-text">שמעו, אני חייב לשתף משהו.
+<div class="post-text" id="fb-text">שבוע שעבר בניתי בוט טלגרם.
 
-בשנה האחרונה העברתי 50+ סדנאות AI לארגונים, מכללות ובתי ספר ברחבי הארץ. וכל פעם מחדש אני רואה את אותו רגע — הרגע שמישהו מבין שהוא יכול לחסוך *שעות* של עבודה ביום.
+לא, אני לא מתכנת. אני מורה.
 
-מה אני מלמד? 🤖
-✅ ChatGPT, Claude, Gemini — לכתיבה, ניתוח ומחקר
-✅ Make.com — אוטומציות שחוסכות שעות
-✅ יצירת תמונות, וידאו, קריינות עם AI
-✅ Vibe Coding — בניית אתרים ואפליקציות בלי קוד
-✅ Claude Code — סוכן AI אוטונומי שעובד בשבילך
+אבל עם AI — כתבתי לו מה אני רוצה, והוא בנה. שורה אחרי שורה. בדק. תיקן. ושוב בדק.
 
-הסדנה מעשית לחלוטין. כל משתתף עם מחשב, מתרגל בזמן אמת.
+עכשיו יש לי בוט שעונה לאנשים אוטומטית.
 
-יש לכם ארגון, חברה, מכללה, ועד עובדים? דברו איתי.
-📞 052-695-3500
-🌐 https://shemesh613.github.io/ai-workshops/org.html
+הדבר הכי מטורף? זה לקח שעתיים. לא שבועות. שעתיים.
 
-שמשון ג'קוב | מרצה ומנחה סדנאות AI</div>
+מי פה חושב שצריך להיות מתכנת כדי לבנות דברים? חשבו שוב 👇</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('fb-text', this)">📋 העתק טקסט</button>
 <a class="btn btn-post-fb" href="https://www.facebook.com/" target="_blank">📘 פתח פייסבוק</a>
@@ -66,27 +63,22 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 <div class="card-header">
 <span class="platform li">💼 לינקדאין</span>
 </div>
-<div class="post-text" id="li-text">50+ סדנאות AI. ארגונים, מכללות, בתי ספר.
+<div class="post-text" id="li-text">"אתה מורה, למה אתה מתעסק עם AI?"
 
-המספר הזה לא קרה במקרה — הוא קרה כי ארגונים מבינים שמי שלא מטמיע AI עכשיו, נשאר מאחור.
+שואלים אותי את זה כל שבוע.
 
-מה הצוותים שלכם לומדים בסדנה?
+התשובה: כי AI לא מחליף מורים. AI הופך מורים לסופר-מורים.
 
-🔹 כתיבת מסמכים ודוחות עם Claude, Gemini, GPT-5.2
-🔹 אוטומציות עם Make.com — לחסוך 5-10 שעות שבועיות
-🔹 יצירת תוכן ויזואלי — תמונות, וידאו, מצגות
-🔹 Claude Code — סוכן AI אוטונומי לצוותי פיתוח
-🔹 GitHub Copilot — קוד מהיר פי 10
+השבוע בלבד:
+→ בניתי בוט טלגרם אוטומטי (בלי קוד)
+→ יצרתי שיר עם AI לפרויקט חינוכי
+→ הכנתי חומרי לימוד שהיו לוקחים שבוע — ביום אחד
 
-הסדנה 100% מעשית. כל משתתף מתרגל בזמן אמת ויוצא עם כלים שעובדים מיד.
+אני לא מתכנת. אני מחנך שלמד לדבר עם AI.
 
-🎯 מתאים לכל סוג צוות — פיתוח, שיווק, תפעול, הנהלה.
+וזה מה שאני מלמד בסדנאות שלי — איך כל אחד יכול לעשות את זה.
 
-מעוניינים? נשמח לשיחה קצרה.
-📞 052-695-3500
-🌐 https://shemesh613.github.io/ai-workshops/org.html
-
-#AI #ArtificialIntelligence #AIWorkshop #בינהמלאכותית #סדנאות #חדשנות #טכנולוגיה</div>
+#AI #Education #EdTech #בינהמלאכותית</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('li-text', this)">📋 העתק טקסט</button>
 <a class="btn btn-post-li" href="https://www.linkedin.com/feed/" target="_blank">💼 פתח לינקדאין</a>
@@ -94,33 +86,101 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 <p class="tip">העתק → פתח לינקדאין → הדבק → צרף תמונה → פרסם</p>
 </div>
 
-<!-- TWITTER -->
+<!-- TWITTER / X -->
 <div class="card">
 <div class="card-header">
 <span class="platform tw">🐦 טוויטר / X</span>
 </div>
-<div class="post-text" id="tw-text">🤖 העברתי 50+ סדנאות AI לארגונים ומכללות בישראל.
+<div class="post-text" id="tw-text">בניתי בוט טלגרם בלי לדעת קוד.
+AI כתב הכל. אני רק אמרתי לו מה לעשות.
 
-הכלים שכל צוות חייב להכיר ב-2026:
-✅ Claude Code — סוכן AI אוטונומי
-✅ Make.com — אוטומציות
-✅ GPT-5.2, Gemini, Midjourney
-✅ Vibe Coding — אפליקציות בלי קוד
+2026 זה לא "תלמד לתכנת".
+2026 זה "תלמד לדבר עם AI".
 
-סדנה מעשית, 100% תרגול.
-
-📞 052-695-3500
-🔗 https://shemesh613.github.io/ai-workshops/org.html
-
-#AI #AIWorkshop #בינהמלאכותית #Claude #ChatGPT</div>
+מי עוד בונה דברים עם AI בלי קוד? 🤖</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('tw-text', this)">📋 העתק טקסט</button>
 <a class="btn btn-post-tw" href="https://x.com/compose/post" target="_blank">🐦 פתח X</a>
 </div>
-<p class="tip">העתק → פתח X → הדבק → צרף תמונה → פרסם</p>
+<p class="tip">העתק → פתח X → הדבק → פרסם</p>
+</div>
+
+<!-- BLUESKY -->
+<div class="card">
+<div class="card-header">
+<span class="platform bs">🦋 Bluesky</span>
+</div>
+<div class="post-text" id="bs-text">בניתי בוט טלגרם בלי לדעת קוד.
+AI כתב הכל. אני רק אמרתי לו מה לעשות.
+
+2026 זה לא "תלמד לתכנת".
+2026 זה "תלמד לדבר עם AI".
+
+#AI #בינהמלאכותית</div>
+<div class="buttons">
+<button class="btn btn-copy" onclick="copyText('bs-text', this)">📋 העתק טקסט</button>
+<a class="btn btn-post-bs" href="https://bsky.app" target="_blank">🦋 פתח Bluesky</a>
+</div>
+<p class="tip">העתק → פתח Bluesky → הדבק → פרסם</p>
+</div>
+
+<p class="divider">פוסט נוסף — סיפור יומי</p>
+
+<!-- FACEBOOK 2 -->
+<div class="card">
+<div class="card-header">
+<span class="platform fb">📘 פייסבוק — סיפור יומי</span>
+</div>
+<div class="post-text" id="fb2-text">רגע של אמת.
+
+עכשיו קמתי לסדר קצת בבית.
+
+ובינתיים? ה-AI עובד בשבילי.
+
+ממש עכשיו הוא:
+— כותב לי תוכן לסושיאל
+— מייצר לי שיר לפורים
+— מתכנן לי לוח תוכן לחודש הקרוב
+
+ואני? מסדר מגירות 😂
+
+זה 2026. אם אתם עדיין עושים הכל לבד — אתם עובדים יותר מדי.
+
+מי פה כבר משתמש ב-AI כעובד שעובד בשבילו? 👇</div>
+<div class="buttons">
+<button class="btn btn-copy" onclick="copyText('fb2-text', this)">📋 העתק טקסט</button>
+<a class="btn btn-post-fb" href="https://www.facebook.com/" target="_blank">📘 פתח פייסבוק</a>
+</div>
+<p class="tip">העתק → פתח פייסבוק → הדבק → פרסם</p>
+</div>
+
+<!-- PURIM TEASER -->
+<div class="card">
+<div class="card-header">
+<span class="platform fb">🎭 טיזר פורים</span>
+</div>
+<div class="post-text" id="purim-text">🎭 פורים 2026 הולך להיות אחר.
+
+אני עובד עכשיו על משהו מטורף — שיר פורים שנוצר לגמרי עם AI.
+
+מילים. מוזיקה. וידאו. הכל AI.
+
+ואתם יודעים מה? זה נשמע טוב. ממש טוב.
+
+מוכנים? עוד כמה ימים זה יוצא 🔥
+
+עקבו כדי לא לפספס 👆</div>
+<div class="buttons">
+<button class="btn btn-copy" onclick="copyText('purim-text', this)">📋 העתק טקסט</button>
+<a class="btn btn-post-fb" href="https://www.facebook.com/" target="_blank">📘 פתח פייסבוק</a>
+</div>
+<p class="tip">העתק → פתח פייסבוק → הדבק → צרף תמונה → פרסם</p>
 </div>
 
 <script>
+// Show update date
+document.getElementById('update-date').textContent = 'עודכן: ' + new Date().toLocaleDateString('he-IL');
+
 function copyText(id, btn) {
   const text = document.getElementById(id).innerText;
   navigator.clipboard.writeText(text).then(() => {
