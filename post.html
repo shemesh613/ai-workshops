@@ -12,7 +12,7 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 .subtitle{text-align:center;color:#aab;margin-bottom:10px;font-size:15px}
 .date{text-align:center;color:#667;margin-bottom:30px;font-size:12px}
 .card{background:rgba(255,255,255,0.06);border:1px solid rgba(255,255,255,0.1);border-radius:16px;padding:20px;margin-bottom:20px;max-width:700px;margin-left:auto;margin-right:auto}
-.card-header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.card-header{display:flex;align-items:center;margin-bottom:12px}
 .platform{font-size:20px;font-weight:700;display:flex;align-items:center;gap:8px}
 .fb{color:#1877f2}.tw{color:#1da1f2}.li{color:#0a66c2}.bs{color:#0085ff}
 .post-text{background:rgba(0,0,0,0.3);border-radius:10px;padding:14px;font-size:14px;line-height:1.8;white-space:pre-wrap;color:#dde;margin-bottom:14px;max-height:200px;overflow-y:auto}
@@ -26,173 +26,58 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 .btn-post-bs{background:#0085ff;color:#fff}
 .copied{background:#ffd600!important;color:#1a1a2e!important}
 .tip{text-align:center;color:#7ecfcf;font-size:13px;margin-top:6px}
-.divider{text-align:center;color:#445;font-size:12px;margin:30px 0;border-top:1px solid rgba(255,255,255,0.05);padding-top:15px}
 </style>
 </head>
 <body>
-
 <h1>🚀 פרסם בלחיצה אחת</h1>
 <p class="subtitle">העתק → לחץ על הכפתור → הדבק → פרסם!</p>
-<p class="date" id="update-date"></p>
-
-<!-- FACEBOOK -->
+<p class="date">עודכן: 20.2.2026</p>
 <div class="card">
-<div class="card-header">
-<span class="platform fb">📘 פייסבוק</span>
-</div>
-<div class="post-text" id="fb-text">שבוע שעבר בניתי בוט טלגרם.
+<div class="card-header"><span class="platform fb">📘 פייסבוק</span></div>
+<div class="post-text" id="fb-text">על יצירת מערכצ אוטומטית בקלוד קוד להנפשת תמונות ללא מגע יד אדם.. סדרת תמונות הופך לסרט שלם לבד
 
-לא, אני לא מתכנת. אני מורה.
-
-אבל עם AI — כתבתי לו מה אני רוצה, והוא בנה. שורה אחרי שורה. בדק. תיקן. ושוב בדק.
-
-עכשיו יש לי בוט שעונה לאנשים אוטומטית.
-
-הדבר הכי מטורף? זה לקח שעתיים. לא שבועות. שעתיים.
-
-מי פה חושב שצריך להיות מתכנת כדי לבנות דברים? חשבו שוב 👇</div>
+מי פה מכיר את זה? ספרו בתגובות 👇</div>
 <div class="buttons">
-<button class="btn btn-copy" onclick="copyText('fb-text', this)">📋 העתק טקסט</button>
+<button class="btn btn-copy" onclick="copyText('fb-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-fb" href="https://www.facebook.com/" target="_blank">📘 פתח פייסבוק</a>
 </div>
 <p class="tip">העתק → פתח פייסבוק → הדבק → צרף תמונה → פרסם</p>
 </div>
-
-<!-- LINKEDIN -->
 <div class="card">
-<div class="card-header">
-<span class="platform li">💼 לינקדאין</span>
-</div>
-<div class="post-text" id="li-text">"אתה מורה, למה אתה מתעסק עם AI?"
-
-שואלים אותי את זה כל שבוע.
-
-התשובה: כי AI לא מחליף מורים. AI הופך מורים לסופר-מורים.
-
-השבוע בלבד:
-→ בניתי בוט טלגרם אוטומטי (בלי קוד)
-→ יצרתי שיר עם AI לפרויקט חינוכי
-→ הכנתי חומרי לימוד שהיו לוקחים שבוע — ביום אחד
-
-אני לא מתכנת. אני מחנך שלמד לדבר עם AI.
-
-וזה מה שאני מלמד בסדנאות שלי — איך כל אחד יכול לעשות את זה.
+<div class="card-header"><span class="platform li">💼 לינקדאין</span></div>
+<div class="post-text" id="li-text">על יצירת מערכצ אוטומטית בקלוד קוד להנפשת תמונות ללא מגע יד אדם.. סדרת תמונות הופך לסרט שלם לבד
 
 #AI #Education #EdTech #בינהמלאכותית</div>
 <div class="buttons">
-<button class="btn btn-copy" onclick="copyText('li-text', this)">📋 העתק טקסט</button>
+<button class="btn btn-copy" onclick="copyText('li-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-li" href="https://www.linkedin.com/feed/" target="_blank">💼 פתח לינקדאין</a>
 </div>
 <p class="tip">העתק → פתח לינקדאין → הדבק → צרף תמונה → פרסם</p>
 </div>
-
-<!-- TWITTER / X -->
 <div class="card">
-<div class="card-header">
-<span class="platform tw">🐦 טוויטר / X</span>
-</div>
-<div class="post-text" id="tw-text">בניתי בוט טלגרם בלי לדעת קוד.
-AI כתב הכל. אני רק אמרתי לו מה לעשות.
+<div class="card-header"><span class="platform tw">🐦 טוויטר / X</span></div>
+<div class="post-text" id="tw-text">על יצירת מערכצ אוטומטית בקלוד קוד להנפשת תמונות ללא מגע יד אדם.. סדרת תמונות הופך לסרט שלם לבד
 
-2026 זה לא "תלמד לתכנת".
-2026 זה "תלמד לדבר עם AI".
-
-מי עוד בונה דברים עם AI בלי קוד? 🤖</div>
+#AI #בינהמלאכותית</div>
 <div class="buttons">
-<button class="btn btn-copy" onclick="copyText('tw-text', this)">📋 העתק טקסט</button>
+<button class="btn btn-copy" onclick="copyText('tw-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-tw" href="https://x.com/compose/post" target="_blank">🐦 פתח X</a>
 </div>
 <p class="tip">העתק → פתח X → הדבק → פרסם</p>
 </div>
-
-<!-- BLUESKY -->
 <div class="card">
-<div class="card-header">
-<span class="platform bs">🦋 Bluesky</span>
-</div>
-<div class="post-text" id="bs-text">בניתי בוט טלגרם בלי לדעת קוד.
-AI כתב הכל. אני רק אמרתי לו מה לעשות.
-
-2026 זה לא "תלמד לתכנת".
-2026 זה "תלמד לדבר עם AI".
+<div class="card-header"><span class="platform bs">🦋 Bluesky</span></div>
+<div class="post-text" id="bs-text">על יצירת מערכצ אוטומטית בקלוד קוד להנפשת תמונות ללא מגע יד אדם.. סדרת תמונות הופך לסרט שלם לבד
 
 #AI #בינהמלאכותית</div>
 <div class="buttons">
-<button class="btn btn-copy" onclick="copyText('bs-text', this)">📋 העתק טקסט</button>
+<button class="btn btn-copy" onclick="copyText('bs-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-bs" href="https://bsky.app" target="_blank">🦋 פתח Bluesky</a>
 </div>
 <p class="tip">העתק → פתח Bluesky → הדבק → פרסם</p>
 </div>
-
-<p class="divider">פוסט נוסף — סיפור יומי</p>
-
-<!-- FACEBOOK 2 -->
-<div class="card">
-<div class="card-header">
-<span class="platform fb">📘 פייסבוק — סיפור יומי</span>
-</div>
-<div class="post-text" id="fb2-text">רגע של אמת.
-
-עכשיו קמתי לסדר קצת בבית.
-
-ובינתיים? ה-AI עובד בשבילי.
-
-ממש עכשיו הוא:
-— כותב לי תוכן לסושיאל
-— מייצר לי שיר לפורים
-— מתכנן לי לוח תוכן לחודש הקרוב
-
-ואני? מסדר מגירות 😂
-
-זה 2026. אם אתם עדיין עושים הכל לבד — אתם עובדים יותר מדי.
-
-מי פה כבר משתמש ב-AI כעובד שעובד בשבילו? 👇</div>
-<div class="buttons">
-<button class="btn btn-copy" onclick="copyText('fb2-text', this)">📋 העתק טקסט</button>
-<a class="btn btn-post-fb" href="https://www.facebook.com/" target="_blank">📘 פתח פייסבוק</a>
-</div>
-<p class="tip">העתק → פתח פייסבוק → הדבק → פרסם</p>
-</div>
-
-<!-- PURIM TEASER -->
-<div class="card">
-<div class="card-header">
-<span class="platform fb">🎭 טיזר פורים</span>
-</div>
-<div class="post-text" id="purim-text">🎭 פורים 2026 הולך להיות אחר.
-
-אני עובד עכשיו על משהו מטורף — שיר פורים שנוצר לגמרי עם AI.
-
-מילים. מוזיקה. וידאו. הכל AI.
-
-ואתם יודעים מה? זה נשמע טוב. ממש טוב.
-
-מוכנים? עוד כמה ימים זה יוצא 🔥
-
-עקבו כדי לא לפספס 👆</div>
-<div class="buttons">
-<button class="btn btn-copy" onclick="copyText('purim-text', this)">📋 העתק טקסט</button>
-<a class="btn btn-post-fb" href="https://www.facebook.com/" target="_blank">📘 פתח פייסבוק</a>
-</div>
-<p class="tip">העתק → פתח פייסבוק → הדבק → צרף תמונה → פרסם</p>
-</div>
-
 <script>
-// Show update date
-document.getElementById('update-date').textContent = 'עודכן: ' + new Date().toLocaleDateString('he-IL');
-
-function copyText(id, btn) {
-  const text = document.getElementById(id).innerText;
-  navigator.clipboard.writeText(text).then(() => {
-    btn.classList.add('copied');
-    btn.innerHTML = '✅ הועתק!';
-    setTimeout(() => {
-      btn.classList.remove('copied');
-      btn.innerHTML = '📋 העתק טקסט';
-    }, 2000);
-  });
-}
+function copyText(id,btn){const t=document.getElementById(id).innerText;navigator.clipboard.writeText(t).then(()=>{btn.classList.add('copied');btn.innerHTML='✅ הועתק!';setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='📋 העתק טקסט'},2000)})}
 </script>
-
 </body>
 </html>
