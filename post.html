@@ -33,11 +33,24 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 <body>
 <h1>🚀 פרסם בלחיצה אחת</h1>
 <p class="subtitle">העתק → לחץ על הכפתור → הדבק → פרסם!</p>
-<p class="date">עודכן: 22.2.2026</p>
-
+<p class="date">עודכן: 23.2.2026</p>
+<div style="text-align:center;margin:20px auto;max-width:700px">
+<img id="post-img" src="post-image.png" alt="Post Image" style="width:100%;border-radius:16px;border:1px solid rgba(255,255,255,0.1)">
+<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+<a class="btn" style="background:#7c4dff;color:#fff" href="post-image.png" download="post-image.png">📥 הורד תמונה</a>
+<button class="btn" style="background:#00bcd4;color:#fff" onclick="copyImg(this)">🖼️ העתק תמונה</button>
+<button class="btn" style="background:#25D366;color:#fff" onclick="shareToStatus(this)">📱 שתף לסטטוס</button>
+</div>
+<p style="color:#7ecfcf;font-size:13px;margin-top:8px">הורד / העתק / שתף לסטטוס → צרף לפוסט בכל פלטפורמה</p>
+</div>
 <div class="card">
 <div class="card-header"><span class="platform fb">📘 פייסבוק</span></div>
-<div class="post-text" id="fb-text">זוכרים שסיפרתי לכם על הווטסאפ שמחובר לי ל-AI? אז עכשיו גם טלגרם 🤯. זה מטורף. אני פשוט מדבר איתו, מקליט הודעה, והוא ישר מתמלל ומבין מה אני רוצה מהמחשב שלי, אפילו סורק קבצים! אנחנו עוד לומדים אחד את השני, יש קצת באגים, אבל וואו, זה משנה לי את היום. מי עוד חולם על עוזר כזה?</div>
+<div class="post-text" id="fb-text">שבוע שעבר פגשתי גרפיקאי עצמאי. עובד 12 שעות ביום, מותש, בקושי סוגר חודש.
+שאלתי אותו: 'אתה משתמש ב-AI?'
+הוא ענה: 'אין לי זמן ללמוד את זה.'
+וזה בדיוק העניין! אם אין לך זמן, AI זה הפתרון, לא עוד משימה.
+ב-2026, זה ההבדל בין לטבוע ללשחות בקלות. 🚀
+איזה תחום בעסק שלכם הייתם רוצים שה-AI ישחרר אתכם ממנו קודם? שתפו!</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('fb-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-fb" href="https://www.facebook.com/" target="_blank">📘 פתח פייסבוק</a>
@@ -46,8 +59,11 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 </div>
 <div class="card">
 <div class="card-header"><span class="platform li">💼 לינקדאין</span></div>
-<div class="post-text" id="li-text">התחברות טלגרם ישירות למודל AI כמו קלוד, ודרכו למחשב, פותחת עולם חדש של אינטראקציה. זה כבר לא רק צ'אט: אני מקליט הוראה קולית, המערכת מתמללת, מנתחת קבצים במחשב ומבצעת. נכון, זה עדיין בשלבי למידה, ולא הכל חלק. אבל הפוטנציאל? עצום. אנחנו עוברים מדיבור למכונה לעבודה *עם* המכונה, בלי ידיים כמעט. זה שינוי פרדיגמה באופן שבו אנחנו תופסים יעילות דיגיטלית.
-#AI #בינהמלאכותית #טכנולוגיה #חדשנות #פרודוקטיביות</div>
+<div class="post-text" id="li-text">פגשתי עצמאי השבוע, גרפיקאי מוכשר, שעובד 12 שעות ביום ומתקשה לצוף. כששאלתי אותו על שילוב AI, הוא השיב ש'אין לו זמן ללמוד'.
+וכאן בדיוק טמונה הטעות האסטרטגית.
+ב-2026, AI כבר לא אופציה נחמדה – הוא קריטי. הוא הכלי שיאפשר לכם להפוך הצעת מחיר משעה ל-3 דקות, לכתוב מיילים ללקוחות בזמן שיא, ולייצר תוכן שיווקי ללא עלויות קופירייטינג.
+AI לא מחליף אתכם, הוא משחרר אתכם להתמקד במה שחשוב באמת. מי שלא ילמד, לא חוסך זמן – הוא פשוט מפסיד כסף.
+#AIלעסקים #בינהמלאכותית #עצמאיםמנצחים #התייעלותעסקית</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('li-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-li" href="https://www.linkedin.com/feed/" target="_blank">💼 פתח לינקדאין</a>
@@ -56,8 +72,8 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 </div>
 <div class="card">
 <div class="card-header"><span class="platform tw">🐦 טוויטר / X</span></div>
-<div class="post-text" id="tw-text">החיים שלי השתנו. אחרי ווטסאפ, גם טלגרם מחובר ל-AI שלי ולמחשב. מקליט הודעה, והוא ישר מבין ועושה. העתיד כבר כאן.
-#AI #טכנולוגיה #חדשנות</div>
+<div class="post-text" id="tw-text">אין לך זמן ללמוד AI? זו הבעיה שלך. ב-2026, AI הוא ההבדל בין עצמאי מותש למרוויח. מי שלא ילמד, מפסיד כסף.
+#AI #עצמאים #בינהמלאכותית</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('tw-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-tw" href="https://x.com/compose/post" target="_blank">🐦 פתח X</a>
@@ -66,8 +82,8 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 </div>
 <div class="card">
 <div class="card-header"><span class="platform bs">🦋 Bluesky</span></div>
-<div class="post-text" id="bs-text">החיים שלי השתנו. אחרי ווטסאפ, גם טלגרם מחובר ל-AI שלי ולמחשב. מקליט הודעה, והוא ישר מבין ועושה. העתיד כבר כאן.
-#AI #טכנולוגיה #חדשנות</div>
+<div class="post-text" id="bs-text">אין לך זמן ללמוד AI? זו הבעיה שלך. ב-2026, AI הוא ההבדל בין עצמאי מותש למרוויח. מי שלא ילמד, מפסיד כסף.
+#AI #עצמאים #בינהמלאכותית</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('bs-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-bs" href="https://bsky.app" target="_blank">🦋 פתח Bluesky</a>
@@ -76,9 +92,9 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 </div>
 <div class="card">
 <div class="card-header"><span class="platform ig">📸 אינסטגרם</span></div>
-<div class="post-text" id="ig-text">ההרגשה הזאת כשהטכנולוגיה פשוט עובדת בשבילך... עכשיו גם טלגרם מחובר ישירות ל-AI שלי. אני מדבר, הוא עושה. זה קסם שמשנה את היומיום שלי!
+<div class="post-text" id="ig-text">מרגיש שאתה טובע בעבודה? עצמאי, מותש, ובקושי מרוויח? AI זה לא מותרות, זה חבל הצלה. אל תחכה ל-2026 כדי להבין שזמן זה כסף.
 ...
-#AI #בינהמלאכותית #טכנולוגיהמתקדמת #חדשנותטכנולוגית #חייםקלים #דיגיטל #עתידכברכאן #שמשוןג'קוב #לומדיםAI #מוטיבציה #יעילות #עוזרדיגיטלי #טכנולוגיהיומיומית #התפתחותאישית #מהפכהטכנולוגית</div>
+#AI #בינהמלאכותית #עסקיםקטנים #פרילנסר #עצמאותכלכלית #ניהולזמן #יעילות #חדשנות #טכנולוגיה #הצלחהעסקית #שמשוןגקוב #קורסAI #ללמודAI #להרוויחיותר #לעבודפחות</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('ig-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-ig" href="https://www.instagram.com/" target="_blank">📸 פתח אינסטגרם</a>
@@ -87,8 +103,8 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 </div>
 <div class="card">
 <div class="card-header"><span class="platform tk">🎵 טיקטוק</span></div>
-<div class="post-text" id="tk-text">תשכחו מלהקליד, עכשיו אני פשוט מדבר לטלגרם וה-AI שלי מנהל לי את המחשב. זה כיף לא נורמלי!
-#AI #טכנולוגיה #בינהמלאכותית #חייםקלים #ויראלי #טיקטוקישראל #חדשנות #לומדיםAI #שמשוןג'קוב #עתיד</div>
+<div class="post-text" id="tk-text">עצמאי, אין לך זמן ללמוד AI? בדיוק בגלל זה אתה חייב ללמוד AI! זה ההבדל בין עסק שורד לעסק מצליח.
+#AI #בינהמלאכותית #עצמאים #פרילנסרים #טיפיםלעסקים #AIלמתחילים #חיסכוןבזמן #כסף #טיקטוקישראל #samsonjacob</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('tk-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-tk" href="https://www.tiktok.com/upload" target="_blank">🎵 פתח טיקטוק</a>
