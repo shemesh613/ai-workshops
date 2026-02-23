@@ -34,15 +34,24 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 <h1>🚀 פרסם בלחיצה אחת</h1>
 <p class="subtitle">העתק → לחץ על הכפתור → הדבק → פרסם!</p>
 <p class="date">עודכן: 23.2.2026</p>
-
+<div style="text-align:center;margin:20px auto;max-width:700px">
+<img id="post-img" src="post-image.png" alt="Post Image" style="width:100%;border-radius:16px;border:1px solid rgba(255,255,255,0.1)">
+<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+<a class="btn" style="background:#7c4dff;color:#fff" href="post-image.png" download="post-image.png">📥 הורד תמונה</a>
+<button class="btn" style="background:#00bcd4;color:#fff" onclick="copyImg(this)">🖼️ העתק תמונה</button>
+<button class="btn" style="background:#25D366;color:#fff" onclick="shareToStatus(this)">📱 שתף לסטטוס</button>
+</div>
+<p style="color:#7ecfcf;font-size:13px;margin-top:8px">הורד / העתק / שתף לסטטוס → צרף לפוסט בכל פלטפורמה</p>
+</div>
 <div class="card">
 <div class="card-header"><span class="platform fb">📘 פייסבוק</span></div>
-<div class="post-text" id="fb-text">חברים, חייב לספר לכם משהו מטורף.
-הלילה בניתי עם ה-AI שלי רובוט שמשווק אותי בפייסבוק.
-הוא סורק פוסטים של אנשים שמחפשים עזרה ב-AI, ומגיב להם *אישית*.
-בלילה אחד: 11 תגובות, הוא רץ כל 20 דקות, ואני... ישנתי! 😴
-זה לא מושלם, אבל הרעיון? שה-AI יעבוד בשבילי כשאני נח.
-אני לא מתכנת, רק מורה. מי רוצה ללמוד לבנות כזה דבר? ספרו לי בתגובות!</div>
+<div class="post-text" id="fb-text">וואו, חברים, הלילה קרה משהו מדהים.
+ישבתי עם קלוד קוד, ה-AI שלי, ובנינו מערכת שמחפשת בפייסבוק אנשים שמחפשים עזרה ב-AI.
+ואז? היא מגיבה להם אישית. בעברית. בזמן שאני ישן. 🤯
+בלילה אחד ה-AI שלי הגיב ל-11 פוסטים.
+זה לא מושלם, אבל הרעיון הוא שה-AI עובד בשבילי כשאני נח.
+אני לא מתכנת, אני פשוט אומר מה אני רוצה.
+מי מכם היה רוצה שה-AI יעבוד בשבילו גם כשהוא ישן?</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('fb-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-fb" href="https://www.facebook.com/" target="_blank">📘 פתח פייסבוק</a>
@@ -51,12 +60,13 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 </div>
 <div class="card">
 <div class="card-header"><span class="platform li">💼 לינקדאין</span></div>
-<div class="post-text" id="li-text">כמורה ל-AI, אני תמיד מחפש איך להפוך את הטכנולוגיה לנגישה ופרקטית.
-הלילה, עם ה-AI שלי Claude Code, בניתי מערכת שסורקת פוסטים בפייסבוק של מי שמחפש הדרכת AI, ומגיבה להם באופן מותאם אישית.
-התוצאה? אוטומציה של שיווק אישי, בזמן שאני מתמקד בדברים אחרים.
-המסר פה הוא לא על התכנות, אלא על היכולת של כל אחד, גם ללא רקע טכני, לרתום AI לצרכים עסקיים.
-ה-AI הוא כלי אדיר שמחכה שנלמד לבקש ממנו נכון.
-#AI #אוטומציה #שיווקדיגיטלי #בינהמלאכותיתלכל #חדשנות</div>
+<div class="post-text" id="li-text">הלילה ה-AI שלי עבד בשבילי, בזמן שאני ישנתי.
+עם Claude Code, בניתי מערכת אוטומטית שסורקת פוסטים בפייסבוק של אנשים שמחפשים הדרכת AI, ומגיבה להם באופן אישי ומותאם.
+בלילה אחד? 11 תגובות מותאמות.
+התובנה המרכזית כאן היא שאתה לא צריך להיות מתכנת כדי לרתום את הכוח העצום של ה-AI לשיווק, ליצירת לידים או לכל משימה עסקית.
+מספיק לדעת לתאר מה רוצים, וה-AI בונה את זה.
+זה משנה את כללי המשחק עבור יחידים ועסקים.
+#AIלשיווק #אוטומציהעסקית #בינהמלאכותית #חדשנותAI #לידים</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('li-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-li" href="https://www.linkedin.com/feed/" target="_blank">💼 פתח לינקדאין</a>
@@ -65,8 +75,7 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 </div>
 <div class="card">
 <div class="card-header"><span class="platform tw">🐦 טוויטר / X</span></div>
-<div class="post-text" id="tw-text">בניתי רובוט AI שמשווק אותי בפייסבוק בזמן שאני ישן. הוא מגיב אישית לאנשים שמחפשים עזרה ב-AI. ה-AI עובד בשבילי. 🔥
-#AI #אוטומציה #שיווק #ClaudeCode</div>
+<div class="post-text" id="tw-text">הלילה בניתי רובוט AI שמשווק אותי בפייסבוק. הוא מגיב אישית למי שמחפש עזרה ב-AI, בזמן שאני ישן. 11 תגובות בלילה אחד! #AI #אוטומציה #שיווקדיגיטלי</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('tw-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-tw" href="https://x.com/compose/post" target="_blank">🐦 פתח X</a>
@@ -75,8 +84,7 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 </div>
 <div class="card">
 <div class="card-header"><span class="platform bs">🦋 Bluesky</span></div>
-<div class="post-text" id="bs-text">בניתי רובוט AI שמשווק אותי בפייסבוק בזמן שאני ישן. הוא מגיב אישית לאנשים שמחפשים עזרה ב-AI. ה-AI עובד בשבילי. 🔥
-#AI #אוטומציה #שיווק #ClaudeCode</div>
+<div class="post-text" id="bs-text">הלילה בניתי רובוט AI שמשווק אותי בפייסבוק. הוא מגיב אישית למי שמחפש עזרה ב-AI, בזמן שאני ישן. 11 תגובות בלילה אחד! #AI #אוטומציה #שיווקדיגיטלי</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('bs-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-bs" href="https://bsky.app" target="_blank">🦋 פתח Bluesky</a>
@@ -85,9 +93,9 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 </div>
 <div class="card">
 <div class="card-header"><span class="platform ig">📸 אינסטגרם</span></div>
-<div class="post-text" id="ig-text">וואו, איזה לילה! ה-AI שלי בנה רובוט שמגיב לאנשים שמחפשים עזרה, בזמן שאני ישן. זה מרגיש כמו קסם, שהטכנולוגיה עובדת בשבילך.
+<div class="post-text" id="ig-text">הלילה הגשמתי חלום. ה-AI שלי עבד בשבילי, שיווק אותי אישית, בזמן שאני ישנתי. זה מרגש לראות איך אפשר לרתום את הטכנולוגיה לחיים שלנו. פשוט מדהים!
 ...
-#AI #בינהמלאכותית #אוטומציה #טכנולוגיה #שיווק #שיווקדיגיטלי #כליםדיגיטליים #חדשנות #פרודוקטיביות #עסקקטן #יזמות #ללמודAI #שמשוןג'קוב #ClaudeCode #העתידהואכאן</div>
+#AI #בינהמלאכותית #אוטומציה #שיווקדיגיטלי #ClaudeCode #טכנולוגיה #חדשנות #יזמות #דיגיטל #ללמודAI #קורסAI #AIלמתחילים #כיףללמוד #פוטנציאל #שמשוןגקוב</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('ig-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-ig" href="https://www.instagram.com/" target="_blank">📸 פתח אינסטגרם</a>
@@ -96,8 +104,8 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 </div>
 <div class="card">
 <div class="card-header"><span class="platform tk">🎵 טיקטוק</span></div>
-<div class="post-text" id="tk-text">תקשיבו טוב! בניתי רובוט AI שמשווק אותי בפייסבוק בזמן שאני ישן. כן, בזמן שאני ישן! 🤯
-#AI #בינהמלאכותית #אוטומציה #שיווק #טיקטוקלמדריכים #חדשנות #טכנולוגיה #שמשוןג'קוב #ClaudeCode #מוריםAI</div>
+<div class="post-text" id="tk-text">ה-AI שלי עכשיו משווק אותי בפייסבוק בזמן שאני ישן! הוא מגיב אישית לאנשים שמחפשים עזרה ב-AI. מטורף!
+#AI #אוטומציה #שיווקדיגיטלי #בינהמלאכותית #טיקטוקישראל #חדשנות #עתידAI #ללמודAI #ClaudeCode #שמשוןגקוב</div>
 <div class="buttons">
 <button class="btn btn-copy" onclick="copyText('tk-text',this)">📋 העתק טקסט</button>
 <a class="btn btn-post-tk" href="https://www.tiktok.com/upload" target="_blank">🎵 פתח טיקטוק</a>
