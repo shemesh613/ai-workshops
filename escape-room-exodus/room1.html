@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>חדר 1 — מכות מצרים</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .plague-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 15px 0;
+    }
+    .plague-card {
+      perspective: 800px; cursor: pointer; height: 120px;
+    }
+    .card-inner {
+      position: relative; width: 100%; height: 100%;
+      transform-style: preserve-3d; transition: transform 0.6s;
+    }
+    .plague-card.flipped .card-inner {
+      transform: rotateY(180deg);
+    }
+    .card-front, .card-back {
+      position: absolute; width: 100%; height: 100%;
+      backface-visibility: hidden; border-radius: 10px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      padding: 8px;
+    }
+    .card-back {
+      background: rgba(100,0,0,0.3); border: 1px solid rgba(255,50,50,0.3);
+    }
+    .card-front {
+      background: rgba(50,0,0,0.4); border: 1px solid rgba(255,50,50,0.4);
+      transform: rotateY(180deg);
+    }
+    .plague-icon { font-size: 1.8rem; }
+    .plague-name { font-size: 0.8rem; color: rgba(255,200,200,0.8); margin: 2px 0; }
+    .plague-verse-fragment {
+      font-size: 0.65rem; color: rgba(255,215,0,0.4); font-family: 'Secular One', sans-serif;
+      background: rgba(255,215,0,0.05); padding: 2px 6px; border-radius: 4px; margin-top: 4px;
+    }
+    .plague-card.flipped .plague-verse-fragment {
+      color: rgba(255,215,0,0.7);
+    }
+    .plague-counter {
+      text-align: center; font-family: 'Secular One', sans-serif;
+      font-size: 0.9rem; color: rgba(255,100,100,0.6); margin: 10px 0;
+    }
+    .scroll-reveal {
+      display: none; margin: 15px 0; padding: 18px;
+      background: rgba(80,30,0,0.3); border: 1px solid rgba(255,150,50,0.3);
+      border-radius: 12px; text-align: center; animation: scrollReveal 0.8s ease-out;
+    }
+    .scroll-reveal.visible { display: block; }
+    @keyframes scrollReveal {
+      from { opacity:0; transform: scaleY(0.3); }
+      to { opacity:1; transform: scaleY(1); }
+    }
+    @media (max-width: 600px) {
+      .plague-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+      .plague-card { height: 100px; }
+      .plague-icon { font-size: 1.3rem; }
+      .plague-name { font-size: 0.65rem; }
+      .plague-verse-fragment { font-size: 0.55rem; }
+    }
+  </style>
+</head>
+<body class="theme-plague">
+
+  <!-- Video Background -->
+  <video
+    class="video-bg"
+    autoplay
+    muted
+    loop
+    playsinline
+    poster="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80"
+  >
+    <source src="https://cdn.coverr.co/videos/coverr-red-ink-in-water-1549/1080p.mp4" type="video/mp4" />
+  </video>
+  <div class="dark-overlay"></div>
+
+  <!-- Particle Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Timer Bar -->
+  <div class="timer-bar">
+    <span class="room-indicator">🐸 חדר 1 — מכות מצרים</span>
+    <span class="timer-display" id="timer-display">00:00</span>
+  </div>
+
+  <!-- Main Container -->
+  <div class="room-container">
+
+    <!-- Title Section -->
+    <div class="room-header">
+      <h1 class="room-title">מכות מצרים</h1>
+      <p class="room-subtitle">עשר מכות. עשרה סודות. מספר אחד חבוי.</p>
+    </div>
+
+    <!-- Question -->
+    <div class="question-box">
+      <p class="question-text">
+        כמה שנה ישבו בני ישראל במצרים? גלה את כל עשר המכות כדי לחשוף את הפסוק.
+      </p>
+    </div>
+
+    <!-- Helper -->
+    <p class="helper-text">
+      🔍 לחץ על כל מכה כדי לגלות אותה. כשתגלה את כולן — המגילה תיפתח.
+    </p>
+
+    <!-- Plague Grid -->
+    <div class="plague-grid">
+
+      <!-- 1. דם -->
+      <div class="plague-card" onclick="flipPlague(this, 0)">
+        <div class="card-inner">
+          <div class="card-back">
+            <div style="font-size: 2rem;">❓</div>
+            <div style="font-size: 0.7rem; color: rgba(255,100,100,0.5);">מכה 1</div>
+          </div>
+          <div class="card-front">
+            <div class="plague-icon">🩸</div>
+            <div class="plague-name">דם</div>
+            <div class="plague-verse-fragment">ומושב</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 2. צפרדע -->
+      <div class="plague-card" onclick="flipPlague(this, 1)">
+        <div class="card-inner">
+          <div class="card-back">
+            <div style="font-size: 2rem;">❓</div>
+            <div style="font-size: 0.7rem; color: rgba(255,100,100,0.5);">מכה 2</div>
+          </div>
+          <div class="card-front">
+            <div class="plague-icon">🐸</div>
+            <div class="plague-name">צפרדע</div>
+            <div class="plague-verse-fragment">בני ישראל</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 3. כינים -->
+      <div class="plague-card" onclick="flipPlague(this, 2)">
+        <div class="card-inner">
+          <div class="card-back">
+            <div style="font-size: 2rem;">❓</div>
+            <div style="font-size: 0.7rem; color: rgba(255,100,100,0.5);">מכה 3</div>
+          </div>
+          <div class="card-front">
+            <div class="plague-icon">🦟</div>
+            <div class="plague-name">כינים</div>
+            <div class="plague-verse-fragment">אשר ישבו</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 4. ערוב -->
+      <div class="plague-card" onclick="flipPlague(this, 3)">
+        <div class="card-inner">
+          <div class="card-back">
+            <div style="font-size: 2rem;">❓</div>
+            <div style="font-size: 0.7rem; color: rgba(255,100,100,0.5);">מכה 4</div>
+          </div>
+          <div class="card-front">
+            <div class="plague-icon">🪰</div>
+            <div class="plague-name">ערוב</div>
+            <div class="plague-verse-fragment">במצרים</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 5. דבר -->
+      <div class="plague-card" onclick="flipPlague(this, 4)">
+        <div class="card-inner">
+          <div class="card-back">
+            <div style="font-size: 2rem;">❓</div>
+            <div style="font-size: 0.7rem; color: rgba(255,100,100,0.5);">מכה 5</div>
+          </div>
+          <div class="card-front">
+            <div class="plague-icon">🐄</div>
+            <div class="plague-name">דבר</div>
+            <div class="plague-verse-fragment">שלושים שנה</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 6. שחין -->
+      <div class="plague-card" onclick="flipPlague(this, 5)">
+        <div class="card-inner">
+          <div class="card-back">
+            <div style="font-size: 2rem;">❓</div>
+            <div style="font-size: 0.7rem; color: rgba(255,100,100,0.5);">מכה 6</div>
+          </div>
+          <div class="card-front">
+            <div class="plague-icon">🔴</div>
+            <div class="plague-name">שחין</div>
+            <div class="plague-verse-fragment">וארבע</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 7. ברד -->
+      <div class="plague-card" onclick="flipPlague(this, 6)">
+        <div class="card-inner">
+          <div class="card-back">
+            <div style="font-size: 2rem;">❓</div>
+            <div style="font-size: 0.7rem; color: rgba(255,100,100,0.5);">מכה 7</div>
+          </div>
+          <div class="card-front">
+            <div class="plague-icon">🌨️</div>
+            <div class="plague-name">ברד</div>
+            <div class="plague-verse-fragment">מאות</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 8. ארבה -->
+      <div class="plague-card" onclick="flipPlague(this, 7)">
+        <div class="card-inner">
+          <div class="card-back">
+            <div style="font-size: 2rem;">❓</div>
+            <div style="font-size: 0.7rem; color: rgba(255,100,100,0.5);">מכה 8</div>
+          </div>
+          <div class="card-front">
+            <div class="plague-icon">🦗</div>
+            <div class="plague-name">ארבה</div>
+            <div class="plague-verse-fragment">שנה</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 9. חושך -->
+      <div class="plague-card" onclick="flipPlague(this, 8)">
+        <div class="card-inner">
+          <div class="card-back">
+            <div style="font-size: 2rem;">❓</div>
+            <div style="font-size: 0.7rem; color: rgba(255,100,100,0.5);">מכה 9</div>
+          </div>
+          <div class="card-front">
+            <div class="plague-icon">🌑</div>
+            <div class="plague-name">חושך</div>
+            <div class="plague-verse-fragment">(שמות י"ב:מ')</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- 10. מכת בכורות -->
+      <div class="plague-card" onclick="flipPlague(this, 9)">
+        <div class="card-inner">
+          <div class="card-back">
+            <div style="font-size: 2rem;">❓</div>
+            <div style="font-size: 0.7rem; color: rgba(255,100,100,0.5);">מכה 10</div>
+          </div>
+          <div class="card-front">
+            <div class="plague-icon">💀</div>
+            <div class="plague-name">מכת בכורות</div>
+            <div class="plague-verse-fragment">🔑</div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+    <!-- /plague-grid -->
+
+    <!-- Counter -->
+    <div class="plague-counter">
+      גילית <span id="plague-count">0</span> מתוך 10 מכות
+    </div>
+
+    <!-- Scroll Reveal -->
+    <div class="scroll-reveal" id="verse-scroll">
+      <p style="color: #ff8844; font-size: 1rem; margin-bottom: 8px;">📜 המגילה נפתחה!</p>
+      <p style="color: rgba(255,255,255,0.8); line-height: 1.8; font-size: 1rem;">
+        "ומושב בני ישראל אשר ישבו במצרים —<br>
+        <strong style="color: #ffd700; font-size: 1.3rem;">שלושים שנה וארבע מאות</strong> שנה"
+      </p>
+      <p style="font-size: 0.8rem; color: rgba(255,215,0,0.5); margin-top: 8px;">שמות י"ב:מ' — כמה זה בספרות?</p>
+      <a
+        href="https://www.sefaria.org/Exodus.12.40?lang=he"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="display:inline-block; margin-top: 10px; font-size: 0.75rem; color: rgba(255,180,80,0.7); text-decoration: underline;"
+      >📖 קרא את הפסוק בספריא</a>
+    </div>
+
+    <div class="password-section">
+      <div class="password-wrapper">
+        <input type="text" class="password-input" placeholder="המספר מהפסוק..." autocomplete="off">
+        <button class="submit-btn">🔓 פתח</button>
+      </div>
+      <div class="attempts-display"></div>
+      <div class="hint-box">💡 גלה את כל 10 המכות. המגילה תחשוף פסוק עם מספר.</div>
+      <div class="hint-box strong">🔥 שלושים + ארבע מאות = ? רשום בספרות.</div>
+    </div>
+  </div>
+
+  <div class="red-flash"></div>
+  <div class="success-overlay">
+    <div class="success-message">🐸 המכות פסקו!</div>
+    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 1.1rem;">פרעה נכנע. אבל הדרך ארוכה — הים מחכה.</p>
+    <a href="room2.html" class="next-room-btn">→ אל ים סוף 🌊</a>
+  </div>
+
+  <!-- Scripts -->
+  <script src="particles.js"></script>
+  <script src="game.js"></script>
+  <script>
+    if (!checkRoomAccess(1)) throw 'Access denied';
+    new ParticleEngine('particles-canvas', 'fire');
+    const timer = new GameTimer();
+    const checker = new PasswordChecker('room1', 'room2.html');
+
+    let flippedCount = 0;
+
+    function flipPlague(card, index) {
+      if (card.classList.contains('flipped')) return;
+      card.classList.add('flipped');
+      flippedCount++;
+      document.getElementById('plague-count').textContent = flippedCount;
+
+      // Strong hint is shown automatically by PasswordChecker
+
+      if (flippedCount === 10) {
+        setTimeout(() => {
+          document.getElementById('verse-scroll').classList.add('visible');
+          document.querySelector('.password-input').focus();
+        }, 800);
+      }
+    }
+  </script>
+
+</body>
+</html>

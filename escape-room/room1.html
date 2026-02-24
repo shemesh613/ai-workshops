@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🔥 חדר האש — חידון התנ"ך</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .location-input-section {
+      margin: 15px 0;
+      text-align: center;
+    }
+    .location-wrapper {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      direction: rtl;
+      margin-top: 10px;
+    }
+    .location-input {
+      padding: 10px 16px;
+      font-size: 1rem;
+      font-family: inherit;
+      text-align: center;
+      background: rgba(255,255,255,0.08);
+      border: 1px solid rgba(255,100,0,0.3);
+      border-radius: 10px;
+      color: #fff;
+      outline: none;
+      width: 200px;
+      transition: all 0.3s;
+    }
+    .location-input:focus { border-color: #ff8c00; box-shadow: 0 0 15px rgba(255,100,0,0.2); }
+    .location-input.wrong { border-color: #ff4444; animation: inputShake 0.5s; }
+    .location-input.correct { border-color: #00ff64; box-shadow: 0 0 20px rgba(0,255,100,0.3); }
+    .location-btn {
+      padding: 10px 20px;
+      font-family: 'Secular One', sans-serif;
+      background: rgba(255,100,0,0.2);
+      border: 1px solid rgba(255,100,0,0.4);
+      border-radius: 10px;
+      color: #ff8c00;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+    .location-btn:hover { background: rgba(255,100,0,0.35); }
+    .location-feedback {
+      margin-top: 10px;
+      font-size: 0.9rem;
+      color: rgba(255,200,100,0.7);
+      min-height: 1.5em;
+    }
+    .verse-reveal {
+      display: none;
+      margin: 15px 0;
+      padding: 18px;
+      background: rgba(0,50,0,0.3);
+      border: 1px solid rgba(0,255,100,0.3);
+      border-radius: 12px;
+      text-align: center;
+      animation: scrollReveal 0.8s ease-out;
+    }
+    .verse-reveal.visible { display: block; }
+    .verse-reveal .verse-text-reveal {
+      font-size: 1rem;
+      color: rgba(255,255,255,0.8);
+      line-height: 1.8;
+      margin-bottom: 10px;
+    }
+  </style>
+</head>
+<body class="theme-fire">
+  <video class="video-bg" autoplay loop muted playsinline
+    poster="https://images.unsplash.com/photo-1487260211189-670c54da558d?w=1920&q=80">
+    <source src="https://cdn.coverr.co/videos/coverr-fire-background-1581/1080p.mp4" type="video/mp4">
+  </video>
+  <div class="fire-glow"></div>
+  <div class="dark-overlay"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="timer-bar">
+    <span class="room-indicator">🔥 חדר 1 — חדר האש</span>
+    <span class="timer-display">--:--</span>
+  </div>
+
+  <div class="room-container">
+    <div class="room-icon">🔥</div>
+    <h1 class="room-title">חדר האש</h1>
+    <p class="room-subtitle">ברזל, אש ודם — מצא את שדה הקרב</p>
+
+    <div class="question-box">
+      <p class="question-text">סיסרא הגיע עם צבא עצום של רכבי ברזל. איפה הוא חנה?</p>
+      <p style="font-size: 0.85rem; color: rgba(255,150,50,0.6); margin-top: 8px;">
+        🗺️ חפש במפה. מצא את המקום — ושם תגלה את המספר.
+      </p>
+    </div>
+
+    <!-- Real Google Maps embed — northern Israel -->
+    <div class="map-container">
+      <iframe src="https://maps.google.com/maps?q=32.85,35.15&t=k&z=10&output=embed&hl=he"
+        loading="lazy" allowfullscreen style="height: 250px;"></iframe>
+      <div class="map-caption">📍 צפון ישראל — חפש: איפה חנה צבא סיסרא?</div>
+    </div>
+
+    <!-- Location input — player types the place name -->
+    <div class="location-input-section">
+      <p style="font-size: 0.9rem; color: rgba(255,150,50,0.7);">📍 מצאת? הקלד את שם המקום:</p>
+      <div class="location-wrapper">
+        <input type="text" class="location-input" id="location-input" placeholder="שם המקום..." autocomplete="off">
+        <button class="location-btn" onclick="checkLocation()">🔍 בדוק</button>
+      </div>
+      <div class="location-feedback" id="location-feedback"></div>
+    </div>
+
+    <!-- Verse reveal — unlocks when location is correct -->
+    <div class="verse-reveal" id="verse-panel">
+      <p style="color: #00ff88; font-size: 1rem; margin-bottom: 8px;">✅ מצאת את מחנה סיסרא!</p>
+      <p class="verse-text-reveal">
+        "וְהוּא לָחַץ אֶת בְּנֵי יִשְׂרָאֵל בְּחָזְקָה עֶשְׂרִים שָׁנָה<br>
+        כִּי לוֹ <strong style="color: #ffd700; font-size: 1.2rem;">תְּשַׁע מֵאוֹת</strong> רֶכֶב בַּרְזֶל"
+      </p>
+      <p style="font-size: 0.8rem; color: rgba(255,215,0,0.5);">שופטים ד', ג' — כמה זה "תשע מאות" בספרות?</p>
+    </div>
+
+    <div class="password-section">
+      <div class="password-wrapper">
+        <input type="text" class="password-input" placeholder="המספר מהפסוק..." autocomplete="off">
+        <button class="submit-btn">🔓 פתח</button>
+      </div>
+      <div class="attempts-display"></div>
+      <div class="hint-box">💡 חפש "חרושת הגויים" — שם חנה סיסרא. הקלד את שם המקום למעלה.</div>
+      <div class="hint-box strong">🔥 הקלד "חרושת הגויים" בשדה המיקום. אז קרא את הפסוק שנחשף.</div>
+    </div>
+  </div>
+
+  <div class="red-flash"></div>
+  <div class="success-overlay">
+    <div class="success-message">🔥 האש דעכה!</div>
+    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 1.1rem;">כלי המלחמה שקטו. אבל עוד קרבות מחכים לך...</p>
+    <a href="room2.html" class="next-room-btn">→ למערכה הבאה ⚔️</a>
+  </div>
+
+  <script src="particles.js"></script>
+  <script src="game.js"></script>
+  <script>
+    if (!checkRoomAccess(1)) throw 'Access denied';
+    new ParticleEngine('particles-canvas', 'fire');
+    const timer = new GameTimer();
+    const checker = new PasswordChecker('room1', 'room2.html');
+
+    const correctLocations = ['חרושת הגויים', 'חרשת הגויים', 'חרושת', 'harosheth'];
+    const nearLocations = ['נחל קישון', 'קישון', 'הר תבור', 'תבור', 'kishon', 'tabor'];
+    let locationFound = false;
+
+    document.getElementById('location-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') checkLocation();
+    });
+
+    function checkLocation() {
+      if (locationFound) return;
+      const input = document.getElementById('location-input');
+      const feedback = document.getElementById('location-feedback');
+      const val = input.value.trim().toLowerCase();
+
+      if (!val) return;
+
+      if (correctLocations.some(loc => val.includes(loc) || loc.includes(val))) {
+        // ✅ Correct location
+        locationFound = true;
+        input.classList.add('correct');
+        input.disabled = true;
+        feedback.style.color = '#00ff88';
+        feedback.textContent = '✅ נכון! חרושת הגויים — מחנה סיסרא!';
+        document.getElementById('verse-panel').classList.add('visible');
+        setTimeout(() => document.querySelector('.password-input').focus(), 800);
+      } else if (nearLocations.some(loc => val.includes(loc) || loc.includes(val))) {
+        // 🟡 Near
+        input.classList.add('wrong');
+        feedback.style.color = '#ffaa00';
+        feedback.textContent = '🟡 קרוב! אבל סיסרא חנה במקום ספציפי ליד הנחל. חפש שוב.';
+        setTimeout(() => { input.classList.remove('wrong'); input.value = ''; }, 1500);
+      } else {
+        // ❌ Wrong
+        input.classList.add('wrong');
+        feedback.style.color = '#ff6666';
+        feedback.textContent = '❌ לא שם. חפש בצפון ישראל, ליד נחל קישון.';
+        document.body.classList.add('screen-shake');
+        setTimeout(() => { input.classList.remove('wrong'); document.body.classList.remove('screen-shake'); input.value = ''; }, 1200);
+      }
+    }
+  </script>
+</body>
+</html>

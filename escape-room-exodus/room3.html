@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>חדר 3 — הר סיני</title>
+  <link rel="stylesheet" href="style.css" />
+  <style>
+    .sinai-vision {
+      margin: 15px 0; border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(180,150,255,0.2); background: rgba(0,0,0,0.3);
+    }
+    .sinai-vision canvas { width: 100%; display: block; }
+    .sinai-label {
+      text-align: center; padding: 8px; font-size: 0.8rem;
+      color: rgba(180,150,255,0.5); background: rgba(20,10,40,0.5);
+    }
+    .commandments-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 15px 0;
+    }
+    .commandment-card {
+      background: rgba(60,40,80,0.2); border: 2px solid rgba(180,150,255,0.2);
+      border-radius: 10px; padding: 14px 10px; cursor: pointer;
+      text-align: center; transition: all 0.3s;
+    }
+    .commandment-card:hover:not(.revealed) {
+      background: rgba(80,60,120,0.3); border-color: rgba(180,150,255,0.4);
+      transform: translateY(-2px);
+    }
+    .commandment-card .cmd-number {
+      font-family: 'Amatic SC', cursive; font-size: 1.8rem;
+      color: rgba(180,150,255,0.6);
+    }
+    .commandment-card .cmd-text {
+      display: none; font-size: 0.8rem; color: rgba(255,255,255,0.7);
+      margin-top: 5px;
+    }
+    .commandment-card.revealed {
+      border-color: rgba(180,150,255,0.5); background: rgba(40,20,60,0.3);
+      pointer-events: none;
+    }
+    .commandment-card.revealed .cmd-text { display: block; }
+    .commandment-card.revealed .cmd-number { color: rgba(180,150,255,0.9); }
+
+    .tablets-verse {
+      display: none; margin: 15px 0; padding: 18px;
+      background: rgba(40,20,60,0.3); border: 1px solid rgba(180,150,255,0.3);
+      border-radius: 12px; text-align: center;
+    }
+    .tablets-verse.visible { display: block; animation: scrollReveal 0.8s ease-out; }
+    @keyframes scrollReveal {
+      from { opacity:0; transform: scaleY(0.3); }
+      to { opacity:1; transform: scaleY(1); }
+    }
+    .cmd-counter {
+      text-align: center; font-family: 'Secular One', sans-serif;
+      font-size: 0.9rem; color: rgba(180,150,255,0.5); margin: 10px 0;
+    }
+    @media (max-width: 600px) {
+      .commandment-card { padding: 10px 6px; }
+      .commandment-card .cmd-number { font-size: 1.4rem; }
+      .commandment-card .cmd-text { font-size: 0.7rem; }
+    }
+  </style>
+</head>
+<body class="theme-sinai">
+
+  <!-- Video Background -->
+  <video
+    class="video-bg"
+    autoplay
+    muted
+    loop
+    playsinline
+    poster="https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=1920&q=80"
+  >
+    <source src="https://cdn.coverr.co/videos/coverr-lightning-storm-over-the-ocean-1902/1080p.mp4" type="video/mp4" />
+  </video>
+  <div class="dark-overlay"></div>
+
+  <!-- Flash Overlay for Lightning Effect -->
+  <div class="flash-overlay" id="flash-overlay"></div>
+
+  <!-- Particle Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Timer Bar -->
+  <div class="timer-bar">
+    <span class="room-indicator">⛰️ חדר 3 — הר סיני</span>
+    <span class="timer-display" id="timer-display">00:00</span>
+  </div>
+
+  <!-- Main Container -->
+  <div class="room-container">
+
+    <!-- Title Section -->
+    <div class="room-header">
+      <h1 class="room-title">הר סיני</h1>
+      <p class="room-subtitle">ברקים ורעמים. הלוחות יורדים מן השמים.</p>
+    </div>
+
+    <!-- Question -->
+    <div class="question-box">
+      <p class="question-text">
+        כמה ימים שהה משה על הר סיני?
+      </p>
+    </div>
+
+    <!-- Helper -->
+    <p class="helper-text">
+      📜 עשר דיברות חקוקות באבן. גלה את כולן — והמספר ייחשף.
+    </p>
+
+    <!-- Sinai Canvas Vision -->
+    <div class="sinai-vision">
+      <canvas id="sinai-canvas"></canvas>
+      <div class="sinai-label">⛰️ לוחות הברית יורדים מן ההר...</div>
+    </div>
+
+    <!-- 10 Commandments Grid -->
+    <div class="commandments-container">
+      <p style="font-size: 0.85rem; color: rgba(180,150,255,0.5); text-align: center; margin-bottom: 10px;">
+        ⛰️ לחץ על כל דיברה כדי לחשוף אותה:
+      </p>
+      <div class="commandments-grid">
+
+        <div class="commandment-card" onclick="revealCmd(this, 0)">
+          <div class="cmd-number">א</div>
+          <div class="cmd-text">אנכי ה' אלוהיך</div>
+        </div>
+
+        <div class="commandment-card" onclick="revealCmd(this, 1)">
+          <div class="cmd-number">ב</div>
+          <div class="cmd-text">לא יהיה לך אלוהים אחרים</div>
+        </div>
+
+        <div class="commandment-card" onclick="revealCmd(this, 2)">
+          <div class="cmd-number">ג</div>
+          <div class="cmd-text">לא תישא את שם ה' לשוא</div>
+        </div>
+
+        <div class="commandment-card" onclick="revealCmd(this, 3)">
+          <div class="cmd-number">ד</div>
+          <div class="cmd-text">זכור את יום השבת</div>
+        </div>
+
+        <div class="commandment-card" onclick="revealCmd(this, 4)">
+          <div class="cmd-number">ה</div>
+          <div class="cmd-text">כבד את אביך ואת אמך</div>
+        </div>
+
+        <div class="commandment-card" onclick="revealCmd(this, 5)">
+          <div class="cmd-number">ו</div>
+          <div class="cmd-text">לא תרצח</div>
+        </div>
+
+        <div class="commandment-card" onclick="revealCmd(this, 6)">
+          <div class="cmd-number">ז</div>
+          <div class="cmd-text">לא תנאף</div>
+        </div>
+
+        <div class="commandment-card" onclick="revealCmd(this, 7)">
+          <div class="cmd-number">ח</div>
+          <div class="cmd-text">לא תגנב</div>
+        </div>
+
+        <div class="commandment-card" onclick="revealCmd(this, 8)">
+          <div class="cmd-number">ט</div>
+          <div class="cmd-text">לא תענה ברעך עד שקר</div>
+        </div>
+
+        <div class="commandment-card" onclick="revealCmd(this, 9)">
+          <div class="cmd-number">י</div>
+          <div class="cmd-text">לא תחמוד</div>
+        </div>
+
+      </div>
+    </div>
+    <!-- /commandments-container -->
+
+    <!-- Counter -->
+    <div class="cmd-counter">
+      חשפת <span id="cmd-count">0</span> מתוך 10 דיברות
+    </div>
+
+    <!-- Hidden Verse Panel — appears after all 10 revealed -->
+    <div class="tablets-verse" id="tablets-verse">
+      <p style="color: #b496ff; font-size: 1rem; margin-bottom: 8px;">⛰️ הלוחות שלמים!</p>
+      <p style="color: rgba(255,255,255,0.8); line-height: 1.8; font-size: 1rem;">
+        "וַיְהִי מֹשֶׁה בָּהָר<br>
+        <strong style="color: #ffd700; font-size: 1.3rem;">אַרְבָּעִים יוֹם וְאַרְבָּעִים לָיְלָה</strong>"
+      </p>
+      <p style="font-size: 0.8rem; color: rgba(255,215,0,0.5); margin-top: 8px;">שמות כ"ד:י"ח — כמה ימים?</p>
+      <a
+        href="https://www.sefaria.org/Exodus.24.18?lang=he"
+        target="_blank"
+        rel="noopener noreferrer"
+        style="display:inline-block; margin-top: 10px; font-size: 0.75rem; color: rgba(180,150,255,0.7); text-decoration: underline;"
+      >📖 קרא את הפסוק בספריא</a>
+    </div>
+
+    <div class="password-section">
+      <div class="password-wrapper">
+        <input type="text" class="password-input" placeholder="כמה ימים?..." inputmode="numeric" autocomplete="off">
+        <button class="submit-btn">🔓 פתח</button>
+      </div>
+      <div class="attempts-display"></div>
+      <div class="hint-box">💡 גלה את כל 10 הדיברות. הפסוק מגלה כמה ימים משה שהה בהר.</div>
+      <div class="hint-box strong">🔥 ארבעים יום וארבעים לילה. כמה זה בספרות?</div>
+    </div>
+
+  </div>
+
+  <div class="red-flash"></div>
+  <div class="success-overlay">
+    <div class="success-message">⛰️ הלוחות בידיך!</div>
+    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 1.1rem;">עכשיו — בנה את בית ה'. המשכן מחכה.</p>
+    <a href="room4.html" class="next-room-btn">→ אל המשכן 🏺</a>
+  </div>
+
+  <!-- Scripts -->
+  <script src="particles.js"></script>
+  <script src="game.js"></script>
+  <script>
+    if (!checkRoomAccess(3)) throw 'Access denied';
+    new ParticleEngine('particles-canvas', 'dust');
+    const timer = new GameTimer();
+    const checker = new PasswordChecker('room3', 'room4.html');
+    startLightning(6000, 15000);
+
+    let revealedCount = 0;
+
+    function revealCmd(card, index) {
+      if (card.classList.contains('revealed')) return;
+      card.classList.add('revealed');
+      revealedCount++;
+      document.getElementById('cmd-count').textContent = revealedCount;
+
+      // Strong hint is shown automatically by CSS/PasswordChecker
+
+      if (revealedCount === 10) {
+        setTimeout(() => {
+          document.getElementById('tablets-verse').classList.add('visible');
+          document.querySelector('.password-input').focus();
+        }, 800);
+      }
+    }
+
+    // ── Sinai Canvas — Falling commandment words (Matrix style) ──
+    const sinaiCanvas = document.getElementById('sinai-canvas');
+    const sinaiCtx = sinaiCanvas.getContext('2d');
+    const cmdWords = ['לא','תרצח','לא','תנאף','לא','תגנב','כבד','את','אביך','ואת','אמך','זכור','את','יום','השבת','לא','תשא','שם','אלוהיך','לשוא','לא','תחמוד','אנכי','ה'];
+    const answerWord = 'ארבעים';
+
+    function initSinai() {
+      sinaiCanvas.width = sinaiCanvas.parentElement.clientWidth;
+      sinaiCanvas.height = 200;
+
+      const columns = Math.floor(sinaiCanvas.width / 25);
+      const drops = Array(columns).fill(0).map(() => Math.random() * 20);
+      let frame = 0;
+
+      function draw() {
+        sinaiCtx.fillStyle = 'rgba(0,0,0,0.08)';
+        sinaiCtx.fillRect(0, 0, sinaiCanvas.width, sinaiCanvas.height);
+        frame++;
+
+        for (let i = 0; i < drops.length; i++) {
+          let word = cmdWords[Math.floor(Math.random() * cmdWords.length)];
+          let color = 'rgba(180,150,255,0.6)';
+          let size = 14;
+
+          // Every ~200 frames, flash "ארבעים" in gold
+          if (frame % 200 > 170 && frame % 200 < 190) {
+            const answerStart = Math.floor(columns / 2) - 2;
+            if (i === answerStart) {
+              word = answerWord;
+              color = '#ffd700';
+              size = 20;
+              sinaiCtx.shadowBlur = 20;
+              sinaiCtx.shadowColor = '#ffd700';
+            }
+          }
+
+          sinaiCtx.fillStyle = color;
+          sinaiCtx.font = size + 'px monospace';
+          sinaiCtx.fillText(word.charAt(Math.floor(Math.random() * word.length)), i * 25, drops[i] * 25);
+          sinaiCtx.shadowBlur = 0;
+
+          if (drops[i] * 25 > sinaiCanvas.height && Math.random() > 0.975) drops[i] = 0;
+          drops[i]++;
+        }
+
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+    initSinai();
+    window.addEventListener('resize', initSinai);
+  </script>
+
+</body>
+</html>

@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>⚔️ חדר השופטים — חידון התנ"ך</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-battle">
+  <video class="video-bg" autoplay loop muted playsinline
+    poster="https://images.unsplash.com/photo-1509316785289-025f5b846b35?w=1920&q=80">
+    <source src="https://cdn.coverr.co/videos/coverr-desert-sand-dunes-7573/1080p.mp4" type="video/mp4">
+  </video>
+
+  <div class="fog-overlay"></div>
+  <div class="dark-overlay"></div>
+  <canvas id="particles-canvas"></canvas>
+  <div class="flash-overlay"></div>
+
+  <div class="timer-bar">
+    <span class="room-indicator">⚔️ חדר 2 — חדר השופטים</span>
+    <span class="timer-display">--:--</span>
+  </div>
+
+  <div class="room-container">
+    <div class="room-icon">⚔️</div>
+    <h1 class="room-title">חדר השופטים</h1>
+    <p class="room-subtitle">שני לוחות אבן. שתי חידות. סוד אחד.</p>
+
+    <!-- Interactive: Stone Tablets -->
+    <div class="tablets-grid">
+      <div class="stone-tablet" id="tablet1" onclick="revealTablet(1)">
+        <div class="tablet-icon">🪨</div>
+        <div class="tablet-text">לוח א' — לחץ לחשוף את הכתובת</div>
+        <div class="tablet-question">
+          <div class="sq-label">חידה א'</div>
+          <div class="sq-text">כמה שנים נאנק העם תחת עול כושן רשעתים?</div>
+          <div class="sub-answer" style="margin-top: 10px;">
+            <input type="number" id="sq1-input" placeholder="?" min="1" max="100">
+            <button onclick="event.stopPropagation(); checkSub(1, 8)">✓</button>
+          </div>
+          <a href="https://www.sefaria.org/Judges.3.8?lang=he" target="_blank" class="sefaria-link" onclick="event.stopPropagation()" style="font-size: 0.75rem; margin-top: 8px;">
+            📜 שופטים ג':ח'
+          </a>
+        </div>
+      </div>
+
+      <div class="stone-tablet" id="tablet2" onclick="revealTablet(2)">
+        <div class="tablet-icon">🪨</div>
+        <div class="tablet-text">לוח ב' — לחץ לחשוף את הכתובת</div>
+        <div class="tablet-question">
+          <div class="sq-label">חידה ב'</div>
+          <div class="sq-text">כמה שנים שלט עגלון מלך מואב בישראל?</div>
+          <div class="sub-answer" style="margin-top: 10px;">
+            <input type="number" id="sq2-input" placeholder="?" min="1" max="100">
+            <button onclick="event.stopPropagation(); checkSub(2, 18)">✓</button>
+          </div>
+          <a href="https://www.sefaria.org/Judges.3.14?lang=he" target="_blank" class="sefaria-link" onclick="event.stopPropagation()" style="font-size: 0.75rem; margin-top: 8px;">
+            📜 שופטים ג':י"ד
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- Locked formula panel -->
+    <div class="locked-panel" id="formula-panel">
+      <div class="lock-icon">🔒</div>
+      <div class="lock-text">ענה על שתי החידות כדי לגלות את הסוד</div>
+      <div class="unlocked-content">
+        <div class="formula-display visible" style="opacity: 1;">
+          <span id="val1">?</span> + <span id="val2">?</span> = <span id="result" style="font-size: 1.6rem; color: #ffd700;">?</span>
+          <br>
+          <span style="font-size: 0.85rem; color: rgba(255,215,0,0.5);">חבר את שתי התשובות. התוצאה היא מספר קדוש — גימטריה של שם שלא ייאמר.</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Google Maps -->
+    <div class="map-container">
+      <iframe src="https://maps.google.com/maps?q=עמק+יזרעאל+ישראל&t=k&z=11&output=embed&hl=he"
+        loading="lazy" allowfullscreen></iframe>
+      <div class="map-caption">📍 עמק יזרעאל — כאן רעדה האדמה תחת רגלי השופטים</div>
+    </div>
+
+    <div class="password-section">
+      <div class="password-wrapper">
+        <input type="text" class="password-input" placeholder="תוצאת החיבור..." autocomplete="off">
+        <button class="submit-btn">🔓 פתח</button>
+      </div>
+      <div class="attempts-display"></div>
+      <div class="hint-box">💡 חבר את המספרים. התוצאה אינה מקרית.</div>
+      <div class="hint-box strong">🔥 י + ה + ו + ה. כמה יוצא? זו התשובה.</div>
+    </div>
+  </div>
+
+  <div class="red-flash"></div>
+
+  <div class="success-overlay">
+    <div class="success-message">⚔️ הצופן נשבר!</div>
+    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 1.1rem;">גילית את הסוד הקדום. אבל עכשיו — חושך.</p>
+    <a href="room3.html" class="next-room-btn">→ היכנס לחשיכה 🌙</a>
+  </div>
+
+  <script src="particles.js"></script>
+  <script src="game.js"></script>
+  <script>
+    if (!checkRoomAccess(2)) throw 'Access denied';
+    new ParticleEngine('particles-canvas', 'dust');
+    const timer = new GameTimer();
+    const checker = new PasswordChecker('room2', 'room3.html');
+    startLightning(8000, 20000);
+
+    const solved = { 1: false, 2: false };
+    const values = { 1: '?', 2: '?' };
+
+    function revealTablet(num) {
+      document.getElementById('tablet' + num).classList.add('revealed');
+    }
+
+    function checkSub(num, answer) {
+      const input = document.getElementById(`sq${num}-input`);
+      const val = parseInt(input.value);
+
+      if (val === answer) {
+        solved[num] = true;
+        values[num] = answer;
+        input.classList.add('correct');
+        input.disabled = true;
+        input.parentElement.querySelector('button').disabled = true;
+        document.getElementById(`val${num}`).textContent = answer;
+
+        if (solved[1] && solved[2]) {
+          const result = values[1] + values[2];
+          document.getElementById('result').textContent = result;
+          document.getElementById('formula-panel').classList.add('unlocked');
+        }
+      } else {
+        input.style.borderColor = '#ff4444';
+        document.body.classList.add('screen-shake');
+        setTimeout(() => {
+          input.style.borderColor = '';
+          document.body.classList.remove('screen-shake');
+          input.value = '';
+          input.focus();
+        }, 500);
+      }
+    }
+  </script>
+</body>
+</html>

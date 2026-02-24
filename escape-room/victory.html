@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏆 ניצחון! — חידון התנ"ך</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <video class="video-bg" autoplay loop muted playsinline
+    poster="https://images.unsplash.com/photo-1467810563316-b5476525c0f9?w=1920&q=80">
+    <source src="https://cdn.coverr.co/videos/coverr-fireworks-in-the-sky-4153/1080p.mp4" type="video/mp4">
+  </video>
+
+  <div class="dark-overlay" style="background: rgba(0,0,0,0.3);"></div>
+  <canvas id="particles-canvas"></canvas>
+  <canvas id="confetti-canvas"></canvas>
+
+  <div class="room-container victory-container">
+    <div class="trophy">🏆</div>
+    <h1 class="victory-title">הצלחת!</h1>
+    <p class="victory-subtitle">כל הכבוד, גיבור. פתחת את כל השערים.</p>
+
+    <!-- Stats -->
+    <div class="stats-grid">
+      <div class="stat-card">
+        <div class="stat-icon">⏱️</div>
+        <div class="stat-value" id="stat-time">--:--</div>
+        <div class="stat-label">זמן</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">❌</div>
+        <div class="stat-value" id="stat-errors">0</div>
+        <div class="stat-label">שגיאות</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-icon">⭐</div>
+        <div class="stat-value" id="stat-score">0</div>
+        <div class="stat-label">ניקוד</div>
+      </div>
+    </div>
+
+    <!-- Star rating -->
+    <div id="stars-display" style="font-size: 2rem; margin: 10px 0;"></div>
+
+    <!-- Share -->
+    <div class="share-section">
+      <button class="share-btn whatsapp" onclick="shareWhatsApp()">
+        📱 שתף בוואטסאפ
+      </button>
+      <button class="share-btn copy-link" onclick="copyLink()">
+        🔗 העתק לינק
+      </button>
+    </div>
+
+    <a href="index.html" class="restart-btn" onclick="GameTimer.reset()">🔄 שחק שוב</a>
+  </div>
+
+  <script src="particles.js"></script>
+  <script src="game.js"></script>
+  <script>
+    if (!checkRoomAccess(5)) throw 'Access denied';
+    new ParticleEngine('particles-canvas', 'confetti');
+
+    const stats = getStats();
+    document.getElementById('stat-time').textContent = stats.formattedTime;
+    document.getElementById('stat-errors').textContent = stats.errors;
+    document.getElementById('stat-score').textContent = stats.score;
+
+    const starsEl = document.getElementById('stars-display');
+    let starCount = 5;
+    if (stats.errors > 3) starCount = 4;
+    if (stats.errors > 6) starCount = 3;
+    if (stats.errors > 10) starCount = 2;
+    if (stats.totalTime > 25 * 60) starCount = Math.min(starCount, 3);
+    starsEl.textContent = '⭐'.repeat(starCount) + '☆'.repeat(5 - starCount);
+
+    try {
+      const audio = new Audio('https://cdn.pixabay.com/audio/2022/03/15/audio_942f23d304.mp3');
+      audio.volume = 0.3;
+      audio.play().catch(() => {});
+    } catch(e) {}
+  </script>
+</body>
+</html>

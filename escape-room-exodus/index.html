@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>הסנה הבוער — חדר בריחה יציאת מצרים</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-burning">
+
+  <!-- Video Background -->
+  <video class="video-bg" autoplay muted loop playsinline
+    poster="https://images.unsplash.com/photo-1487260211189-670c54da558d?w=1920&q=80">
+    <source src="https://cdn.coverr.co/videos/coverr-fire-background-1581/1080p.mp4" type="video/mp4">
+  </video>
+  <div class="dark-overlay"></div>
+
+  <!-- Particles Canvas -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Timer Bar -->
+  <div class="timer-bar">
+    <span class="room-indicator">🔥 שער הכניסה — הסנה הבוער</span>
+    <span class="timer-display" id="timer-display">00:00</span>
+  </div>
+
+  <!-- Main Content -->
+  <div class="room-container">
+
+    <!-- Room Header -->
+    <div class="room-header">
+      <div class="room-icon">🔥</div>
+      <h1 class="room-title">הסנה הבוער</h1>
+      <p class="room-subtitle">"והסנה בוער באש — והסנה איננו אוכל"</p>
+    </div>
+
+    <!-- Question Box -->
+    <div class="question-box">
+      <div class="question-text">
+        משה ראה מראה נורא. סנה בוער שלא נשרף. באיזה הר עמד?
+      </div>
+      <div class="question-helper">
+        🏔️ חמישה הרים. רק אחד מהם — הר האלוהים.
+      </div>
+    </div>
+
+    <!-- Burning Bush Scene -->
+    <div class="bush-scene">
+      <canvas id="bush-canvas"></canvas>
+      <div class="bush-label">🔥 הסנה בוער באש... והסנה איננו אוכל</div>
+    </div>
+
+    <!-- Mountain Grid -->
+    <div class="mountain-grid">
+
+      <!-- הר תבור ❌ -->
+      <div class="mountain-card" onclick="examineMountain(this, 'wrong', '❌ הר תבור בצפון ישראל. דבורה הנביאה עלתה אליו — אבל הסנה לא כאן.')">
+        <div class="mountain-icon">🏔️</div>
+        <div class="mountain-name">הר תבור</div>
+        <div class="mountain-result"></div>
+      </div>
+
+      <!-- הר הכרמל ❌ -->
+      <div class="mountain-card" onclick="examineMountain(this, 'wrong', '❌ הר הכרמל — כאן אליהו ניצח את נביאי הבעל. אבל זה קרה מאות שנים אחרי.')">
+        <div class="mountain-icon">⛰️</div>
+        <div class="mountain-name">הר הכרמל</div>
+        <div class="mountain-result"></div>
+      </div>
+
+      <!-- הר חורב ✅ -->
+      <div class="mountain-card" onclick="examineMountain(this, 'correct', '✨ נכון! הר חורב — הר האלוהים!\n&quot;ויבא אל הר האלוהים חורבה&quot;\nשם ההר — הוא הסיסמה.')">
+        <div class="mountain-icon">🗻</div>
+        <div class="mountain-name">הר חורב</div>
+        <div class="mountain-result"></div>
+      </div>
+
+      <!-- הר המוריה ❌ -->
+      <div class="mountain-card" onclick="examineMountain(this, 'wrong', '❌ הר המוריה — כאן עקד אברהם את יצחק. אבל משה טרם נולד.')">
+        <div class="mountain-icon">🏛️</div>
+        <div class="mountain-name">הר המוריה</div>
+        <div class="mountain-result"></div>
+      </div>
+
+      <!-- הר גריזים ❌ -->
+      <div class="mountain-card" onclick="examineMountain(this, 'wrong', '❌ הר גריזים — הר הברכה. אבל הסנה הבוער? לא כאן.')">
+        <div class="mountain-icon">🌄</div>
+        <div class="mountain-name">הר גריזים</div>
+        <div class="mountain-result"></div>
+      </div>
+
+    </div>
+
+    <!-- Sefaria Link -->
+    <div class="sefaria-link-box">
+      <a href="https://www.sefaria.org/Exodus.3?lang=he" target="_blank" class="sefaria-link">
+        📜 קרא את שמות ג' בספריא
+      </a>
+    </div>
+
+    <div class="password-section">
+      <div class="password-wrapper">
+        <input type="text" class="password-input" placeholder="שם ההר..." autocomplete="off">
+        <button class="submit-btn">🔓 פתח</button>
+      </div>
+      <div class="attempts-display"></div>
+      <div class="hint-box">💡 משה רעה צאן. הוא הגיע להר שנקרא גם 'הר האלוהים'.</div>
+      <div class="hint-box strong">🔥 חורב. סיני. שני שמות להר אחד. הקלד את הראשון.</div>
+    </div>
+  </div>
+
+  <div class="red-flash"></div>
+  <div class="success-overlay">
+    <div class="success-message">🔥 הסנה נגלה!</div>
+    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 1.1rem;">ה' דיבר. עכשיו — מצרים.</p>
+    <a href="room1.html" class="next-room-btn">→ היכנס למצרים 🐸</a>
+  </div>
+
+  <!-- Scripts -->
+  <script src="particles.js"></script>
+  <script src="game.js"></script>
+
+  <script>
+    // ─── Burning Bush Canvas Animation ───────────────────────────────────────
+    const bushCanvas = document.getElementById('bush-canvas');
+    const bushCtx = bushCanvas.getContext('2d');
+
+    function initBush() {
+      bushCanvas.width = bushCanvas.parentElement.clientWidth;
+      bushCanvas.height = 200;
+
+      const flames = [];
+      for (let i = 0; i < 50; i++) {
+        flames.push({
+          x: bushCanvas.width / 2 + (Math.random() - 0.5) * 100,
+          y: bushCanvas.height - 30 - Math.random() * 80,
+          size: Math.random() * 8 + 3,
+          speedY: -(Math.random() * 2 + 0.5),
+          life: Math.random() * 60 + 20,
+          maxLife: 80,
+          hue: Math.random() * 40 + 15
+        });
+      }
+
+      function drawBush() {
+        bushCtx.fillStyle = 'rgba(0,0,0,0.1)';
+        bushCtx.fillRect(0, 0, bushCanvas.width, bushCanvas.height);
+
+        // Bush shape (dark green, always there — לא נשרף)
+        bushCtx.fillStyle = 'rgba(20,80,20,0.3)';
+        bushCtx.beginPath();
+        bushCtx.ellipse(bushCanvas.width / 2, bushCanvas.height - 50, 70, 50, 0, 0, Math.PI * 2);
+        bushCtx.fill();
+
+        // Trunk
+        bushCtx.fillStyle = 'rgba(80,50,20,0.5)';
+        bushCtx.fillRect(bushCanvas.width / 2 - 5, bushCanvas.height - 30, 10, 30);
+
+        // Flames
+        flames.forEach((f, i) => {
+          f.y += f.speedY;
+          f.x += (Math.random() - 0.5) * 1.5;
+          f.life--;
+          f.size *= 0.99;
+
+          const alpha = (f.life / f.maxLife) * 0.7;
+          bushCtx.globalAlpha = alpha;
+          const grad = bushCtx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.size);
+          grad.addColorStop(0, `hsl(${f.hue}, 100%, 70%)`);
+          grad.addColorStop(1, 'transparent');
+          bushCtx.fillStyle = grad;
+          bushCtx.beginPath();
+          bushCtx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
+          bushCtx.fill();
+          bushCtx.globalAlpha = 1;
+
+          if (f.life <= 0) {
+            flames[i] = {
+              x: bushCanvas.width / 2 + (Math.random() - 0.5) * 100,
+              y: bushCanvas.height - 30 - Math.random() * 30,
+              size: Math.random() * 8 + 3,
+              speedY: -(Math.random() * 2 + 0.5),
+              life: Math.random() * 60 + 20,
+              maxLife: 80,
+              hue: Math.random() * 40 + 15
+            };
+          }
+        });
+
+        requestAnimationFrame(drawBush);
+      }
+
+      drawBush();
+    }
+
+    initBush();
+    window.addEventListener('resize', initBush);
+
+    // ─── Mountain Examination ─────────────────────────────────────────────────
+    function examineMountain(el, type, message) {
+      if (el.classList.contains('examined')) return;
+      el.classList.add('examined', type);
+      el.querySelector('.mountain-result').innerHTML = message.replace(/\n/g, '<br>');
+
+      if (type === 'correct') {
+        // Highlight the password input after finding the right mountain
+        setTimeout(() => {
+          document.getElementById('password-input').focus();
+          document.getElementById('password-section').classList.add('highlight');
+        }, 800);
+      }
+    }
+
+    // ─── Initialize Game Engine ──────────────────────────────────────────────
+    new ParticleEngine('particles-canvas', 'burning');
+    const timer = new GameTimer();
+    const checker = new PasswordChecker('index', 'room1.html');
+  </script>
+
+</body>
+</html>

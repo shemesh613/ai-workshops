@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>חדר 2 — קריעת ים סוף</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-sea">
+
+  <!-- Video Background -->
+  <video class="video-bg" autoplay muted loop playsinline
+    poster="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1920&q=80">
+    <source src="https://cdn.coverr.co/videos/coverr-waves-crashing-on-rocks-2764/1080p.mp4" type="video/mp4">
+  </video>
+  <div class="dark-overlay"></div>
+
+  <!-- Particles -->
+  <canvas id="particles-canvas"></canvas>
+
+  <!-- Timer Bar -->
+  <div class="timer-bar">
+    <span class="room-indicator">🌊 חדר 2 — קריעת ים סוף</span>
+    <span class="timer-display" id="timer-display">00:00</span>
+  </div>
+
+  <!-- Main Content -->
+  <div class="room-container">
+
+    <div class="room-header">
+      <h1 class="room-title">קריעת ים סוף</h1>
+      <p class="room-subtitle">הים סוער. פרעה רודף. כמה רכב הביא?</p>
+    </div>
+
+    <div class="question-box">
+      <p class="question-text">
+        פרעה יצא לרדוף אחרי בני ישראל. כמה רכב בחור לקח איתו?
+      </p>
+    </div>
+
+    <p class="helper-text">
+      🗺️ חמישה קטעי מגילה פזורים. מצא את כולם כדי להרכיב את הפסוק.
+    </p>
+
+      <!-- Sea Canvas Animation -->
+      <div class="sea-scene">
+        <canvas id="sea-canvas"></canvas>
+        <div class="sea-label">🌊 הים סוער... חפש את קטעי המגילה</div>
+      </div>
+
+      <!-- Scroll Fragments -->
+      <div class="fragments-container">
+        <p style="font-size: 0.85rem; color: rgba(0,191,255,0.5); text-align: center; margin-bottom: 10px;">
+          📜 לחץ על קטעי המגילה כדי לאסוף את הפסוק:
+        </p>
+
+        <div class="fragments-grid">
+          <div class="scroll-fragment" onclick="findFragment(this, 0)">
+            <div class="fragment-mystery">❓</div>
+            <div class="fragment-text">ויקח</div>
+          </div>
+          <div class="scroll-fragment" onclick="findFragment(this, 1)">
+            <div class="fragment-mystery">❓</div>
+            <div class="fragment-text">שש מאות</div>
+          </div>
+          <div class="scroll-fragment" onclick="findFragment(this, 2)">
+            <div class="fragment-mystery">❓</div>
+            <div class="fragment-text">רכב</div>
+          </div>
+          <div class="scroll-fragment" onclick="findFragment(this, 3)">
+            <div class="fragment-mystery">❓</div>
+            <div class="fragment-text">בחור</div>
+          </div>
+          <div class="scroll-fragment" onclick="findFragment(this, 4)">
+            <div class="fragment-mystery">❓</div>
+            <div class="fragment-text">וכל רכב מצרים</div>
+          </div>
+        </div>
+
+        <div class="verse-assembly" id="verse-assembly">
+          <span class="fragment-slot" id="slot-0">___</span>
+          <span class="fragment-slot" id="slot-1">___</span>
+          <span class="fragment-slot" id="slot-2">___</span>
+          <span class="fragment-slot" id="slot-3">___</span>
+          <span class="fragment-slot" id="slot-4">___</span>
+        </div>
+      </div>
+
+      <!-- Google Maps — Red Sea Area -->
+      <div class="map-container">
+        <iframe src="https://maps.google.com/maps?q=29.5,32.5&t=k&z=8&output=embed&hl=he"
+          loading="lazy" allowfullscreen style="height: 200px;"></iframe>
+        <div class="map-caption">📍 ים סוף — כאן נקרע הים לשניים</div>
+      </div>
+
+      <!-- Sefaria Link -->
+      <div class="sefaria-link-box">
+        <a href="https://www.sefaria.org/Exodus.14.7?lang=he" target="_blank" rel="noopener" class="sefaria-link">
+          📖 שמות י״ד:ז׳ — ספריא
+        </a>
+      </div>
+
+      <div class="password-section">
+        <div class="password-wrapper">
+          <input type="text" class="password-input" placeholder="כמה רכב?..." autocomplete="off">
+          <button class="submit-btn">🔓 פתח</button>
+        </div>
+        <div class="attempts-display"></div>
+        <div class="hint-box">💡 אסוף את כל 5 הקטעים. הפסוק מספר כמה רכב בחור לקח פרעה.</div>
+        <div class="hint-box strong">🔥 שש מאות. כמה זה בספרות?</div>
+      </div>
+
+  </div>
+
+  <div class="red-flash"></div>
+  <div class="success-overlay">
+    <div class="success-message">🌊 הים נקרע!</div>
+    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 1.1rem;">עברת בתוך הים ביבשה. אבל הר סיני מחכה.</p>
+    <a href="room3.html" class="next-room-btn">→ אל הר סיני ⛰️</a>
+  </div>
+
+  <!-- Inline Styles -->
+  <style>
+    .sea-scene {
+      margin: 15px 0; border-radius: 12px; overflow: hidden;
+      border: 1px solid rgba(0,191,255,0.2);
+    }
+    .sea-scene canvas { width: 100%; display: block; }
+    .sea-label {
+      text-align: center; padding: 8px; font-size: 0.8rem;
+      color: rgba(0,191,255,0.5); background: rgba(0,20,60,0.5);
+    }
+    .fragments-grid {
+      display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 10px 0;
+    }
+    .scroll-fragment {
+      background: rgba(0,50,100,0.2); border: 1px solid rgba(0,191,255,0.2);
+      border-radius: 10px; padding: 15px 8px; cursor: pointer; text-align: center;
+      transition: all 0.3s; position: relative; min-height: 80px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .scroll-fragment:hover:not(.found) {
+      background: rgba(0,100,200,0.2); border-color: rgba(0,191,255,0.4);
+      transform: translateY(-3px);
+    }
+    .scroll-fragment .fragment-mystery {
+      font-size: 1.5rem; transition: all 0.3s;
+    }
+    .scroll-fragment .fragment-text {
+      display: none; font-family: 'Frank Ruhl Libre', serif;
+      font-size: 0.85rem; color: #ffd700;
+    }
+    .scroll-fragment.found {
+      border-color: rgba(255,215,0,0.4); background: rgba(50,50,0,0.2);
+      pointer-events: none;
+    }
+    .scroll-fragment.found .fragment-mystery { display: none; }
+    .scroll-fragment.found .fragment-text { display: block; }
+    .verse-assembly {
+      text-align: center; margin: 15px 0; padding: 15px;
+      background: rgba(0,30,60,0.3); border-radius: 10px;
+      font-family: 'Frank Ruhl Libre', serif; font-size: 1.1rem;
+      color: rgba(255,255,255,0.5); direction: rtl;
+      border: 1px solid rgba(0,100,200,0.2);
+    }
+    .fragment-slot {
+      margin: 0 3px; transition: all 0.3s;
+    }
+    .fragment-slot.filled {
+      color: #ffd700; font-weight: bold;
+      text-shadow: 0 0 10px rgba(255,215,0,0.3);
+    }
+    .fragment-slot.highlight {
+      font-size: 1.4rem; color: #ff8844;
+      text-shadow: 0 0 15px rgba(255,136,68,0.5);
+    }
+    @media (max-width: 600px) {
+      .fragments-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
+      .scroll-fragment { padding: 10px 4px; min-height: 60px; }
+      .scroll-fragment .fragment-text { font-size: 0.7rem; }
+      .verse-assembly { font-size: 0.9rem; }
+    }
+  </style>
+
+  <!-- Scripts -->
+  <script src="particles.js"></script>
+  <script src="game.js"></script>
+  <script>
+    if (!checkRoomAccess(2)) throw 'Access denied';
+    new ParticleEngine('particles-canvas', 'water');
+    const timer = new GameTimer();
+    const checker = new PasswordChecker('room2', 'room3.html');
+
+    // ─── Sea Canvas Animation ───────────────────────────────────────────────
+    const seaCanvas = document.getElementById('sea-canvas');
+    const seaCtx = seaCanvas.getContext('2d');
+    let seaSplit = false;
+    let splitProgress = 0;
+
+    function initSea() {
+      seaCanvas.width = seaCanvas.parentElement.clientWidth;
+      seaCanvas.height = 180;
+      let time = 0;
+
+      function drawSea() {
+        time += 0.02;
+
+        // Animate split progress smoothly
+        if (seaSplit && splitProgress < 1) {
+          splitProgress = Math.min(1, splitProgress + 0.012);
+        }
+
+        seaCtx.clearRect(0, 0, seaCanvas.width, seaCanvas.height);
+
+        // Water gradient — shifts to lighter/brighter as sea splits
+        const grad = seaCtx.createLinearGradient(0, 0, 0, seaCanvas.height);
+        grad.addColorStop(0, `rgba(0,${40 + splitProgress * 60},${80 + splitProgress * 80},0.8)`);
+        grad.addColorStop(1, `rgba(0,${20 + splitProgress * 30},${60 + splitProgress * 60},0.9)`);
+        seaCtx.fillStyle = grad;
+        seaCtx.fillRect(0, 0, seaCanvas.width, seaCanvas.height);
+
+        // Dry path between walls of water (widens with splitProgress)
+        if (splitProgress > 0) {
+          const pathWidth = splitProgress * 80;
+          const pathX = seaCanvas.width / 2 - pathWidth / 2;
+
+          // Sand / dry ground
+          const pathGrad = seaCtx.createLinearGradient(0, 60, 0, seaCanvas.height);
+          pathGrad.addColorStop(0, `rgba(210,180,100,${splitProgress * 0.7})`);
+          pathGrad.addColorStop(1, `rgba(180,150,80,${splitProgress * 0.5})`);
+          seaCtx.fillStyle = pathGrad;
+          seaCtx.fillRect(pathX, 60, pathWidth, seaCanvas.height - 60);
+
+          // Glowing path center line
+          if (splitProgress > 0.5) {
+            const glow = seaCtx.createLinearGradient(0, 80, 0, seaCanvas.height);
+            glow.addColorStop(0, `rgba(255,220,100,${(splitProgress - 0.5) * 0.6})`);
+            glow.addColorStop(1, 'rgba(255,180,50,0)');
+            seaCtx.fillStyle = glow;
+            seaCtx.fillRect(seaCanvas.width / 2 - 4, 60, 8, seaCanvas.height - 60);
+          }
+        }
+
+        // Waves — left half and right half separate as splitProgress grows
+        for (let layer = 0; layer < 3; layer++) {
+          const pathHalfWidth = splitProgress * 40 + layer * 10;
+
+          // Left wave wall
+          seaCtx.beginPath();
+          seaCtx.moveTo(0, seaCanvas.height);
+          for (let x = 0; x <= seaCanvas.width / 2 - pathHalfWidth; x += 5) {
+            const y = 40 + layer * 25
+              + Math.sin(x * 0.02 + time + layer) * 15
+              + Math.sin(x * 0.01 + time * 0.7) * 10;
+            seaCtx.lineTo(x, y);
+          }
+          // Wall of water edge — rises up when splitting
+          const wallHeight = 40 + layer * 25 - splitProgress * 30;
+          seaCtx.lineTo(seaCanvas.width / 2 - pathHalfWidth, wallHeight);
+          seaCtx.lineTo(seaCanvas.width / 2 - pathHalfWidth, seaCanvas.height);
+          seaCtx.closePath();
+
+          const waveColors = [
+            `rgba(0,${100 + splitProgress * 40},200,0.5)`,
+            `rgba(0,${80 + splitProgress * 30},180,0.4)`,
+            `rgba(0,${60 + splitProgress * 20},150,0.3)`
+          ];
+          seaCtx.fillStyle = waveColors[layer];
+          seaCtx.fill();
+
+          // Right wave wall (mirror)
+          seaCtx.beginPath();
+          seaCtx.moveTo(seaCanvas.width, seaCanvas.height);
+          for (let x = seaCanvas.width; x >= seaCanvas.width / 2 + pathHalfWidth; x -= 5) {
+            const y = 40 + layer * 25
+              + Math.sin(x * 0.02 - time + layer) * 15
+              + Math.sin(x * 0.01 - time * 0.7) * 10;
+            seaCtx.lineTo(x, y);
+          }
+          seaCtx.lineTo(seaCanvas.width / 2 + pathHalfWidth, wallHeight);
+          seaCtx.lineTo(seaCanvas.width / 2 + pathHalfWidth, seaCanvas.height);
+          seaCtx.closePath();
+          seaCtx.fillStyle = waveColors[layer];
+          seaCtx.fill();
+        }
+
+        // Foam on wave crests (only when not fully split)
+        if (splitProgress < 0.8) {
+          for (let x = 0; x < seaCanvas.width; x += 30) {
+            // Skip the path gap
+            if (Math.abs(x - seaCanvas.width / 2) < splitProgress * 40) continue;
+            const y = 40 + Math.sin(x * 0.02 + time) * 15;
+            seaCtx.globalAlpha = (0.3 + Math.sin(time + x) * 0.2) * (1 - splitProgress * 0.8);
+            seaCtx.fillStyle = '#fff';
+            seaCtx.beginPath();
+            seaCtx.arc(x, y, 2, 0, Math.PI * 2);
+            seaCtx.fill();
+          }
+          seaCtx.globalAlpha = 1;
+        }
+
+        // Spray / mist at the water walls when splitting
+        if (splitProgress > 0.2) {
+          const wallX1 = seaCanvas.width / 2 - splitProgress * 40;
+          const wallX2 = seaCanvas.width / 2 + splitProgress * 40;
+          for (let i = 0; i < 8; i++) {
+            const sprayY = 40 + Math.random() * 60;
+            const alpha = (splitProgress - 0.2) * 0.4;
+            seaCtx.globalAlpha = alpha;
+            seaCtx.fillStyle = '#aaddff';
+            seaCtx.beginPath();
+            seaCtx.arc(wallX1 + Math.random() * 8 - 4, sprayY, 1.5, 0, Math.PI * 2);
+            seaCtx.fill();
+            seaCtx.beginPath();
+            seaCtx.arc(wallX2 + Math.random() * 8 - 4, sprayY, 1.5, 0, Math.PI * 2);
+            seaCtx.fill();
+          }
+          seaCtx.globalAlpha = 1;
+        }
+
+        // Israelites walking through when fully split
+        if (splitProgress > 0.85) {
+          const alpha = (splitProgress - 0.85) / 0.15;
+          seaCtx.globalAlpha = alpha;
+          seaCtx.font = '14px serif';
+          seaCtx.textAlign = 'center';
+          // Draw small figures walking through the path
+          const figurePositions = [0.2, 0.4, 0.6, 0.8];
+          figurePositions.forEach(pos => {
+            const fx = seaCanvas.width / 2;
+            const fy = 80 + pos * (seaCanvas.height - 90);
+            seaCtx.fillText('🚶', fx - 10, fy);
+            seaCtx.fillText('🚶', fx + 6, fy + 5);
+          });
+          seaCtx.globalAlpha = 1;
+          seaCtx.textAlign = 'start';
+        }
+
+        requestAnimationFrame(drawSea);
+      }
+
+      drawSea();
+    }
+
+    initSea();
+    window.addEventListener('resize', initSea);
+
+    // ─── Fragment Collection Logic ──────────────────────────────────────────
+    const fragmentTexts = ['ויקח', 'שש מאות', 'רכב', 'בחור', 'וכל רכב מצרים'];
+    let foundCount = 0;
+
+    function findFragment(el, index) {
+      if (el.classList.contains('found')) return;
+      el.classList.add('found');
+      foundCount++;
+
+      const slot = document.getElementById('slot-' + index);
+      slot.textContent = fragmentTexts[index];
+      slot.classList.add('filled');
+
+      // Highlight "שש מאות"
+      if (index === 1) {
+        slot.classList.add('highlight');
+      }
+
+      // Flash animation on the found fragment
+      el.style.animation = 'none';
+      el.style.boxShadow = '0 0 20px rgba(255,215,0,0.6)';
+      setTimeout(() => { el.style.boxShadow = ''; }, 800);
+
+      if (foundCount === 5) {
+        seaSplit = true; // trigger sea splitting animation
+        // Update sea label
+        document.querySelector('.sea-label').textContent = '✨ הים נקרע! הכנס את המספר למטה';
+        setTimeout(() => {
+          document.querySelector('.password-input').focus();
+        }, 1000);
+      }
+    }
+  </script>
+
+</body>
+</html>

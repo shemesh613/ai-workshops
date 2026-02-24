@@ -1,0 +1,363 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏺 חדר המשכן — יציאת מצרים</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .lives-bar {
+      display: flex; justify-content: center; align-items: center; gap: 8px; margin: 10px 0;
+    }
+    .lives-bar .heart {
+      font-size: 1.5rem; transition: all 0.4s;
+      filter: drop-shadow(0 0 5px rgba(255,50,50,0.5));
+    }
+    .lives-bar .heart.lost { filter: grayscale(1) opacity(0.2); transform: scale(0.7); }
+    .lives-bar .heart.breaking { animation: heartBreak 0.5s ease-out; }
+    @keyframes heartBreak {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.4); filter: drop-shadow(0 0 15px rgba(255,0,0,0.8)); }
+      100% { transform: scale(0.7); filter: grayscale(1) opacity(0.2); }
+    }
+    .lives-label { font-size: 0.8rem; color: rgba(255,100,100,0.6); font-family: 'Secular One', sans-serif; }
+
+    .tabernacle-grid {
+      display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; margin: 15px 0;
+    }
+    .tab-item {
+      background: rgba(139,90,43,0.1); border: 2px solid rgba(139,90,43,0.25);
+      border-radius: 12px; padding: 16px 8px; cursor: pointer; transition: all 0.3s;
+      text-align: center; position: relative; min-height: 100px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .tab-item:hover:not(.selected) {
+      background: rgba(139,90,43,0.25); transform: translateY(-3px);
+      border-color: rgba(255,215,0,0.4);
+    }
+
+    /* Mystery state — only measurement visible */
+    .tab-item .mystery-icon {
+      font-size: 2rem; margin-bottom: 6px; opacity: 0.4;
+      animation: mysteryPulse 2s ease-in-out infinite;
+    }
+    @keyframes mysteryPulse {
+      0%, 100% { opacity: 0.3; } 50% { opacity: 0.5; }
+    }
+    .tab-item .item-measure {
+      font-family: 'Secular One', sans-serif; font-size: 1.2rem;
+      color: #ffd700; text-shadow: 0 0 8px rgba(255,215,0,0.3);
+    }
+
+    /* Hidden until revealed */
+    .tab-item .item-icon { font-size: 1.8rem; margin-bottom: 4px; display: none; }
+    .tab-item .item-name {
+      font-size: 0.75rem; color: rgba(255,255,255,0.7); margin-top: 6px; display: none;
+    }
+    .tab-item .item-source {
+      font-size: 0.6rem; color: rgba(255,215,0,0.4); margin-top: 4px; display: none;
+    }
+
+    /* Revealed states */
+    .tab-item.selected .mystery-icon { display: none; }
+    .tab-item.selected .item-icon { display: block; }
+    .tab-item.selected .item-name { display: block; }
+    .tab-item.selected .item-source { display: block; }
+
+    .tab-item.correct-pick {
+      border-color: rgba(0,255,100,0.5) !important; background: rgba(0,100,0,0.2) !important;
+      box-shadow: 0 0 20px rgba(0,255,100,0.15);
+      animation: correctGlow 0.6s ease-out;
+    }
+    @keyframes correctGlow {
+      0% { box-shadow: none; } 50% { box-shadow: 0 0 30px rgba(0,255,100,0.4); }
+      100% { box-shadow: 0 0 15px rgba(0,255,100,0.15); }
+    }
+    .tab-item.correct-pick::after {
+      content: '✅'; position: absolute; top: 5px; left: 5px; font-size: 1rem;
+    }
+    .tab-item.correct-pick .item-name { color: #00ff88; }
+
+    .tab-item.wrong-pick {
+      border-color: rgba(255,50,50,0.5) !important; background: rgba(100,0,0,0.2) !important;
+      opacity: 0.5; animation: wrongExplode 0.6s ease-out;
+    }
+    @keyframes wrongExplode {
+      0% { transform: scale(1); } 20% { transform: scale(1.08); box-shadow: 0 0 25px rgba(255,0,0,0.5); }
+      40% { transform: scale(0.95); } 100% { transform: scale(1); }
+    }
+    .tab-item.wrong-pick::after {
+      content: '❌'; position: absolute; top: 5px; left: 5px; font-size: 1rem;
+    }
+    .tab-item.wrong-pick .item-name { color: #ff6666; }
+    .tab-item.wrong-pick .item-source { color: rgba(255,100,100,0.5); }
+    .tab-item.selected { pointer-events: none; }
+
+    .penalty-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(100,0,0,0.85); z-index: 150; display: none;
+      justify-content: center; align-items: center; flex-direction: column; text-align: center;
+    }
+    .penalty-overlay.active { display: flex; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .penalty-icon { font-size: 4rem; margin-bottom: 10px; animation: penaltyPulse 1s infinite; }
+    @keyframes penaltyPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+    .penalty-title { font-family:'Amatic SC',cursive; font-size:2.5rem; color:#ff4444; }
+    .penalty-timer { font-family:'Secular One',sans-serif; font-size:3rem; color:#ff6666; margin:15px 0; }
+    .penalty-text { font-size:0.95rem; color:rgba(255,200,200,0.7); max-width:300px; }
+
+    .blueprint-panel {
+      display: none; margin: 15px 0; padding: 18px;
+      background: rgba(50,30,0,0.3); border: 1px solid rgba(255,215,0,0.3);
+      border-radius: 12px; text-align: center;
+    }
+    .blueprint-panel.visible { display: block; animation: scrollReveal 0.8s ease-out; }
+    @keyframes scrollReveal {
+      from { opacity:0; transform: scaleY(0.3); }
+      to { opacity:1; transform: scaleY(1); }
+    }
+
+    .pick-counter {
+      text-align: center; font-family: 'Secular One', sans-serif;
+      font-size: 0.9rem; color: rgba(255,215,0,0.5); margin: 10px 0;
+    }
+
+    @media (max-width: 600px) {
+      .tabernacle-grid { grid-template-columns: repeat(4, 1fr); gap: 6px; }
+      .tab-item { padding: 10px 4px; min-height: 80px; }
+      .tab-item .item-measure { font-size: 0.9rem; }
+      .tab-item .mystery-icon { font-size: 1.5rem; }
+      .tab-item .item-name { font-size: 0.6rem; }
+    }
+  </style>
+</head>
+<body class="theme-tabernacle">
+  <video class="video-bg" autoplay loop muted playsinline
+    poster="https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?w=1920&q=80">
+    <source src="https://cdn.coverr.co/videos/coverr-gold-particles-in-black-background-5765/1080p.mp4" type="video/mp4">
+  </video>
+  <div class="dark-overlay"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="timer-bar">
+    <span class="room-indicator">🏺 חדר 4 — המשכן</span>
+    <span class="timer-display">--:--</span>
+  </div>
+
+  <div class="room-container">
+    <div class="room-icon">🏺</div>
+    <h1 class="room-title">המשכן</h1>
+    <p class="room-subtitle">מידות קדושות חקוקות בזהב. אבל רק חלקן אמיתיות.</p>
+
+    <div class="question-box">
+      <p class="question-text">8 מידות. 4 מהתורה. 4 מזויפות. לחץ על המידה — וגלה מה מסתתר מאחוריה.</p>
+      <p style="font-size: 0.85rem; color: rgba(255,215,0,0.5); margin-top: 5px;">
+        ⚠️ בחר נכון — והכלי ייחשף. טעות — ותאבד חיים! ❤️ 3 חיים.
+      </p>
+    </div>
+
+    <!-- Lives -->
+    <div class="lives-bar">
+      <span class="lives-label">חיים:</span>
+      <span class="heart" id="heart-1">❤️</span>
+      <span class="heart" id="heart-2">❤️</span>
+      <span class="heart" id="heart-3">❤️</span>
+    </div>
+
+    <!-- Grid: ONLY measurements visible. Items hidden until clicked. -->
+    <div class="tabernacle-grid">
+
+      <!-- ✅ חצר המשכן — 100 אמה (שמות כ"ז:י"ח) -->
+      <div class="tab-item" onclick="pickItem(this, true, '🏗️', 'חצר המשכן', 'שמות כ״ז:י״ח')">
+        <div class="mystery-icon">❓</div>
+        <div class="item-icon"></div>
+        <div class="item-measure">100 אמה</div>
+        <div class="item-name"></div>
+        <div class="item-source"></div>
+      </div>
+
+      <!-- ❌ כיור הנחושת — 15 אמה (מזויף) -->
+      <div class="tab-item" onclick="pickItem(this, false, '🏺', 'כיור הנחושת', 'לא מוזכר בתורה!')">
+        <div class="mystery-icon">❓</div>
+        <div class="item-icon"></div>
+        <div class="item-measure">15 אמה</div>
+        <div class="item-name"></div>
+        <div class="item-source"></div>
+      </div>
+
+      <!-- ✅ ארון הברית — 2.5 אמה (שמות כ"ה:י') -->
+      <div class="tab-item" onclick="pickItem(this, true, '📦', 'ארון הברית', 'שמות כ״ה:י׳')">
+        <div class="mystery-icon">❓</div>
+        <div class="item-icon"></div>
+        <div class="item-measure">2.5 אמה</div>
+        <div class="item-name"></div>
+        <div class="item-source"></div>
+      </div>
+
+      <!-- ❌ פעמוני הזהב — 24 (מזויף, אמיתי: 72) -->
+      <div class="tab-item" onclick="pickItem(this, false, '🔔', 'פעמוני הזהב', 'המספר האמיתי: 72!')">
+        <div class="mystery-icon">❓</div>
+        <div class="item-icon"></div>
+        <div class="item-measure">24 פעמונים</div>
+        <div class="item-name"></div>
+        <div class="item-source"></div>
+      </div>
+
+      <!-- ✅ מנורת הזהב — 7 קנים (שמות כ"ה:ל"ז) -->
+      <div class="tab-item" onclick="pickItem(this, true, '🕯️', 'מנורת הזהב', 'שמות כ״ה:ל״ז')">
+        <div class="mystery-icon">❓</div>
+        <div class="item-icon"></div>
+        <div class="item-measure">7 קנים</div>
+        <div class="item-name"></div>
+        <div class="item-source"></div>
+      </div>
+
+      <!-- ❌ יריעות עזים — 5 אמה (מזויף, אמיתי: 30 אמה) -->
+      <div class="tab-item" onclick="pickItem(this, false, '🧵', 'יריעות עזים', 'האורך האמיתי: 30 אמה!')">
+        <div class="mystery-icon">❓</div>
+        <div class="item-icon"></div>
+        <div class="item-measure">5 אמה</div>
+        <div class="item-name"></div>
+        <div class="item-source"></div>
+      </div>
+
+      <!-- ✅ קרשי המשכן — 10 אמה (שמות כ"ו:ט"ז) -->
+      <div class="tab-item" onclick="pickItem(this, true, '🪵', 'קרשי המשכן', 'שמות כ״ו:ט״ז')">
+        <div class="mystery-icon">❓</div>
+        <div class="item-icon"></div>
+        <div class="item-measure">10 אמה</div>
+        <div class="item-name"></div>
+        <div class="item-source"></div>
+      </div>
+
+      <!-- ❌ מזבח הקטורת — 8 אמה (מזויף, אמיתי: 1 אמה) -->
+      <div class="tab-item" onclick="pickItem(this, false, '⚱️', 'מזבח הקטורת', 'הגובה האמיתי: 1 אמה!')">
+        <div class="mystery-icon">❓</div>
+        <div class="item-icon"></div>
+        <div class="item-measure">8 אמה</div>
+        <div class="item-name"></div>
+        <div class="item-source"></div>
+      </div>
+
+    </div>
+
+    <div class="pick-counter">
+      מצאת <span id="pick-count">0</span> מתוך 4 מידות תנ"כיות
+    </div>
+
+    <!-- Blueprint panel — locked -->
+    <div class="blueprint-panel" id="blueprint">
+      <p style="color: #ffd700; font-size: 1rem; margin-bottom: 8px;">🏗️ תכנית המשכן נחשפה!</p>
+      <p style="color: rgba(255,255,255,0.8); line-height: 1.8;">
+        חצר המשכן: <strong style="color: #ffd700; font-size: 1.3rem;">100 אמה</strong> אורך<br>
+        "אורך החצר מאה באמה" (שמות כ"ז:י"ח)
+      </p>
+      <p style="font-size: 0.8rem; color: rgba(255,215,0,0.5); margin-top: 8px;">מה אורך החצר בספרות?</p>
+    </div>
+
+    <div class="password-section">
+      <div class="password-wrapper">
+        <input type="text" class="password-input" placeholder="אורך החצר..." autocomplete="off">
+        <button class="submit-btn">🔓 פתח</button>
+      </div>
+      <div class="attempts-display"></div>
+      <div class="hint-box">💡 לחץ על מידות שנראות לך מהתורה. אחרי 4 נכונות — התכנית תיחשף.</div>
+      <div class="hint-box strong">🔥 אורך החצר מאה באמה. כמה זה בספרות?</div>
+    </div>
+  </div>
+
+  <div class="red-flash"></div>
+
+  <!-- Penalty Overlay -->
+  <div class="penalty-overlay" id="penalty-screen">
+    <div class="penalty-icon">💀</div>
+    <div class="penalty-title">עונש 15 שניות!</div>
+    <div class="penalty-timer" id="penalty-countdown">15</div>
+    <div class="penalty-text">3 טעויות. חכה 15 שניות — הזמן ממשיך לרוץ!</div>
+  </div>
+
+  <div class="success-overlay">
+    <div class="success-message">🏺 המשכן עומד!</div>
+    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 1.1rem;">בנית את בית ה'. הזהב שלך. החירות שלך.</p>
+    <a href="victory.html" class="next-room-btn">→ אל החירות 🎉</a>
+  </div>
+
+  <script src="particles.js"></script>
+  <script src="game.js"></script>
+  <script>
+    if (!checkRoomAccess(4)) throw 'Access denied';
+    new ParticleEngine('particles-canvas', 'goldfall');
+    const timer = new GameTimer();
+    const checker = new PasswordChecker('room4', 'victory.html');
+
+    let correctPicks = 0;
+    let lives = 3;
+    let penalized = false;
+
+    function pickItem(item, isCorrect, icon, name, source) {
+      if (item.classList.contains('selected') || penalized) return;
+      item.classList.add('selected');
+
+      // Reveal the hidden item info
+      item.querySelector('.item-icon').textContent = icon;
+      item.querySelector('.item-name').textContent = name;
+      item.querySelector('.item-source').textContent = source;
+
+      if (isCorrect) {
+        item.classList.add('correct-pick');
+        correctPicks++;
+        document.getElementById('pick-count').textContent = correctPicks;
+
+        if (correctPicks === 4) {
+          setTimeout(() => {
+            document.getElementById('blueprint').classList.add('visible');
+            document.querySelector('.password-input').focus();
+          }, 600);
+        }
+      } else {
+        item.classList.add('wrong-pick');
+
+        const heart = document.getElementById('heart-' + lives);
+        if (heart) {
+          heart.classList.add('breaking');
+          setTimeout(() => heart.classList.add('lost'), 500);
+        }
+        lives--;
+
+        document.body.classList.add('screen-shake');
+        const flash = document.querySelector('.red-flash');
+        if (flash) { flash.classList.remove('active'); void flash.offsetWidth; flash.classList.add('active'); }
+        setTimeout(() => document.body.classList.remove('screen-shake'), 400);
+
+        const errors = parseInt(localStorage.getItem('exodus_Errors') || '0') + 1;
+        localStorage.setItem('exodus_Errors', errors.toString());
+
+        if (lives <= 0) startPenalty();
+      }
+    }
+
+    function startPenalty() {
+      penalized = true;
+      document.getElementById('penalty-screen').classList.add('active');
+      let countdown = 15;
+      const el = document.getElementById('penalty-countdown');
+      el.textContent = countdown;
+
+      const interval = setInterval(() => {
+        countdown--;
+        el.textContent = countdown;
+        if (countdown <= 0) {
+          clearInterval(interval);
+          document.getElementById('penalty-screen').classList.remove('active');
+          penalized = false;
+          lives = 3;
+          for (let i = 1; i <= 3; i++) {
+            const h = document.getElementById('heart-' + i);
+            h.classList.remove('lost', 'breaking');
+          }
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

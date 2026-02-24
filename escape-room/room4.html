@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>👑 חדר המלכים — חידון התנ"ך</title>
+  <link rel="stylesheet" href="style.css">
+  <style>
+    .lives-bar {
+      display: flex; justify-content: center; align-items: center; gap: 8px; margin: 10px 0;
+    }
+    .lives-bar .heart {
+      font-size: 1.5rem; transition: all 0.4s;
+      filter: drop-shadow(0 0 5px rgba(255,50,50,0.5));
+    }
+    .lives-bar .heart.lost { filter: grayscale(1) opacity(0.2); transform: scale(0.7); }
+    .lives-bar .heart.breaking { animation: heartBreak 0.5s ease-out; }
+    @keyframes heartBreak {
+      0% { transform: scale(1); }
+      30% { transform: scale(1.4); filter: drop-shadow(0 0 15px rgba(255,0,0,0.8)); }
+      100% { transform: scale(0.7); filter: grayscale(1) opacity(0.2); }
+    }
+    .lives-label { font-size: 0.8rem; color: rgba(255,100,100,0.6); font-family: 'Secular One', sans-serif; }
+
+    .penalty-overlay {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(100,0,0,0.85); z-index: 150; display: none;
+      justify-content: center; align-items: center; flex-direction: column; text-align: center;
+    }
+    .penalty-overlay.active { display: flex; animation: fadeIn 0.3s; }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    .penalty-icon { font-size: 4rem; margin-bottom: 10px; animation: penaltyPulse 1s infinite; }
+    @keyframes penaltyPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+    .penalty-title { font-family:'Amatic SC',cursive; font-size:2.5rem; color:#ff4444; }
+    .penalty-timer { font-family:'Secular One',sans-serif; font-size:3rem; color:#ff6666; margin:15px 0; }
+    .penalty-text { font-size:0.95rem; color:rgba(255,200,200,0.7); max-width:300px; }
+
+    /* Stall cards — ONLY prices visible, items hidden */
+    .stall-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; margin: 15px 0;
+    }
+    .stall-card {
+      background: rgba(139,90,43,0.1); border: 2px solid rgba(139,90,43,0.25);
+      border-radius: 12px; padding: 16px 8px; cursor: pointer; transition: all 0.3s;
+      text-align: center; position: relative; min-height: 100px;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    }
+    .stall-card:hover:not(.selected) { background: rgba(139,90,43,0.25); transform: translateY(-3px); border-color: rgba(255,215,0,0.4); }
+
+    /* Mystery state */
+    .stall-card .mystery-icon {
+      font-size: 2rem; margin-bottom: 6px; opacity: 0.4;
+      animation: mysteryPulse 2s ease-in-out infinite;
+    }
+    @keyframes mysteryPulse { 0%,100% { opacity: 0.3; } 50% { opacity: 0.5; } }
+
+    .stall-card .stall-price {
+      font-family: 'Secular One', sans-serif; font-size: 1.3rem;
+      color: #ffd700; text-shadow: 0 0 8px rgba(255,215,0,0.3);
+    }
+
+    /* Hidden until clicked */
+    .stall-card .stall-icon { font-size: 1.8rem; margin-bottom: 4px; display: none; }
+    .stall-card .stall-name { font-size: 0.8rem; color: rgba(255,255,255,0.7); margin-top: 6px; display: none; }
+    .stall-card .stall-source { font-size: 0.6rem; color: rgba(255,215,0,0.4); margin-top: 4px; display: none; }
+
+    /* Revealed */
+    .stall-card.selected .mystery-icon { display: none; }
+    .stall-card.selected .stall-icon { display: block; }
+    .stall-card.selected .stall-name { display: block; }
+    .stall-card.selected .stall-source { display: block; }
+
+    .stall-card.correct-pick {
+      border-color: rgba(0,255,100,0.5) !important; background: rgba(0,100,0,0.2) !important;
+      box-shadow: 0 0 20px rgba(0,255,100,0.15);
+      animation: stallGlow 0.5s ease-out;
+    }
+    @keyframes stallGlow { 0%{box-shadow:none} 50%{box-shadow:0 0 25px rgba(0,255,100,0.4)} 100%{box-shadow:0 0 15px rgba(0,255,100,0.15)} }
+    .stall-card.correct-pick::after {
+      content: '✅'; position: absolute; top: 5px; left: 5px; font-size: 1rem;
+    }
+    .stall-card.correct-pick .stall-name { color: #00ff88; }
+
+    .stall-card.wrong-pick {
+      border-color: rgba(255,50,50,0.5) !important; background: rgba(100,0,0,0.2) !important;
+      opacity: 0.5; animation: stallExplode 0.6s ease-out;
+    }
+    @keyframes stallExplode { 0%{transform:scale(1)} 20%{transform:scale(1.1);box-shadow:0 0 30px rgba(255,0,0,0.5)} 40%{transform:scale(0.95)} 100%{transform:scale(1)} }
+    .stall-card.wrong-pick::after {
+      content: '❌'; position: absolute; top: 5px; left: 5px; font-size: 1rem;
+    }
+    .stall-card.wrong-pick .stall-name { color: #ff6666; }
+    .stall-card.selected { pointer-events: none; }
+
+    @media (max-width: 600px) {
+      .stall-grid { grid-template-columns: repeat(3, 1fr); gap: 6px; }
+      .stall-card { padding: 10px 4px; min-height: 80px; }
+      .stall-card .stall-price { font-size: 1rem; }
+      .stall-card .stall-name { font-size: 0.65rem; }
+    }
+  </style>
+</head>
+<body class="theme-gold">
+  <video class="video-bg" autoplay loop muted playsinline
+    poster="https://images.unsplash.com/photo-1577083552431-6e5fd01988ec?w=1920&q=80">
+    <source src="https://cdn.coverr.co/videos/coverr-gold-particles-in-black-background-5765/1080p.mp4" type="video/mp4">
+  </video>
+  <div class="dark-overlay"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="timer-bar">
+    <span class="room-indicator">👑 חדר 4 — חדר המלכים</span>
+    <span class="timer-display">--:--</span>
+  </div>
+
+  <div class="room-container">
+    <div class="room-icon"><span class="crown-spin">👑</span></div>
+    <h1 class="room-title">חדר המלכים</h1>
+    <p class="room-subtitle">שוק עתיק. 9 מחירים. רק 4 מהתנ"ך. לחץ — וגלה מה מסתתר.</p>
+
+    <div class="question-box">
+      <p class="question-text">רואה את המחירים? רק 4 מתוכם מוזכרים בתנ"ך. לחץ על מחיר — ותגלה מה הסחורה.</p>
+      <p style="font-size: 0.85rem; color: rgba(255,215,0,0.5); margin-top: 5px;">
+        ⚠️ 9 דוכנים. 4 מהתנ"ך. 5 מלכודות. ❤️ 3 חיים.
+      </p>
+    </div>
+
+    <!-- Lives -->
+    <div class="lives-bar">
+      <span class="lives-label">חיים:</span>
+      <span class="heart" id="heart-1">❤️</span>
+      <span class="heart" id="heart-2">❤️</span>
+      <span class="heart" id="heart-3">❤️</span>
+    </div>
+
+    <!-- Stalls: ONLY prices visible. Items hidden until clicked. -->
+    <div class="stall-grid">
+
+      <!-- ✅ רבע קב חריונים = 5 כסף (מלכים ב ו:כה) -->
+      <div class="stall-card" onclick="pickStall(this, true, 5, '🫘', 'רבע קב חריונים', 'מלכים ב׳ ו:כ״ה')">
+        <div class="mystery-icon">❓</div>
+        <div class="stall-icon"></div>
+        <div class="stall-price">5 כסף</div>
+        <div class="stall-name"></div>
+        <div class="stall-source"></div>
+      </div>
+
+      <!-- ❌ כד שמן זית — 12 כסף (מזויף) -->
+      <div class="stall-card" onclick="pickStall(this, false, 0, '🫗', 'כד שמן זית', 'לא מוזכר בתנ״ך!')">
+        <div class="mystery-icon">❓</div>
+        <div class="stall-icon"></div>
+        <div class="stall-price">12 כסף</div>
+        <div class="stall-name"></div>
+        <div class="stall-source"></div>
+      </div>
+
+      <!-- ✅ מכירת יוסף = 20 כסף (בראשית לז:כח) -->
+      <div class="stall-card" onclick="pickStall(this, true, 20, '⛓️', 'מכירת יוסף', 'בראשית ל״ז:כ״ח')">
+        <div class="mystery-icon">❓</div>
+        <div class="stall-icon"></div>
+        <div class="stall-price">20 כסף</div>
+        <div class="stall-name"></div>
+        <div class="stall-source"></div>
+      </div>
+
+      <!-- ❌ אפוד בד — 45 כסף (מזויף) -->
+      <div class="stall-card" onclick="pickStall(this, false, 0, '👘', 'אפוד בד', 'לא מוזכר בתנ״ך!')">
+        <div class="mystery-icon">❓</div>
+        <div class="stall-icon"></div>
+        <div class="stall-price">45 כסף</div>
+        <div class="stall-name"></div>
+        <div class="stall-source"></div>
+      </div>
+
+      <!-- ✅ ראש חמור = 80 כסף (מלכים ב ו:כה) -->
+      <div class="stall-card" onclick="pickStall(this, true, 80, '🥩', 'ראש חמור', 'מלכים ב׳ ו:כ״ה')">
+        <div class="mystery-icon">❓</div>
+        <div class="stall-icon"></div>
+        <div class="stall-price">80 כסף</div>
+        <div class="stall-name"></div>
+        <div class="stall-source"></div>
+      </div>
+
+      <!-- ❌ חמור לרכיבה — 30 כסף (מזויף) -->
+      <div class="stall-card" onclick="pickStall(this, false, 0, '🫏', 'חמור לרכיבה', 'לא מוזכר בתנ״ך!')">
+        <div class="mystery-icon">❓</div>
+        <div class="stall-icon"></div>
+        <div class="stall-price">30 כסף</div>
+        <div class="stall-name"></div>
+        <div class="stall-source"></div>
+      </div>
+
+      <!-- ❌ כד יין ישן — 8 כסף (מזויף) -->
+      <div class="stall-card" onclick="pickStall(this, false, 0, '🍷', 'כד יין ישן', 'לא מוזכר בתנ״ך!')">
+        <div class="mystery-icon">❓</div>
+        <div class="stall-icon"></div>
+        <div class="stall-price">8 כסף</div>
+        <div class="stall-name"></div>
+        <div class="stall-source"></div>
+      </div>
+
+      <!-- ✅ סוסים ממצרים = 150 כסף (מלכים א י:כח) -->
+      <div class="stall-card" onclick="pickStall(this, true, 150, '🐴', 'סוסים ממצרים', 'מלכים א׳ י:כ״ט')">
+        <div class="mystery-icon">❓</div>
+        <div class="stall-icon"></div>
+        <div class="stall-price">150 כסף</div>
+        <div class="stall-name"></div>
+        <div class="stall-source"></div>
+      </div>
+
+      <!-- ❌ בגדי פשתן — 25 כסף (מזויף) -->
+      <div class="stall-card" onclick="pickStall(this, false, 0, '🧶', 'בגדי פשתן', 'לא מוזכר בתנ״ך!')">
+        <div class="mystery-icon">❓</div>
+        <div class="stall-icon"></div>
+        <div class="stall-price">25 כסף</div>
+        <div class="stall-name"></div>
+        <div class="stall-source"></div>
+      </div>
+    </div>
+
+    <div class="reveal-counter">
+      מצאת <span class="count" id="pick-count">0</span> מתוך 4 סחורות תנ"כיות
+    </div>
+
+    <!-- Locked calculation -->
+    <div class="locked-panel" id="calc-panel">
+      <div class="lock-icon">🔒</div>
+      <div class="lock-text">מצא את 4 הסחורות התנ"כיות כדי לפתוח את הכספת</div>
+      <div class="unlocked-content">
+        <div class="price-total" id="price-formula"></div>
+      </div>
+    </div>
+
+    <div class="password-section">
+      <div class="password-wrapper">
+        <input type="text" class="password-input" placeholder="הסכום הכולל..." autocomplete="off">
+        <button class="submit-btn">🔓 פתח</button>
+      </div>
+      <div class="attempts-display"></div>
+      <div class="hint-box">💡 לחץ על מחירים שנראים לך מהתנ"ך. אחרי 4 נכונים — חבר את הסכומים.</div>
+      <div class="hint-box strong">🔥 חפש: חריונים, יוסף, חמור (בזמן מצור), סוסים. חבר את 4 המחירים.</div>
+    </div>
+  </div>
+
+  <div class="red-flash"></div>
+
+  <!-- Penalty Overlay -->
+  <div class="penalty-overlay" id="penalty-screen">
+    <div class="penalty-icon">💀</div>
+    <div class="penalty-title">עונש 15 שניות!</div>
+    <div class="penalty-timer" id="penalty-countdown">15</div>
+    <div class="penalty-text">3 טעויות. חכה 15 שניות — הזמן ממשיך לרוץ!</div>
+  </div>
+
+  <div class="success-overlay">
+    <div class="success-message">👑 הכספת נפתחה!</div>
+    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 1.1rem;">הזהב שלך. הדרך שלך. ניצחת את הכל.</p>
+    <a href="victory.html" class="next-room-btn">→ אל הגאולה 🎉</a>
+  </div>
+
+  <script src="particles.js"></script>
+  <script src="game.js"></script>
+  <script>
+    if (!checkRoomAccess(4)) throw 'Access denied';
+    new ParticleEngine('particles-canvas', 'goldfall');
+    const timer = new GameTimer();
+    const checker = new PasswordChecker('room4', 'victory.html');
+
+    const foundPrices = [];
+    let lives = 3;
+    let penalized = false;
+
+    function pickStall(stall, isCorrect, price, icon, name, source) {
+      if (stall.classList.contains('selected') || penalized) return;
+      stall.classList.add('selected');
+
+      // Reveal hidden item info
+      stall.querySelector('.stall-icon').textContent = icon;
+      stall.querySelector('.stall-name').textContent = name;
+      stall.querySelector('.stall-source').textContent = source;
+
+      if (isCorrect) {
+        // ✅ Correct pick
+        stall.classList.add('correct-pick');
+        foundPrices.push(price);
+        document.getElementById('pick-count').textContent = foundPrices.length;
+
+        if (foundPrices.length === 4) {
+          setTimeout(() => {
+            const sorted = [...foundPrices].sort((a, b) => a - b);
+            document.getElementById('price-formula').textContent = sorted.join(' + ') + ' = ?';
+            document.getElementById('calc-panel').classList.add('unlocked');
+            document.querySelector('.password-input').focus();
+          }, 600);
+        }
+      } else {
+        // ❌ Wrong pick — lose a life!
+        stall.classList.add('wrong-pick');
+
+        const heart = document.getElementById('heart-' + lives);
+        if (heart) {
+          heart.classList.add('breaking');
+          setTimeout(() => heart.classList.add('lost'), 500);
+        }
+        lives--;
+
+        // Effects
+        document.body.classList.add('screen-shake');
+        const flash = document.querySelector('.red-flash');
+        if (flash) { flash.classList.remove('active'); void flash.offsetWidth; flash.classList.add('active'); }
+        setTimeout(() => document.body.classList.remove('screen-shake'), 400);
+
+        // Track error
+        const errors = parseInt(localStorage.getItem('escapeErrors') || '0') + 1;
+        localStorage.setItem('escapeErrors', errors.toString());
+
+        if (lives <= 0) startPenalty();
+      }
+    }
+
+    function startPenalty() {
+      penalized = true;
+      document.getElementById('penalty-screen').classList.add('active');
+      let countdown = 15;
+      const el = document.getElementById('penalty-countdown');
+      el.textContent = countdown;
+
+      const interval = setInterval(() => {
+        countdown--;
+        el.textContent = countdown;
+        if (countdown <= 0) {
+          clearInterval(interval);
+          document.getElementById('penalty-screen').classList.remove('active');
+          penalized = false;
+          lives = 3;
+          for (let i = 1; i <= 3; i++) {
+            const h = document.getElementById('heart-' + i);
+            h.classList.remove('lost', 'breaking');
+          }
+        }
+      }, 1000);
+    }
+  </script>
+</body>
+</html>

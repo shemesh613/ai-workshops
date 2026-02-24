@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🌙 חדר החידות — חידון התנ"ך</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body class="theme-matrix">
+  <video class="video-bg" autoplay loop muted playsinline
+    poster="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80">
+    <source src="https://cdn.coverr.co/videos/coverr-starry-sky-2986/1080p.mp4" type="video/mp4">
+  </video>
+  <div class="dark-overlay"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="timer-bar">
+    <span class="room-indicator">🌙 חדר 3 — חדר החידות</span>
+    <span class="timer-display">--:--</span>
+  </div>
+
+  <div class="room-container">
+    <div class="room-icon">🌙</div>
+    <h1 class="room-title glitch" data-text="חדר החידות">חדר החידות</h1>
+    <p class="room-subtitle">אותיות מתערבבות בחושך. פענח את הצופן.</p>
+
+    <div class="question-box">
+      <p class="question-text">מי אמר: "הנה אנכי הולך למות"?</p>
+      <p style="font-size: 0.85rem; color: rgba(0,255,136,0.5); margin-top: 8px;">
+        👁️ צפה בחזון הנבואה — השם מוצפן בתוך האותיות הנופלות.
+      </p>
+    </div>
+
+    <!-- Prophecy Vision — answer flashes among falling letters -->
+    <div class="prophecy-screen">
+      <canvas id="prophecy-canvas"></canvas>
+      <div class="prophecy-label">חזון נבואה — עקוב אחרי האותיות הזוהרות</div>
+    </div>
+
+    <p style="font-size: 0.8rem; color: rgba(0,255,136,0.4); text-align: center; margin: 5px 0;">
+      💡 עקוב אחרי האותיות הבוהקות בצבע זהב. הן מאייתות את השם.
+    </p>
+
+    <!-- Atbash cipher display -->
+    <div style="margin: 15px 0;">
+      <p style="font-size: 0.9rem; color: rgba(0,255,136,0.6); text-align: center; margin-bottom: 8px;">
+        🔐 או פענח בעצמך — הנה הצופן באתב"ש:
+      </p>
+      <div class="cipher-grid" id="cipher-grid"></div>
+    </div>
+
+    <!-- Atbash reference table -->
+    <div class="atbash-table-container">
+      <p style="font-size: 0.75rem; color: rgba(0,255,136,0.3); margin-bottom: 4px; text-align: center;">טבלת אתב"ש — לחץ על אות מוצפנת למעלה כדי לפענח:</p>
+      <table class="atbash-table" id="atbash-ref"></table>
+    </div>
+
+    <a href="https://www.sefaria.org/Genesis.25.29-34?lang=he" target="_blank" class="sefaria-link" style="margin: 10px auto; display: inline-flex;">
+      📜 קרא את הסיפור — בראשית כ"ה בספריא
+    </a>
+
+    <div class="password-section">
+      <div class="password-wrapper">
+        <input type="text" class="password-input" placeholder="השם שגילית..." autocomplete="off">
+        <button class="submit-btn">🔓 פתח</button>
+      </div>
+      <div class="attempts-display"></div>
+      <div class="hint-box">💡 צפה בחזון הנבואה — אותיות זהב מאייתות את השם. או פענח את האתב"ש.</div>
+      <div class="hint-box strong">🔥 ציד. אדמוני. תאום. בן יצחק. מכר את בכורתו.</div>
+    </div>
+  </div>
+
+  <div class="red-flash"></div>
+  <div class="success-overlay">
+    <div class="success-message">🌙 הצופן נפרץ!</div>
+    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 1.1rem;">האור חוזר. ריח של זהב באוויר. חדר אחרון.</p>
+    <a href="room4.html" class="next-room-btn">→ היכנס לארמון 👑</a>
+  </div>
+
+  <script src="particles.js"></script>
+  <script src="game.js"></script>
+  <script>
+    if (!checkRoomAccess(3)) throw 'Access denied';
+    new ParticleEngine('particles-canvas', 'matrix');
+    const timer = new GameTimer();
+    const checker = new PasswordChecker('room3', 'room4.html');
+
+    // ── Prophecy Vision: falling letters with hidden answer ──
+    const pCanvas = document.getElementById('prophecy-canvas');
+    const pCtx = pCanvas.getContext('2d');
+    const answerWord = 'עשיו';
+    const hebrewChars = 'אבגדהוזחטיכלמנסעפצקרשת';
+
+    function initProphecy() {
+      pCanvas.width = pCanvas.parentElement.clientWidth;
+      pCanvas.height = 200;
+
+      const columns = Math.floor(pCanvas.width / 18);
+      const drops = Array(columns).fill(0);
+      let frame = 0;
+      let revealPhase = -1; // which letter of answer to highlight
+      let revealCol = -1;
+
+      function draw() {
+        pCtx.fillStyle = 'rgba(0, 0, 0, 0.08)';
+        pCtx.fillRect(0, 0, pCanvas.width, pCanvas.height);
+
+        frame++;
+
+        // Every ~120 frames, start revealing a letter of the answer
+        if (frame % 120 === 0) {
+          revealPhase = (revealPhase + 1) % answerWord.length;
+          revealCol = Math.floor(Math.random() * (columns - 4)) + 2;
+        }
+
+        for (let i = 0; i < drops.length; i++) {
+          let char = hebrewChars[Math.floor(Math.random() * hebrewChars.length)];
+          let color = '#00ff88';
+          let size = 14;
+          let shadow = '';
+
+          // Highlight answer letter
+          if (revealPhase >= 0 && i >= revealCol && i < revealCol + answerWord.length) {
+            const letterIdx = i - revealCol;
+            if (letterIdx === revealPhase && Math.abs(drops[i] * 18 - pCanvas.height / 2) < 30) {
+              char = answerWord[letterIdx];
+              color = '#ffd700';
+              size = 20;
+              pCtx.shadowBlur = 15;
+              pCtx.shadowColor = '#ffd700';
+            }
+          }
+
+          // Also periodically spell out full word
+          if (frame % 300 > 270 && frame % 300 < 290 && i >= revealCol && i < revealCol + answerWord.length) {
+            const letterIdx = i - revealCol;
+            char = answerWord[letterIdx];
+            color = '#ffd700';
+            size = 22;
+            pCtx.shadowBlur = 20;
+            pCtx.shadowColor = '#ffd700';
+          }
+
+          pCtx.fillStyle = color;
+          pCtx.font = `${size}px monospace`;
+          pCtx.fillText(char, i * 18, drops[i] * 18);
+          pCtx.shadowBlur = 0;
+
+          if (drops[i] * 18 > pCanvas.height && Math.random() > 0.975) {
+            drops[i] = 0;
+          }
+          drops[i]++;
+        }
+        requestAnimationFrame(draw);
+      }
+      draw();
+    }
+
+    initProphecy();
+    window.addEventListener('resize', initProphecy);
+
+    // ── Atbash cipher grid ──
+    const answer = 'עשיו';
+    const encoded = atbashEncode(answer);
+    const grid = document.getElementById('cipher-grid');
+
+    encoded.split('').forEach((char, i) => {
+      const cell = document.createElement('div');
+      cell.className = 'cipher-cell';
+      cell.style.cursor = 'pointer';
+      cell.innerHTML = `<span class="encoded">${char}</span><span class="decoded" id="dec-${i}">?</span>`;
+      cell.addEventListener('click', () => {
+        const dec = document.getElementById('dec-' + i);
+        if (dec.textContent === '?') {
+          dec.textContent = answer[i]; dec.style.color = '#00ff88'; cell.style.borderColor = '#00ff88';
+        } else {
+          dec.textContent = '?'; dec.style.color = 'rgba(255,255,255,0.3)'; cell.style.borderColor = 'rgba(0,255,0,0.3)';
+        }
+      });
+      grid.appendChild(cell);
+    });
+
+    // ── Atbash reference table ──
+    const aleph = 'אבגדהוזחטיכלמנסעפצקרשת';
+    const tav   = 'תשרקצפעסנמלכיטחזוהדגבא';
+    const table = document.getElementById('atbash-ref');
+    const row1 = document.createElement('tr');
+    const row2 = document.createElement('tr');
+    const l1 = document.createElement('td'); l1.className = 'label-cell'; l1.textContent = 'רגיל'; row1.appendChild(l1);
+    const l2 = document.createElement('td'); l2.className = 'label-cell'; l2.textContent = 'מוצפן'; row2.appendChild(l2);
+    aleph.split('').forEach((c, i) => {
+      const t1 = document.createElement('td'); t1.textContent = c; row1.appendChild(t1);
+      const t2 = document.createElement('td'); t2.textContent = tav[i]; row2.appendChild(t2);
+    });
+    table.appendChild(row1);
+    table.appendChild(row2);
+  </script>
+</body>
+</html>

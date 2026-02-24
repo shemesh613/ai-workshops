@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>🏰 חדר בריחה — חידון התנ"ך</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <video class="video-bg" autoplay loop muted playsinline
+    poster="https://images.unsplash.com/photo-1547483238-f400e65ccd56?w=1920&q=80">
+    <source src="https://cdn.coverr.co/videos/coverr-jerusalem-old-city-walls-1584/1080p.mp4" type="video/mp4">
+  </video>
+  <div class="fog-overlay"></div>
+  <div class="dark-overlay"></div>
+  <canvas id="particles-canvas"></canvas>
+
+  <div class="timer-bar">
+    <span class="room-indicator">🚪 שער הכניסה</span>
+    <span class="timer-display">30:00</span>
+  </div>
+
+  <div class="room-container">
+    <div class="room-icon">🚪</div>
+    <h1 class="room-title">פתח לי שערי צדק</h1>
+    <p class="room-subtitle">"אבוא בם, אודה יה..."</p>
+
+    <div class="question-box">
+      <p class="question-text">מהו הפרי הראשון שהוזכר אי פעם בכתבי הקודש?</p>
+      <p style="font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-top: 8px;">
+        🌿 חפש בגן עדן. בדוק כל עץ — רק אחד מהם מסתיר את התשובה.
+      </p>
+    </div>
+
+    <!-- Interactive: Garden of Eden — click plants to examine -->
+    <div class="garden-scene">
+      <div class="garden-plant" onclick="examinePlant(this, 'wrong', '❌ הזית מוזכר בסיפור נח, לא בגן עדן.\nחפש מוקדם יותר — בפרק ג\'.')">
+        <div class="plant-icon">🫒</div>
+        <div class="plant-name">עץ הזית</div>
+        <div class="plant-result"></div>
+      </div>
+      <div class="garden-plant" onclick="examinePlant(this, 'correct', '✨ נכון! בבראשית ג\' פסוק ז\' כתוב:\n&quot;ויתפרו עלה... ויעשו להם חגורות&quot;\nשם העלה — הוא שם הפרי. הוא הסיסמה.')">
+        <div class="plant-icon">🌿</div>
+        <div class="plant-name">עץ התאנה</div>
+        <div class="plant-result"></div>
+      </div>
+      <div class="garden-plant" onclick="examinePlant(this, 'wrong', '❌ הגפן מוזכרת בסיפור נח אחרי המבול.\nהפרי שאתה מחפש קדם לכל זה.')">
+        <div class="plant-icon">🍇</div>
+        <div class="plant-name">גפן</div>
+        <div class="plant-result"></div>
+      </div>
+      <div class="garden-plant" onclick="examinePlant(this, 'wrong', '❌ הרימון מוזכר הרבה יותר מאוחר.\nחזור לגן עדן — לפרק ג\'.')">
+        <div class="plant-icon">🍎</div>
+        <div class="plant-name">רימון</div>
+        <div class="plant-result"></div>
+      </div>
+    </div>
+
+    <a href="https://www.sefaria.org/Genesis.3?lang=he" target="_blank" class="sefaria-link" style="margin: 5px auto; display: inline-flex;">
+      📜 פתח בראשית ג' בספריא — חפש בין השורות
+    </a>
+
+    <div class="password-section">
+      <div class="password-wrapper">
+        <input type="text" class="password-input" placeholder="שם הפרי..." autocomplete="off" autofocus>
+        <button class="submit-btn">🔓 פתח</button>
+      </div>
+      <div class="attempts-display"></div>
+      <div class="hint-box">💡 בדוק את עץ התאנה בגן למעלה. מה כתוב שם?</div>
+      <div class="hint-box strong">🔥 הם תפרו עלים של פרי מסוים... שם העלה = שם הפרי = הסיסמה.</div>
+    </div>
+  </div>
+
+  <div class="red-flash"></div>
+  <div class="success-overlay">
+    <div class="success-message">🔓 השער נפתח!</div>
+    <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 1.1rem;">להבות מרצדות מעבר לדלת. אם אתה אמיץ — היכנס.</p>
+    <a href="room1.html" class="next-room-btn">→ היכנס לחדר האש 🔥</a>
+  </div>
+
+  <script src="particles.js"></script>
+  <script src="game.js"></script>
+  <script>
+    new ParticleEngine('particles-canvas', 'gold');
+    const timer = new GameTimer();
+    const checker = new PasswordChecker('index', 'room1.html');
+
+    function examinePlant(el, type, message) {
+      if (el.classList.contains('examined')) return;
+      el.classList.add('examined', type);
+      el.querySelector('.plant-result').innerHTML = message.replace(/\n/g, '<br>');
+    }
+  </script>
+</body>
+</html>
