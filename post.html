@@ -27,19 +27,108 @@ h1{text-align:center;font-size:28px;margin:20px 0;background:linear-gradient(90d
 .btn-post-ig{background:linear-gradient(45deg,#f09433,#e6683c,#dc2743,#cc2366,#bc1888);color:#fff}
 .btn-post-tk{background:#010101;color:#00f2ea}
 .copied{background:#ffd600!important;color:#1a1a2e!important}
+.tip{text-align:center;color:#7ecfcf;font-size:13px;margin-top:6px}
 </style>
 </head>
 <body>
 <h1>🚀 פרסם בלחיצה אחת</h1>
 <p class="subtitle">העתק → לחץ על הכפתור → הדבק → פרסם!</p>
 <p class="date">עודכן: 25.2.2026</p>
-<div style="text-align:center;margin:20px auto;max-width:700px"><img src="post-image.png" style="width:100%;border-radius:16px;border:1px solid rgba(255,255,255,0.1)"><div style="display:flex;gap:10px;justify-content:center;margin-top:12px"><a class="btn" style="background:#7c4dff;color:#fff" href="post-image.png" download="post-image.png">📥 הורד תמונה</a></div></div>
-<div class="card"><div class="card-header"><span class="platform fb">📘 פייסבוק</span></div><div class="post-text" id="fb-text">איזה כיף שאני שמח היום. זה לא תמיד מובן מאליו, אבל כשהשמחה פשוט מגיעה, צריך לדעת לקבל אותה בברכה. אין פה איזה אלגוריתם מורכב, רק עובדה פשוטה: טוב לי. ואתם יודעים מה? זה מספיק. מאחל לכולם רגעים כאלה של שלווה פנימית, בלי לחפש סיבות מיוחדות.</div><div class="buttons"><button class="btn btn-copy" onclick="copyText('fb-text',this)">📋 העתק טקסט</button><a class="btn btn-post-fb" href="https://www.facebook.com/" target="_blank">📘 פתח פייסבוק</a></div></div>
-<div class="card"><div class="card-header"><span class="platform li">💼 לינקדאין</span></div><div class="post-text" id="li-text">היום התעוררתי עם תחושה פשוטה ונהדרת: 'איזה כיף שאני שמח'. בעולם שבו אנחנו מנתחים, מתכננים ומייעלים כל דבר, לפעמים הערך הגדול ביותר הוא פשוט להיות במצב של רווחה פנימית. שמחה, גם כשהיא לא נובעת מאירוע ספציפי, היא משאב אדיר. היא משפרת קבלת החלטות, מחזקת יצירתיות ומאפשרת לנו להתמודד טוב יותר עם אתגרים. זו לא רק תחושה, זו אסטרטגיה לחיים פרודוקטיביים ומספקים יותר. תזכרו להעריך את הרגעים האלה. #שמחה #אושרפשוט #רווחהאישית #מנהיגות #השראה</div><div class="buttons"><button class="btn btn-copy" onclick="copyText('li-text',this)">📋 העתק טקסט</button><a class="btn btn-post-li" href="https://www.linkedin.com/feed/" target="_blank">💼 פתח לינקדאין</a></div></div>
-<div class="card"><div class="card-header"><span class="platform tw">🐦 טוויטר / X</span></div><div class="post-text" id="tw-text">איזה כיף שאני שמח! לפעמים הפשטות היא התשובה הכי עמוקה. תנו לעצמכם להרגיש, בלי לנתח יותר מדי. #שמחהפשוטה #אושר #רגעיםטובים</div><div class="buttons"><button class="btn btn-copy" onclick="copyText('tw-text',this)">📋 העתק טקסט</button><a class="btn btn-post-tw" href="https://x.com/compose/post" target="_blank">🐦 פתח X</a></div></div>
-<div class="card"><div class="card-header"><span class="platform bs">🦋 Bluesky</span></div><div class="post-text" id="bs-text">איזה כיף שאני שמח! לפעמים הפשטות היא התשובה הכי עמוקה. תנו לעצמכם להרגיש, בלי לנתח יותר מדי. #שמחהפשוטה #אושר #רגעיםטובים</div><div class="buttons"><button class="btn btn-copy" onclick="copyText('bs-text',this)">📋 העתק טקסט</button><a class="btn btn-post-bs" href="https://bsky.app" target="_blank">🦋 פתח Bluesky</a></div></div>
-<div class="card"><div class="card-header"><span class="platform ig">📸 אינסטגרם</span></div><div class="post-text" id="ig-text">איזה כיף שאני שמח! רגעים כאלה, בלי סיבה מיוחדת, הם הזהב האמיתי. פשוט להיות, פשוט להרגיש טוב. זה כל מה שצריך. #שמחה #אושר #פשטות #gratitude</div><div class="buttons"><button class="btn btn-copy" onclick="copyText('ig-text',this)">📋 העתק טקסט</button><a class="btn btn-post-ig" href="https://www.instagram.com/" target="_blank">📸 פתח אינסטגרם</a></div></div>
-<div class="card"><div class="card-header"><span class="platform tk">🎵 טיקטוק</span></div><div class="post-text" id="tk-text">איזה כיף שאני שמח! לפעמים הנתון הכי חשוב הוא פשוט להרגיש טוב. #שמחה #אושרעכשיו #פשטותהחיים</div><div class="buttons"><button class="btn btn-copy" onclick="copyText('tk-text',this)">📋 העתק טקסט</button><a class="btn btn-post-tk" href="https://www.tiktok.com/upload" target="_blank">🎵 פתח טיקטוק</a></div></div>
-<script>function copyText(id,btn){const t=document.getElementById(id).innerText;navigator.clipboard.writeText(t).then(()=>{btn.classList.add('copied');btn.innerHTML='✅ הועתק!';setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='📋 העתק טקסט'},2000)})}</script>
+<div style="text-align:center;margin:20px auto;max-width:700px">
+<img id="post-img" src="post-image.png" alt="Post Image" style="width:100%;border-radius:16px;border:1px solid rgba(255,255,255,0.1)">
+<div style="display:flex;gap:10px;justify-content:center;margin-top:12px;flex-wrap:wrap">
+<a class="btn" style="background:#7c4dff;color:#fff" href="post-image.png" download="post-image.png">📥 הורד תמונה</a>
+<button class="btn" style="background:#00bcd4;color:#fff" onclick="copyImg(this)">🖼️ העתק תמונה</button>
+<button class="btn" style="background:#25D366;color:#fff" onclick="shareToStatus(this)">📱 שתף לסטטוס</button>
+</div>
+<p style="color:#7ecfcf;font-size:13px;margin-top:8px">הורד / העתק / שתף לסטטוס → צרף לפוסט בכל פלטפורמה</p>
+</div>
+<div class="card">
+<div class="card-header"><span class="platform fb">📘 פייסבוק</span></div>
+<div class="post-text" id="fb-text">וואו. זה מרגש אותי כל פעם מחדש.
+היום חגגנו בישיבה את ההישג המטורף הזה: סרטון שייצרנו עם &quot;נבחרת ה-AI&quot; שלי, על מגילת אסתר לפורים, הגיע ל-10,000 צפיות!
+אתם מבינים? חבר'ה רגילים, שלמדו אצלי, יצרו משהו שאלפים צופים בו. זה הכוח של AI כשהוא בידיים הנכונות.
+והיום סיכמנו: לא עוצרים כאן. ממשיכים ללמוד, לטפס, להגיע לשיא.
+הכיף הכי גדול שלי זה לראות אתכם מצליחים. 🤩
+מה הדבר הבא שאתם חולמים ליצור עם AI?</div>
+<div class="buttons">
+<button class="btn btn-copy" onclick="copyText('fb-text',this)">📋 העתק טקסט</button>
+<a class="btn btn-post-fb" href="https://www.facebook.com/" target="_blank">📘 פתח פייסבוק</a>
+</div>
+<p class="tip">העתק → פתח פייסבוק → הדבק → צרף תמונה → פרסם</p>
+</div>
+<div class="card">
+<div class="card-header"><span class="platform li">💼 לינקדאין</span></div>
+<div class="post-text" id="li-text">כשמדברים על AI, רבים מדמיינים מומחים למדעי המחשב. אבל האמת מפתיעה יותר.
+היום חגגנו הישג מרגש עם משתתפי קורס ה-AI שלי בישיבה: סרטון שיצרו על מגילת אסתר לפורים, הגיע ל-10,000 צפיות בזמן קצר.
+זה מוכיח שאפשר ללמד כל אדם, מכל רקע, לרתום את כוחו של ה-AI ליצירת תוכן משמעותי ובעל ערך.
+הם לא מתכנתים, הם אנשים שלמדו פשוט לעבוד עם הכלים.
+השמחה שלי היא לראות אותם ממשיכים לרכוש מיומנויות AI מתקדמות, ולטפס לטופ.
+הפוטנציאל האנושי, בשילוב עם AI, הוא בלתי מוגבל.
+#AIלכלאחד #חדשנותבחינוך #יצירתתוכן #מיומנויותAI #שמשוןג'קוב</div>
+<div class="buttons">
+<button class="btn btn-copy" onclick="copyText('li-text',this)">📋 העתק טקסט</button>
+<a class="btn btn-post-li" href="https://www.linkedin.com/feed/" target="_blank">💼 פתח לינקדאין</a>
+</div>
+<p class="tip">העתק → פתח לינקדאין → הדבק → צרף תמונה → פרסם</p>
+</div>
+<div class="card">
+<div class="card-header"><span class="platform tw">🐦 טוויטר / X</span></div>
+<div class="post-text" id="tw-text">ה&quot;נבחרת&quot; שלי בישיבה עשתה את זה! סרטון AI על מגילת אסתר שהם יצרו הגיע ל-10,000 צפיות. חגגנו, וממשיכים לטופ. פורים שמח!
+#AI #פורים #הצלחה #ללמודAI</div>
+<div class="buttons">
+<button class="btn btn-copy" onclick="copyText('tw-text',this)">📋 העתק טקסט</button>
+<a class="btn btn-post-tw" href="https://x.com/compose/post" target="_blank">🐦 פתח X</a>
+</div>
+<p class="tip">העתק → פתח X → הדבק → פרסם</p>
+</div>
+<div class="card">
+<div class="card-header"><span class="platform bs">🦋 Bluesky</span></div>
+<div class="post-text" id="bs-text">ה&quot;נבחרת&quot; שלי בישיבה עשתה את זה! סרטון AI על מגילת אסתר שהם יצרו הגיע ל-10,000 צפיות. חגגנו, וממשיכים לטופ. פורים שמח!
+#AI #פורים #הצלחה #ללמודAI</div>
+<div class="buttons">
+<button class="btn btn-copy" onclick="copyText('bs-text',this)">📋 העתק טקסט</button>
+<a class="btn btn-post-bs" href="https://bsky.app" target="_blank">🦋 פתח Bluesky</a>
+</div>
+<p class="tip">העתק → פתח Bluesky → הדבק → פרסם</p>
+</div>
+<div class="card">
+<div class="card-header"><span class="platform ig">📸 אינסטגרם</span></div>
+<div class="post-text" id="ig-text">הלב מתמלא גאווה! 🤩
+החבר'ה בקורס ה-AI שלי בישיבה יצרו סרטון מדהים לפורים על מגילת אסתר, והוא כבר עם 10,000 צפיות!
+זו ההוכחה שכל אחד יכול ליצור דברים מטורפים עם AI. ממשיכים ללמוד ולכבוש!
+#AIלכולם #פוריםשמח #הצלחה #יצירתיות</div>
+<div class="buttons">
+<button class="btn btn-copy" onclick="copyText('ig-text',this)">📋 העתק טקסט</button>
+<a class="btn btn-post-ig" href="https://www.instagram.com/" target="_blank">📸 פתח אינסטגרם</a>
+</div>
+<p class="tip">העתק → פתח אינסטגרם → פוסט חדש → צרף תמונה → הדבק → פרסם</p>
+</div>
+<div class="card">
+<div class="card-header"><span class="platform" style="color:#25D366">📱 סטטוס WhatsApp</span></div>
+<div class="post-text" id="status-text">עם נבחרת ה AI בישיבה המשתתפים בקורס הAI שלי - שמשון ג'יקוב AI יצרנ סרטון על מגילת אסתר לפורים, שגרף 
+
+🤖 שמשון ג'קוב — AI לכולם</div>
+<div class="buttons">
+<button class="btn" style="background:#25D366;color:#fff" onclick="shareToStatus(this)">📱 שתף לסטטוס</button>
+<a class="btn" style="background:#7c4dff;color:#fff" href="post-image.png" download="post-image.png">📥 הורד תמונה</a>
+</div>
+<p class="tip">שתף / הורד → פתח WhatsApp → סטטוס → צרף תמונה</p>
+</div>
+<div class="card">
+<div class="card-header"><span class="platform tk">🎵 טיקטוק</span></div>
+<div class="post-text" id="tk-text">החבר'ה שלי בישיבה פשוט קרעו את הרשת! סרטון AI על מגילת אסתר הגיע ל-10K צפיות. זה רק ההתחלה! 🚀
+#AI #פורים #ויראלי #ללמודAI</div>
+<div class="buttons">
+<button class="btn btn-copy" onclick="copyText('tk-text',this)">📋 העתק טקסט</button>
+<a class="btn btn-post-tk" href="https://www.tiktok.com/upload" target="_blank">🎵 פתח טיקטוק</a>
+</div>
+<p class="tip">העתק → העלה סרטון → הדבק כיתוב → פרסם</p>
+</div>
+<script>
+function copyText(id,btn){const t=document.getElementById(id).innerText;navigator.clipboard.writeText(t).then(()=>{btn.classList.add('copied');btn.innerHTML='✅ הועתק!';setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='📋 העתק טקסט'},2000)})}
+async function copyImg(btn){try{const img=document.getElementById('post-img');const resp=await fetch(img.src);const blob=await resp.blob();await navigator.clipboard.write([new ClipboardItem({'image/png':blob})]);btn.classList.add('copied');btn.innerHTML='✅ הועתק!';setTimeout(()=>{btn.classList.remove('copied');btn.innerHTML='🖼️ העתק תמונה'},2000)}catch(e){btn.innerHTML='❌ לא נתמך';setTimeout(()=>{btn.innerHTML='🖼️ העתק תמונה'},2000)}}
+async function shareToStatus(btn){try{const img=document.getElementById('post-img');const resp=await fetch(img.src);const blob=await resp.blob();const file=new File([blob],'post-image.png',{type:'image/png'});if(navigator.share&&navigator.canShare({files:[file]})){await navigator.share({files:[file],title:'סטטוס WhatsApp'});btn.innerHTML='✅ שותף!';setTimeout(()=>{btn.innerHTML='📱 שתף לסטטוס'},2000)}else{const a=document.createElement('a');a.href=img.src;a.download='post-image.png';a.click();btn.innerHTML='📥 הורד → העלה לסטטוס';setTimeout(()=>{btn.innerHTML='📱 שתף לסטטוס'},3000)}}catch(e){btn.innerHTML='❌ נכשל';setTimeout(()=>{btn.innerHTML='📱 שתף לסטטוס'},2000)}}
+</script>
 </body>
 </html>
