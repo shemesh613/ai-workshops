@@ -6,6 +6,142 @@
   <title>חדר 3 — הר סיני</title>
   <link rel="stylesheet" href="style.css" />
   <style>
+    /* ── Interactive Mountain Scene ── */
+    .sinai-scene {
+      position: relative; width: 100%; height: 320px; margin: 15px 0;
+      border-radius: 12px; overflow: hidden; cursor: crosshair;
+      border: 1px solid rgba(180,150,255,0.2);
+      background: linear-gradient(to bottom,
+        #050015 0%, #0a0030 20%, #150050 40%, #2a1060 55%, #3a2040 75%, #1a1020 100%);
+    }
+    /* Mountain shape */
+    .sinai-mountain {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 220px solid transparent; border-right: 220px solid transparent;
+      border-bottom: 280px solid #1a1535;
+    }
+    .sinai-mountain-overlay {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 180px solid transparent; border-right: 180px solid transparent;
+      border-bottom: 240px solid #0f0a25;
+    }
+    /* Smoke at peak */
+    .sinai-smoke {
+      position: absolute; top: 15px; left: 50%; transform: translateX(-50%);
+      width: 120px; height: 50px;
+      background: radial-gradient(ellipse, rgba(200,180,255,0.25), transparent);
+      border-radius: 50%; animation: smokeFloat 4s ease-in-out infinite alternate;
+    }
+    @keyframes smokeFloat {
+      0% { opacity: 0.3; transform: translateX(-50%) scale(1) translateY(0); }
+      100% { opacity: 0.5; transform: translateX(-50%) scale(1.2) translateY(-8px); }
+    }
+    /* Fire glow at base */
+    .sinai-fire-glow {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 300px; height: 80px;
+      background: radial-gradient(ellipse at bottom, rgba(255,100,0,0.15), transparent);
+      animation: fireGlow 2s ease-in-out infinite alternate;
+    }
+    @keyframes fireGlow {
+      0% { opacity: 0.5; } 100% { opacity: 0.8; }
+    }
+    /* Stars */
+    .sinai-star {
+      position: absolute; width: 2px; height: 2px; background: #fff;
+      border-radius: 50%; animation: starTwinkle 3s ease-in-out infinite alternate;
+    }
+    @keyframes starTwinkle { 0% { opacity: 0.2; } 100% { opacity: 0.8; } }
+
+    /* Hidden hotspots */
+    .hotspot {
+      position: absolute; border-radius: 50%; cursor: pointer;
+      transition: all 0.3s; z-index: 5;
+    }
+    .hotspot:hover { background: rgba(255,215,0,0.1); box-shadow: 0 0 20px rgba(255,215,0,0.15); }
+    .hotspot.found {
+      background: rgba(255,215,0,0.15) !important;
+      box-shadow: 0 0 25px rgba(255,215,0,0.3) !important;
+      pointer-events: none; cursor: default;
+    }
+    .hotspot.found::after {
+      content: '✨'; position: absolute; top: 50%; left: 50%;
+      transform: translate(-50%, -50%); font-size: 1.2rem;
+    }
+    .hotspot.wrong-spot {
+      animation: hotspotShake 0.4s ease-out;
+      background: rgba(255,0,0,0.15);
+    }
+    @keyframes hotspotShake {
+      0%, 100% { transform: translateX(0); }
+      25% { transform: translateX(-5px); } 75% { transform: translateX(5px); }
+    }
+
+    /* Found clues panel */
+    .clues-panel {
+      display: flex; flex-wrap: wrap; gap: 6px; margin: 10px 0; justify-content: center;
+    }
+    .clue-badge {
+      padding: 6px 12px; border-radius: 8px; font-size: 0.75rem;
+      background: rgba(255,215,0,0.05); border: 1px solid rgba(255,215,0,0.15);
+      color: rgba(255,255,255,0.3); transition: all 0.5s;
+      font-family: 'Frank Ruhl Libre', serif;
+    }
+    .clue-badge.revealed {
+      background: rgba(255,215,0,0.12); border-color: rgba(255,215,0,0.4);
+      color: rgba(255,215,0,0.9); animation: badgeReveal 0.5s ease-out;
+    }
+    @keyframes badgeReveal {
+      from { transform: scale(0.5); opacity: 0; }
+      to { transform: scale(1); opacity: 1; }
+    }
+
+    /* Cipher section */
+    .cipher-section {
+      margin: 15px 0; padding: 18px; text-align: center;
+      background: rgba(40,20,60,0.3); border: 1px solid rgba(180,150,255,0.2);
+      border-radius: 12px; display: none;
+    }
+    .cipher-section.unlocked { display: block; animation: scrollReveal 0.8s ease-out; }
+
+    .cipher-grid {
+      display: flex; gap: 8px; justify-content: center; margin: 12px 0;
+    }
+    .cipher-cell {
+      width: 55px; height: 70px; border: 2px solid rgba(180,150,255,0.3);
+      border-radius: 10px; background: rgba(60,30,100,0.2);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      cursor: pointer; transition: all 0.3s;
+    }
+    .cipher-cell:hover { border-color: rgba(180,150,255,0.6); background: rgba(80,40,120,0.3); }
+    .cipher-cell .encoded {
+      font-size: 1.4rem; color: rgba(255,100,100,0.8);
+      font-family: 'Frank Ruhl Libre', serif;
+    }
+    .cipher-cell .decoded {
+      font-size: 1.2rem; color: rgba(255,255,255,0.3); margin-top: 4px;
+      font-family: 'Frank Ruhl Libre', serif; transition: all 0.3s;
+    }
+    .cipher-cell.solved { border-color: rgba(0,255,100,0.5); background: rgba(0,80,0,0.2); }
+    .cipher-cell.solved .decoded { color: #00ff88; font-weight: bold; }
+
+    /* Atbash reference */
+    .atbash-table-container { margin: 10px 0; overflow-x: auto; }
+    .atbash-table {
+      margin: 0 auto; border-collapse: collapse; font-size: 0.7rem;
+      font-family: 'Frank Ruhl Libre', serif;
+    }
+    .atbash-table td {
+      padding: 3px 6px; border: 1px solid rgba(180,150,255,0.15);
+      text-align: center; color: rgba(255,255,255,0.5);
+    }
+    .atbash-table .label-cell {
+      color: rgba(180,150,255,0.5); font-weight: bold; background: rgba(40,20,60,0.3);
+    }
+
+    /* Matrix canvas */
     .sinai-vision {
       margin: 15px 0; border-radius: 12px; overflow: hidden;
       border: 1px solid rgba(180,150,255,0.2); background: rgba(0,0,0,0.3);
@@ -15,70 +151,40 @@
       text-align: center; padding: 8px; font-size: 0.8rem;
       color: rgba(180,150,255,0.5); background: rgba(20,10,40,0.5);
     }
-    .commandments-grid {
-      display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 15px 0;
-    }
-    .commandment-card {
-      background: rgba(60,40,80,0.2); border: 2px solid rgba(180,150,255,0.2);
-      border-radius: 10px; padding: 14px 10px; cursor: pointer;
-      text-align: center; transition: all 0.3s;
-    }
-    .commandment-card:hover:not(.revealed) {
-      background: rgba(80,60,120,0.3); border-color: rgba(180,150,255,0.4);
-      transform: translateY(-2px);
-    }
-    .commandment-card .cmd-number {
-      font-family: 'Amatic SC', cursive; font-size: 1.8rem;
-      color: rgba(180,150,255,0.6);
-    }
-    .commandment-card .cmd-text {
-      display: none; font-size: 0.8rem; color: rgba(255,255,255,0.7);
-      margin-top: 5px;
-    }
-    .commandment-card.revealed {
-      border-color: rgba(180,150,255,0.5); background: rgba(40,20,60,0.3);
-      pointer-events: none;
-    }
-    .commandment-card.revealed .cmd-text { display: block; }
-    .commandment-card.revealed .cmd-number { color: rgba(180,150,255,0.9); }
 
-    .tablets-verse {
-      display: none; margin: 15px 0; padding: 18px;
-      background: rgba(40,20,60,0.3); border: 1px solid rgba(180,150,255,0.3);
-      border-radius: 12px; text-align: center;
+    .screen-shake { animation: screenShake 0.6s ease-out; }
+    @keyframes screenShake {
+      0%, 100% { transform: translateX(0); }
+      10% { transform: translateX(-8px); } 20% { transform: translateX(8px); }
+      30% { transform: translateX(-6px); } 40% { transform: translateX(6px); }
+      50% { transform: translateX(-4px); } 60% { transform: translateX(4px); }
     }
-    .tablets-verse.visible { display: block; animation: scrollReveal 0.8s ease-out; }
     @keyframes scrollReveal {
       from { opacity:0; transform: scaleY(0.3); }
       to { opacity:1; transform: scaleY(1); }
     }
-    .cmd-counter {
-      text-align: center; font-family: 'Secular One', sans-serif;
-      font-size: 0.9rem; color: rgba(180,150,255,0.5); margin: 10px 0;
-    }
+
     @media (max-width: 600px) {
-      .commandment-card { padding: 10px 6px; }
-      .commandment-card .cmd-number { font-size: 1.4rem; }
-      .commandment-card .cmd-text { font-size: 0.7rem; }
+      .sinai-scene { height: 250px; }
+      .sinai-mountain { border-left-width: 160px; border-right-width: 160px; border-bottom-width: 220px; }
+      .sinai-mountain-overlay { border-left-width: 130px; border-right-width: 130px; border-bottom-width: 190px; }
+      .cipher-cell { width: 45px; height: 60px; }
+      .cipher-cell .encoded { font-size: 1.1rem; }
+      .cipher-cell .decoded { font-size: 1rem; }
     }
   </style>
 </head>
 <body class="theme-sinai">
 
   <!-- Video Background -->
-  <video
-    class="video-bg"
-    autoplay
-    muted
-    loop
-    playsinline
-    poster="https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=1920&q=80"
-  >
+  <video class="video-bg" autoplay muted loop playsinline
+    poster="https://images.unsplash.com/photo-1534088568595-a066f410bcda?w=1920&q=80">
     <source src="https://cdn.coverr.co/videos/coverr-lightning-storm-over-the-ocean-1902/1080p.mp4" type="video/mp4" />
   </video>
+  <div class="fog-overlay"></div>
   <div class="dark-overlay"></div>
 
-  <!-- Flash Overlay for Lightning Effect -->
+  <!-- Flash Overlay for Lightning -->
   <div class="flash-overlay" id="flash-overlay"></div>
 
   <!-- Particle Canvas -->
@@ -93,111 +199,109 @@
   <!-- Main Container -->
   <div class="room-container">
 
-    <!-- Title Section -->
-    <div class="room-header">
-      <h1 class="room-title">הר סיני</h1>
-      <p class="room-subtitle">ברקים ורעמים. הלוחות יורדים מן השמים.</p>
-    </div>
+    <div class="room-icon">⛰️</div>
+    <h1 class="room-title glitch" data-text="הר סיני">הר סיני</h1>
+    <p class="room-subtitle">ברקים ורעמים. סודות חבויים בהר. מצא אותם.</p>
 
-    <!-- Question -->
     <div class="question-box">
-      <p class="question-text">
-        כמה ימים שהה משה על הר סיני?
+      <p class="question-text">כמה ימים שהה משה על הר סיני?</p>
+      <p style="font-size: 0.85rem; color: rgba(180,150,255,0.5); margin-top: 8px;">
+        👁️ חפש 5 מגילות חבויות בהר. כל מגילה חושפת רמז. הסוד מוצפן באתב"ש.
       </p>
     </div>
 
-    <!-- Helper -->
-    <p class="helper-text">
-      📜 עשר דיברות חקוקות באבן. גלה את כולן — והמספר ייחשף.
+    <!-- Interactive Mountain Scene — find hidden scrolls -->
+    <p style="font-size:0.85rem; color:rgba(180,150,255,0.4); text-align:center; margin:8px 0;">
+      🔍 לחץ על מקומות חשודים בהר כדי לגלות מגילות חבויות:
     </p>
 
-    <!-- Sinai Canvas Vision -->
+    <div class="sinai-scene" id="sinai-scene" onclick="clickScene(event)">
+      <!-- Stars -->
+      <div class="sinai-star" style="top:12%; left:15%; animation-delay:0s;"></div>
+      <div class="sinai-star" style="top:8%; left:75%; animation-delay:1s;"></div>
+      <div class="sinai-star" style="top:18%; left:35%; animation-delay:0.5s;"></div>
+      <div class="sinai-star" style="top:5%; left:55%; animation-delay:1.5s;"></div>
+      <div class="sinai-star" style="top:15%; left:90%; animation-delay:2s;"></div>
+      <div class="sinai-star" style="top:22%; left:10%; animation-delay:0.7s;"></div>
+      <div class="sinai-star" style="top:10%; left:45%; animation-delay:1.2s;"></div>
+      <div class="sinai-star" style="top:3%; left:25%; animation-delay:0.3s;"></div>
+
+      <!-- Smoke at peak -->
+      <div class="sinai-smoke"></div>
+
+      <!-- Mountain -->
+      <div class="sinai-mountain"></div>
+      <div class="sinai-mountain-overlay"></div>
+
+      <!-- Fire glow -->
+      <div class="sinai-fire-glow"></div>
+
+      <!-- 5 Hidden hotspots -->
+      <!-- 1. Cloud/smoke at peak -->
+      <div class="hotspot" id="hs-0" data-index="0" onclick="event.stopPropagation(); findHotspot(0)"
+        style="top: 10%; left: 43%; width: 55px; height: 40px;" title=""></div>
+
+      <!-- 2. Lightning area (right) -->
+      <div class="hotspot" id="hs-1" data-index="1" onclick="event.stopPropagation(); findHotspot(1)"
+        style="top: 28%; left: 65%; width: 45px; height: 45px;" title=""></div>
+
+      <!-- 3. Tablets on the mountain -->
+      <div class="hotspot" id="hs-2" data-index="2" onclick="event.stopPropagation(); findHotspot(2)"
+        style="top: 42%; left: 46%; width: 50px; height: 40px;" title=""></div>
+
+      <!-- 4. Fire at base -->
+      <div class="hotspot" id="hs-3" data-index="3" onclick="event.stopPropagation(); findHotspot(3)"
+        style="top: 72%; left: 40%; width: 55px; height: 40px;" title=""></div>
+
+      <!-- 5. People gathered at foot -->
+      <div class="hotspot" id="hs-4" data-index="4" onclick="event.stopPropagation(); findHotspot(4)"
+        style="top: 82%; left: 20%; width: 60px; height: 35px;" title=""></div>
+    </div>
+
+    <!-- Found clues -->
+    <div class="clues-panel">
+      <div class="clue-badge" id="clue-0">☁️ ???</div>
+      <div class="clue-badge" id="clue-1">⚡ ???</div>
+      <div class="clue-badge" id="clue-2">📜 ???</div>
+      <div class="clue-badge" id="clue-3">🔥 ???</div>
+      <div class="clue-badge" id="clue-4">👥 ???</div>
+    </div>
+
+    <div style="text-align:center; font-family:'Secular One',sans-serif; font-size:0.85rem; color:rgba(180,150,255,0.4); margin:5px 0;">
+      מצאת <span id="found-count" style="color:rgba(180,150,255,0.7);">0</span> מתוך 5 מגילות
+    </div>
+
+    <!-- Cipher section — unlocks after all 5 clues found -->
+    <div class="cipher-section" id="cipher-section">
+      <p style="color: #b496ff; font-size: 1rem; margin-bottom: 8px;">🔐 המגילות חשפו צופן!</p>
+      <p style="font-size: 0.85rem; color: rgba(255,255,255,0.5); margin-bottom: 12px;">
+        הצופן מוצפן באתב"ש. לחץ על כל אות כדי לפענח:
+      </p>
+
+      <div class="cipher-grid" id="cipher-grid"></div>
+
+      <div class="atbash-table-container">
+        <p style="font-size: 0.7rem; color: rgba(180,150,255,0.3); margin: 8px 0 4px; text-align: center;">
+          טבלת אתב"ש — השתמש בה לפענוח:
+        </p>
+        <table class="atbash-table" id="atbash-ref"></table>
+      </div>
+
+      <p style="font-size: 0.8rem; color: rgba(255,215,0,0.5); margin-top: 10px;">
+        שמות כ"ד:י"ח — "ויהי משה בהר <strong style="color:#ffd700;">???</strong> יום ו??? לילה"
+      </p>
+    </div>
+
+    <!-- Sinai matrix canvas -->
     <div class="sinai-vision">
       <canvas id="sinai-canvas"></canvas>
-      <div class="sinai-label">⛰️ לוחות הברית יורדים מן ההר...</div>
+      <div class="sinai-label">⛰️ אותיות הלוחות נופלות מן השמים...</div>
     </div>
 
-    <!-- 10 Commandments Grid -->
-    <div class="commandments-container">
-      <p style="font-size: 0.85rem; color: rgba(180,150,255,0.5); text-align: center; margin-bottom: 10px;">
-        ⛰️ לחץ על כל דיברה כדי לחשוף אותה:
-      </p>
-      <div class="commandments-grid">
-
-        <div class="commandment-card" onclick="revealCmd(this, 0)">
-          <div class="cmd-number">א</div>
-          <div class="cmd-text">אנכי ה' אלוהיך</div>
-        </div>
-
-        <div class="commandment-card" onclick="revealCmd(this, 1)">
-          <div class="cmd-number">ב</div>
-          <div class="cmd-text">לא יהיה לך אלוהים אחרים</div>
-        </div>
-
-        <div class="commandment-card" onclick="revealCmd(this, 2)">
-          <div class="cmd-number">ג</div>
-          <div class="cmd-text">לא תישא את שם ה' לשוא</div>
-        </div>
-
-        <div class="commandment-card" onclick="revealCmd(this, 3)">
-          <div class="cmd-number">ד</div>
-          <div class="cmd-text">זכור את יום השבת</div>
-        </div>
-
-        <div class="commandment-card" onclick="revealCmd(this, 4)">
-          <div class="cmd-number">ה</div>
-          <div class="cmd-text">כבד את אביך ואת אמך</div>
-        </div>
-
-        <div class="commandment-card" onclick="revealCmd(this, 5)">
-          <div class="cmd-number">ו</div>
-          <div class="cmd-text">לא תרצח</div>
-        </div>
-
-        <div class="commandment-card" onclick="revealCmd(this, 6)">
-          <div class="cmd-number">ז</div>
-          <div class="cmd-text">לא תנאף</div>
-        </div>
-
-        <div class="commandment-card" onclick="revealCmd(this, 7)">
-          <div class="cmd-number">ח</div>
-          <div class="cmd-text">לא תגנב</div>
-        </div>
-
-        <div class="commandment-card" onclick="revealCmd(this, 8)">
-          <div class="cmd-number">ט</div>
-          <div class="cmd-text">לא תענה ברעך עד שקר</div>
-        </div>
-
-        <div class="commandment-card" onclick="revealCmd(this, 9)">
-          <div class="cmd-number">י</div>
-          <div class="cmd-text">לא תחמוד</div>
-        </div>
-
-      </div>
-    </div>
-    <!-- /commandments-container -->
-
-    <!-- Counter -->
-    <div class="cmd-counter">
-      חשפת <span id="cmd-count">0</span> מתוך 10 דיברות
-    </div>
-
-    <!-- Hidden Verse Panel — appears after all 10 revealed -->
-    <div class="tablets-verse" id="tablets-verse">
-      <p style="color: #b496ff; font-size: 1rem; margin-bottom: 8px;">⛰️ הלוחות שלמים!</p>
-      <p style="color: rgba(255,255,255,0.8); line-height: 1.8; font-size: 1rem;">
-        "וַיְהִי מֹשֶׁה בָּהָר<br>
-        <strong style="color: #ffd700; font-size: 1.3rem;">אַרְבָּעִים יוֹם וְאַרְבָּעִים לָיְלָה</strong>"
-      </p>
-      <p style="font-size: 0.8rem; color: rgba(255,215,0,0.5); margin-top: 8px;">שמות כ"ד:י"ח — כמה ימים?</p>
-      <a
-        href="https://www.sefaria.org/Exodus.24.18?lang=he"
-        target="_blank"
-        rel="noopener noreferrer"
-        style="display:inline-block; margin-top: 10px; font-size: 0.75rem; color: rgba(180,150,255,0.7); text-decoration: underline;"
-      >📖 קרא את הפסוק בספריא</a>
-    </div>
+    <!-- Sefaria -->
+    <a href="https://www.sefaria.org/Exodus.24.18?lang=he" target="_blank" class="sefaria-link" style="margin:5px auto; display:inline-flex;">
+      📖 שמות כ"ד:י"ח — ספריא
+    </a>
 
     <div class="password-section">
       <div class="password-wrapper">
@@ -205,10 +309,9 @@
         <button class="submit-btn">🔓 פתח</button>
       </div>
       <div class="attempts-display"></div>
-      <div class="hint-box">💡 גלה את כל 10 הדיברות. הפסוק מגלה כמה ימים משה שהה בהר.</div>
-      <div class="hint-box strong">🔥 ארבעים יום וארבעים לילה. כמה זה בספרות?</div>
+      <div class="hint-box">💡 חפש 5 מגילות חבויות בהר סיני. פענח את הצופן באתב"ש.</div>
+      <div class="hint-box strong">🔥 ארבעים יום. כמה זה בספרות?</div>
     </div>
-
   </div>
 
   <div class="red-flash"></div>
@@ -228,25 +331,113 @@
     const checker = new PasswordChecker('room3', 'room4.html');
     startLightning(6000, 15000);
 
-    let revealedCount = 0;
+    // ── Hotspot Data ──────────────────────────────────────────────────────────
+    const hotspots = [
+      { icon: '☁️', label: 'ענן הכבוד', verse: '"וַיִּשְׁכֹּן כְּבוֹד ה\' עַל הַר סִינַי"' },
+      { icon: '⚡', label: 'ברקים ורעמים', verse: '"וַיְהִי קֹלֹת וּבְרָקִים"' },
+      { icon: '📜', label: 'לוחות הברית', verse: '"וַיִּתֵּן אֶל מֹשֶׁה... לֻחֹת אָבֶן"' },
+      { icon: '🔥', label: 'אש על ההר', verse: '"וְכָל הָהָר עָשֵׁן"' },
+      { icon: '👥', label: 'העם למרגלות', verse: '"וַיַּעֲמֹד הָעָם מֵרָחֹק"' }
+    ];
+    let foundHotspots = 0;
+    const foundSet = new Set();
 
-    function revealCmd(card, index) {
-      if (card.classList.contains('revealed')) return;
-      card.classList.add('revealed');
-      revealedCount++;
-      document.getElementById('cmd-count').textContent = revealedCount;
+    function findHotspot(index) {
+      if (foundSet.has(index)) return;
+      foundSet.add(index);
+      foundHotspots++;
 
-      // Strong hint is shown automatically by CSS/PasswordChecker
+      // Mark hotspot as found
+      document.getElementById('hs-' + index).classList.add('found');
 
-      if (revealedCount === 10) {
+      // Reveal clue badge
+      const badge = document.getElementById('clue-' + index);
+      const hs = hotspots[index];
+      badge.textContent = hs.icon + ' ' + hs.label;
+      badge.classList.add('revealed');
+      badge.title = hs.verse;
+
+      // Update counter
+      document.getElementById('found-count').textContent = foundHotspots;
+
+      // Lightning flash effect
+      const flash = document.getElementById('flash-overlay');
+      flash.style.opacity = '0.3';
+      setTimeout(() => flash.style.opacity = '0', 200);
+
+      // All 5 found → unlock cipher
+      if (foundHotspots === 5) {
         setTimeout(() => {
-          document.getElementById('tablets-verse').classList.add('visible');
-          document.querySelector('.password-input').focus();
-        }, 800);
+          document.getElementById('cipher-section').classList.add('unlocked');
+        }, 600);
       }
     }
 
-    // ── Sinai Canvas — Falling commandment words (Matrix style) ──
+    // Click on empty scene area → wrong spot feedback
+    function clickScene(event) {
+      const scene = document.getElementById('sinai-scene');
+      // Brief red flash on wrong click
+      scene.style.boxShadow = '0 0 30px rgba(255,0,0,0.3) inset';
+      scene.classList.add('screen-shake');
+      setTimeout(() => {
+        scene.style.boxShadow = '';
+        scene.classList.remove('screen-shake');
+      }, 400);
+    }
+
+    // ── Atbash Cipher ─────────────────────────────────────────────────────────
+    const answer = 'ארבעים';
+    const aleph = 'אבגדהוזחטיכלמנסעפצקרשת';
+    const tav   = 'תשרקצפעסנמלכיטחזוהדגבא';
+
+    function atbashEncode(word) {
+      return word.split('').map(c => {
+        const i = aleph.indexOf(c);
+        return i >= 0 ? tav[i] : c;
+      }).join('');
+    }
+
+    const encoded = atbashEncode(answer);
+    const cipherGrid = document.getElementById('cipher-grid');
+    let solvedCount = 0;
+
+    encoded.split('').forEach((char, i) => {
+      const cell = document.createElement('div');
+      cell.className = 'cipher-cell';
+      cell.innerHTML = `<span class="encoded">${char}</span><span class="decoded" id="dec-${i}">?</span>`;
+      cell.addEventListener('click', () => {
+        const dec = document.getElementById('dec-' + i);
+        if (dec.textContent === '?') {
+          dec.textContent = answer[i];
+          cell.classList.add('solved');
+          solvedCount++;
+          if (solvedCount === answer.length) {
+            // All decoded — highlight password input
+            setTimeout(() => document.querySelector('.password-input').focus(), 500);
+          }
+        } else {
+          dec.textContent = '?';
+          cell.classList.remove('solved');
+          solvedCount--;
+        }
+      });
+      cipherGrid.appendChild(cell);
+    });
+
+    // Atbash reference table
+    const table = document.getElementById('atbash-ref');
+    const row1 = document.createElement('tr');
+    const row2 = document.createElement('tr');
+    const l1 = document.createElement('td'); l1.className = 'label-cell'; l1.textContent = 'רגיל'; row1.appendChild(l1);
+    const l2 = document.createElement('td'); l2.className = 'label-cell'; l2.textContent = 'מוצפן'; row2.appendChild(l2);
+    aleph.split('').forEach((c, i) => {
+      const t1 = document.createElement('td'); t1.textContent = c; row1.appendChild(t1);
+      const t2 = document.createElement('td'); t2.textContent = tav[i]; row2.appendChild(t2);
+    });
+    table.appendChild(row1);
+    table.appendChild(row2);
+
+    // ── Matrix Canvas — Falling Hebrew Letters ────────────────────────────────
     const sinaiCanvas = document.getElementById('sinai-canvas');
     const sinaiCtx = sinaiCanvas.getContext('2d');
     const cmdWords = ['לא','תרצח','לא','תנאף','לא','תגנב','כבד','את','אביך','ואת','אמך','זכור','את','יום','השבת','לא','תשא','שם','אלוהיך','לשוא','לא','תחמוד','אנכי','ה'];

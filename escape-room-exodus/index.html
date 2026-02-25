@@ -13,6 +13,7 @@
     poster="https://images.unsplash.com/photo-1487260211189-670c54da558d?w=1920&q=80">
     <source src="https://cdn.coverr.co/videos/coverr-fire-background-1581/1080p.mp4" type="video/mp4">
   </video>
+  <div class="fog-overlay"></div>
   <div class="dark-overlay"></div>
 
   <!-- Particles Canvas -->
@@ -202,10 +203,8 @@
       el.querySelector('.mountain-result').innerHTML = message.replace(/\n/g, '<br>');
 
       if (type === 'correct') {
-        // Highlight the password input after finding the right mountain
         setTimeout(() => {
-          document.getElementById('password-input').focus();
-          document.getElementById('password-section').classList.add('highlight');
+          document.querySelector('.password-input').focus();
         }, 800);
       }
     }
