@@ -6,90 +6,108 @@
   <title>חדר 2 — קריעת ים סוף</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* Sea scene styles */
+    /* ── Location Input ── */
+    .location-section { margin: 15px 0; text-align: center; }
+    .location-wrapper { display: flex; gap: 8px; justify-content: center; direction: rtl; margin-top: 10px; }
+    .location-input {
+      padding: 10px 16px; font-size: 1rem; font-family: inherit; text-align: center;
+      background: rgba(255,255,255,0.08); border: 1px solid rgba(0,191,255,0.3);
+      border-radius: 10px; color: #fff; outline: none; width: 220px; transition: all 0.3s;
+    }
+    .location-input:focus { border-color: #00bfff; box-shadow: 0 0 15px rgba(0,191,255,0.2); }
+    .location-input.wrong { border-color: #ff4444; animation: inputShake 0.5s; }
+    .location-input.correct { border-color: #00ff64; box-shadow: 0 0 20px rgba(0,255,100,0.3); }
+    @keyframes inputShake {
+      0%, 100% { transform: translateX(0); }
+      20% { transform: translateX(-8px); } 40% { transform: translateX(8px); }
+      60% { transform: translateX(-5px); } 80% { transform: translateX(5px); }
+    }
+    .location-btn {
+      padding: 10px 20px; font-family: 'Secular One', sans-serif;
+      background: rgba(0,191,255,0.15); border: 1px solid rgba(0,191,255,0.4);
+      border-radius: 10px; color: #00bfff; cursor: pointer; transition: all 0.3s;
+    }
+    .location-btn:hover { background: rgba(0,191,255,0.3); }
+    .location-feedback {
+      margin-top: 10px; font-size: 0.9rem; color: rgba(0,191,255,0.7); min-height: 1.5em;
+    }
+
+    /* ── Sea Canvas ── */
     .sea-scene { margin: 15px 0; border-radius: 12px; overflow: hidden; border: 1px solid rgba(0,191,255,0.2); }
     .sea-scene canvas { width: 100%; display: block; }
     .sea-label { text-align: center; padding: 8px; font-size: 0.8rem; color: rgba(0,191,255,0.5); background: rgba(0,20,60,0.5); }
 
-    /* Fragment grid */
-    .fragments-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin: 10px 0; }
-    .scroll-fragment {
-      background: rgba(0,50,100,0.15); border: 2px solid rgba(0,191,255,0.2);
-      border-radius: 12px; padding: 16px 8px; cursor: pointer; text-align: center;
-      transition: all 0.3s; min-height: 80px;
-      display: flex; align-items: center; justify-content: center;
-      font-family: 'Frank Ruhl Libre', serif; font-size: 0.9rem; color: rgba(255,255,255,0.7);
-      position: relative;
-    }
-    .scroll-fragment:hover:not(.picked) { background: rgba(0,100,200,0.2); border-color: rgba(0,191,255,0.4); transform: translateY(-3px); }
-    .scroll-fragment.picked { pointer-events: none; }
-    .scroll-fragment.correct-pick {
-      border-color: rgba(255,215,0,0.5) !important; background: rgba(50,50,0,0.2) !important;
-      color: #ffd700; box-shadow: 0 0 15px rgba(255,215,0,0.15);
-    }
-    .scroll-fragment.wrong-pick {
-      border-color: rgba(255,50,50,0.5) !important; background: rgba(100,0,0,0.2) !important;
-      opacity: 0.3; color: #ff6666;
-      animation: fragmentDie 0.6s ease-out;
-    }
-    @keyframes fragmentDie {
-      0% { transform: scale(1); } 20% { transform: scale(1.1); box-shadow: 0 0 25px rgba(255,0,0,0.5); }
-      40% { transform: scale(0.95); } 100% { transform: scale(1); }
-    }
-    .scroll-fragment.wrong-pick::after { content: '\274C'; position: absolute; top: 3px; left: 3px; font-size: 0.8rem; }
-    .scroll-fragment.correct-pick::after { content: '\2705'; position: absolute; top: 3px; left: 3px; font-size: 0.8rem; }
+    /* ── Drag & Drop Fragments ── */
+    .drag-section { display: none; margin: 15px 0; }
+    .drag-section.unlocked { display: block; animation: scrollReveal 0.8s ease-out; }
 
-    /* Verse assembly */
-    .verse-assembly {
-      text-align: center; margin: 15px 0; padding: 15px;
-      background: rgba(0,30,60,0.3); border-radius: 10px;
-      font-family: 'Frank Ruhl Libre', serif; font-size: 1.1rem;
-      color: rgba(255,255,255,0.4); direction: rtl;
-      border: 1px solid rgba(0,100,200,0.2);
+    .drop-zones {
+      display: flex; gap: 6px; justify-content: center; flex-wrap: wrap;
+      margin: 10px 0; direction: rtl;
     }
-    .fragment-slot { margin: 0 3px; transition: all 0.3s; }
-    .fragment-slot.filled { color: #ffd700; font-weight: bold; text-shadow: 0 0 10px rgba(255,215,0,0.3); }
-    .fragment-slot.highlight { font-size: 1.4rem; color: #ff8844; text-shadow: 0 0 15px rgba(255,136,68,0.5); }
-
-    /* Lives bar */
-    .lives-bar { display: flex; justify-content: center; align-items: center; gap: 8px; margin: 10px 0; }
-    .lives-bar .heart { font-size: 1.5rem; transition: all 0.4s; filter: drop-shadow(0 0 5px rgba(255,50,50,0.5)); }
-    .lives-bar .heart.lost { filter: grayscale(1) opacity(0.2); transform: scale(0.7); }
-    .lives-bar .heart.breaking { animation: heartBreak 0.5s ease-out; }
-    @keyframes heartBreak { 0% { transform: scale(1); } 30% { transform: scale(1.4); filter: drop-shadow(0 0 15px rgba(255,0,0,0.8)); } 100% { transform: scale(0.7); filter: grayscale(1) opacity(0.2); } }
-    .lives-label { font-size: 0.8rem; color: rgba(0,150,255,0.6); font-family: 'Secular One', sans-serif; }
-
-    /* Penalty overlay */
-    .penalty-overlay {
-      position: fixed; inset: 0; z-index: 9999; background: rgba(0,0,0,0.85);
-      display: none; flex-direction: column; align-items: center; justify-content: center;
+    .drop-zone {
+      width: 100px; height: 50px; border: 2px dashed rgba(0,191,255,0.3);
+      border-radius: 10px; display: flex; align-items: center; justify-content: center;
+      font-family: 'Frank Ruhl Libre', serif; font-size: 0.8rem;
+      color: rgba(255,255,255,0.3); transition: all 0.3s; background: rgba(0,30,60,0.2);
     }
-    .penalty-overlay.active { display: flex; animation: fadeIn 0.3s; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .penalty-icon { font-size: 4rem; margin-bottom: 10px; animation: penaltyPulse 1s infinite; }
-    @keyframes penaltyPulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
-    .penalty-title { font-family:'Amatic SC',cursive; font-size:2.5rem; color:#ff4444; }
-    .penalty-timer { font-family:'Secular One',sans-serif; font-size:3rem; color:#ff6666; margin:15px 0; }
-    .penalty-text { font-size:0.95rem; color:rgba(255,200,200,0.7); max-width:300px; text-align:center; }
+    .drop-zone.drag-over { border-color: rgba(255,215,0,0.6); background: rgba(255,215,0,0.08); }
+    .drop-zone.filled {
+      border-style: solid; border-color: rgba(255,215,0,0.5);
+      color: #ffd700; font-weight: bold; background: rgba(50,50,0,0.2);
+    }
+    .drop-zone.filled.highlight-slot { color: #ff8844; font-size: 1rem; text-shadow: 0 0 10px rgba(255,136,68,0.5); }
+
+    .drag-pieces {
+      display: flex; gap: 8px; flex-wrap: wrap; justify-content: center; margin: 12px 0;
+    }
+    .drag-piece {
+      padding: 10px 14px; border-radius: 10px; cursor: grab;
+      background: rgba(0,50,100,0.2); border: 2px solid rgba(0,191,255,0.25);
+      color: rgba(255,255,255,0.7); font-family: 'Frank Ruhl Libre', serif;
+      font-size: 0.85rem; transition: all 0.3s; user-select: none;
+    }
+    .drag-piece:hover { background: rgba(0,100,200,0.25); border-color: rgba(0,191,255,0.5); transform: translateY(-2px); }
+    .drag-piece.dragging { opacity: 0.4; cursor: grabbing; }
+    .drag-piece.placed { display: none; }
+    .drag-piece.fake-piece { /* looks identical — player doesn't know */ }
+
+    /* ── Hard Question ── */
+    .hard-question {
+      margin: 15px 0; padding: 18px; border-radius: 12px;
+      border: 1px solid rgba(0,191,255,0.2); background: rgba(0,30,60,0.2);
+      display: none; text-align: center;
+    }
+    .hard-question.unlocked { display: block; animation: scrollReveal 0.8s ease-out; }
+    .hq-text { font-size: 1.05rem; color: #fff; margin-bottom: 12px; line-height: 1.6; }
+    .hq-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 10px 0; }
+    .hq-option {
+      padding: 12px; border-radius: 10px; cursor: pointer;
+      background: rgba(0,191,255,0.05); border: 2px solid rgba(0,191,255,0.15);
+      color: rgba(255,255,255,0.7); font-size: 0.9rem; transition: all 0.3s;
+      font-family: 'Frank Ruhl Libre', serif;
+    }
+    .hq-option:hover:not(.picked) { background: rgba(0,191,255,0.12); border-color: rgba(0,191,255,0.35); transform: translateY(-2px); }
+    .hq-option.picked { pointer-events: none; }
+    .hq-option.correct-pick { border-color: rgba(0,255,100,0.5) !important; background: rgba(0,100,0,0.2) !important; color: #00ff88; }
+    .hq-option.wrong-pick { border-color: rgba(255,50,50,0.5) !important; background: rgba(100,0,0,0.2) !important; color: #ff6666; opacity: 0.5; }
 
     .screen-shake { animation: screenShake 0.6s ease-out; }
     @keyframes screenShake {
       0%, 100% { transform: translateX(0); }
       10% { transform: translateX(-8px); } 20% { transform: translateX(8px); }
       30% { transform: translateX(-6px); } 40% { transform: translateX(6px); }
-      50% { transform: translateX(-4px); } 60% { transform: translateX(4px); }
     }
+    @keyframes scrollReveal { from { opacity:0; transform:scaleY(0.3); } to { opacity:1; transform:scaleY(1); } }
 
     @media (max-width: 600px) {
-      .fragments-grid { grid-template-columns: repeat(4, 1fr); gap: 4px; }
-      .scroll-fragment { padding: 10px 4px; min-height: 60px; font-size: 0.75rem; }
-      .verse-assembly { font-size: 0.9rem; }
+      .drop-zone { width: 75px; height: 42px; font-size: 0.65rem; }
+      .drag-piece { padding: 8px 10px; font-size: 0.75rem; }
+      .hq-options { grid-template-columns: 1fr; }
     }
   </style>
 </head>
 <body class="theme-sea">
-
-  <!-- Video Background -->
   <video class="video-bg" autoplay muted loop playsinline
     poster="https://images.unsplash.com/photo-1505118380757-91f5f5632de0?w=1920&q=80">
     <source src="https://cdn.coverr.co/videos/coverr-waves-crashing-on-rocks-2764/1080p.mp4" type="video/mp4">
@@ -98,244 +116,158 @@
   <div class="dark-overlay"></div>
   <canvas id="particles-canvas"></canvas>
 
-  <!-- Timer Bar -->
   <div class="timer-bar">
     <span class="room-indicator">🌊 חדר 2 — קריעת ים סוף</span>
     <span class="timer-display" id="timer-display">00:00</span>
   </div>
 
-  <!-- Main Content -->
   <div class="room-container">
     <div class="room-icon">🌊</div>
     <h1 class="room-title">קריעת ים סוף</h1>
-    <p class="room-subtitle">הים סוער. פרעה רודף. מצא את הפסוק הנכון.</p>
+    <p class="room-subtitle">הים סוער. פרעה רודף. מצא את המקום — ופענח את הפסוק.</p>
 
     <div class="question-box">
       <p class="question-text">כמה רכב בחור לקח פרעה לרדוף אחרי בני ישראל?</p>
       <p style="font-size: 0.85rem; color: rgba(0,191,255,0.5); margin-top: 8px;">
-        🌊 8 קטעי מגילה נמצאו בים. רק 5 מהם מהפסוק האמיתי. 3 מזויפים!
+        🗺️ שלב 1: מצא במפה איפה חנו ישראל לפני חציית הים. שלב 2: סדר את הפסוק. שלב 3: ענה נכון.
       </p>
     </div>
 
-    <!-- Lives -->
-    <div class="lives-bar">
-      <span class="lives-label">חיים:</span>
-      <span class="heart" id="heart-1">❤️</span>
-      <span class="heart" id="heart-2">❤️</span>
-      <span class="heart" id="heart-3">❤️</span>
+    <!-- ═══ PHASE 1: Google Maps + Location Input ═══ -->
+    <div class="map-container">
+      <iframe src="https://maps.google.com/maps?q=29.5,32.5&t=k&z=8&output=embed&hl=he"
+        loading="lazy" allowfullscreen style="height: 220px;"></iframe>
+      <div class="map-caption">📍 מפת סיני — היכן חנו בני ישראל לפני שנקרע הים?</div>
+    </div>
+
+    <div class="location-section">
+      <p style="font-size: 0.9rem; color: rgba(0,191,255,0.6);">📍 הקלד את שם המקום:</p>
+      <div class="location-wrapper">
+        <input type="text" class="location-input" id="location-input" placeholder="שם המקום..." autocomplete="off">
+        <button class="location-btn" id="location-btn" onclick="checkLocation()">🔍 בדוק</button>
+      </div>
+      <div class="location-feedback" id="location-feedback"></div>
     </div>
 
     <!-- Sea Canvas -->
     <div class="sea-scene">
       <canvas id="sea-canvas"></canvas>
-      <div class="sea-label" id="sea-label">🌊 הים סוער... בחר את הקטעים הנכונים</div>
+      <div class="sea-label" id="sea-label">🌊 הים סוער... מצא את המקום כדי לפתוח את הדרך</div>
     </div>
 
-    <!-- Fragments grid (shuffled by JS) -->
-    <p style="font-size:0.85rem; color:rgba(0,191,255,0.5); text-align:center; margin-bottom:10px;">
-      📜 לחץ על קטעי הפסוק האמיתיים — היזהר מהמזויפים!
-    </p>
-    <div class="fragments-grid" id="fragments-grid">
-      <!-- Inserted by JS -->
+    <!-- ═══ PHASE 2: Drag & Drop Verse Assembly ═══ -->
+    <div class="drag-section" id="drag-section">
+      <p style="font-size:0.9rem; color:rgba(0,191,255,0.6); text-align:center; margin-bottom:8px;">
+        📜 סדר את קטעי הפסוק בגרירה למקום הנכון:
+      </p>
+      <p style="font-size:0.75rem; color:rgba(255,100,100,0.5); text-align:center; margin-bottom:10px;">
+        ⚠️ יש גם קטעים מזויפים — היזהר!
+      </p>
+
+      <div class="drop-zones" id="drop-zones">
+        <div class="drop-zone" data-slot="0">1</div>
+        <div class="drop-zone" data-slot="1">2</div>
+        <div class="drop-zone" data-slot="2">3</div>
+        <div class="drop-zone" data-slot="3">4</div>
+        <div class="drop-zone" data-slot="4">5</div>
+      </div>
+
+      <div class="drag-pieces" id="drag-pieces">
+        <!-- Filled by JS — shuffled real + fake pieces -->
+      </div>
+
+      <div style="text-align:center; font-size:0.8rem; color:rgba(0,191,255,0.4); margin:8px 0;">
+        סודרו <span id="placed-count" style="color:rgba(0,191,255,0.7);">0</span> מתוך 5 קטעים
+      </div>
     </div>
 
-    <!-- Verse assembly -->
-    <div class="verse-assembly">
-      <span class="fragment-slot" id="slot-0">___</span>
-      <span class="fragment-slot" id="slot-1">___</span>
-      <span class="fragment-slot" id="slot-2">___</span>
-      <span class="fragment-slot" id="slot-3">___</span>
-      <span class="fragment-slot" id="slot-4">___</span>
-    </div>
-
-    <div class="reveal-counter">
-      מצאת <span class="count" id="found-count">0</span> מתוך 5 קטעים אמיתיים
-    </div>
-
-    <!-- Google Maps -->
-    <div class="map-container">
-      <iframe src="https://maps.google.com/maps?q=29.5,32.5&t=k&z=8&output=embed&hl=he"
-        loading="lazy" allowfullscreen style="height: 200px;"></iframe>
-      <div class="map-caption">📍 ים סוף — כאן נקרע הים לשניים</div>
+    <!-- ═══ PHASE 3: Hard Question ═══ -->
+    <div class="hard-question" id="hard-question">
+      <p style="color:#00bfff; font-size:0.85rem; margin-bottom:8px;">⚡ שאלת בונוס — רמת חידון התנ"ך:</p>
+      <p class="hq-text">מה שם המקום בו טבע צבא פרעה?</p>
+      <p style="font-size:0.75rem; color:rgba(255,255,255,0.35); margin-bottom:10px;">רמז: "וַיָּשָׁב הַיָּם... וַיְנַעֵר ה' אֶת מִצְרַיִם בְּתוֹךְ הַיָּם" — שמות י"ד:כ"ז</p>
+      <div class="hq-options">
+        <div class="hq-option" onclick="answerHQ(this, false)">מדבר שור</div>
+        <div class="hq-option" onclick="answerHQ(this, true)">ים סוף</div>
+        <div class="hq-option" onclick="answerHQ(this, false)">נחל מצרים</div>
+        <div class="hq-option" onclick="answerHQ(this, false)">מי מריבה</div>
+      </div>
     </div>
 
     <!-- Sefaria -->
     <a href="https://www.sefaria.org/Exodus.14.7?lang=he" target="_blank" class="sefaria-link" style="margin:5px auto; display:inline-flex;">
-      📖 שמות י״ד:ז׳ — ספריא
+      📖 שמות י"ד:ז' — ספריא
     </a>
 
     <div class="password-section">
       <div class="password-wrapper">
-        <input type="text" class="password-input" placeholder="כמה רכב?..." autocomplete="off">
+        <input type="text" class="password-input" placeholder="כמה רכב?..." inputmode="numeric" autocomplete="off">
         <button class="submit-btn">🔓 פתח</button>
       </div>
       <div class="attempts-display"></div>
-      <div class="hint-box">💡 מצא את 5 הקטעים האמיתיים. המספר מופיע בפסוק.</div>
+      <div class="hint-box">💡 מצא את המקום במפה ← סדר את הפסוק בגרירה ← ענה על שאלת הבונוס.</div>
       <div class="hint-box strong">🔥 שש מאות. כמה זה בספרות?</div>
     </div>
   </div>
 
   <div class="red-flash"></div>
-
   <div class="success-overlay">
     <div class="success-message">🌊 הים נקרע!</div>
     <p style="color: rgba(255,255,255,0.7); margin-bottom: 20px; font-size: 1.1rem;">עברת בתוך הים ביבשה. אבל הר סיני מחכה.</p>
     <a href="room3.html" class="next-room-btn">→ אל הר סיני ⛰️</a>
   </div>
 
-  <!-- Penalty overlay -->
-  <div class="penalty-overlay" id="penalty-screen">
-    <div class="penalty-icon">💀</div>
-    <div class="penalty-title">עונש 15 שניות!</div>
-    <div class="penalty-timer" id="penalty-countdown">15</div>
-    <div class="penalty-text">3 טעויות. חכה 15 שניות — הזמן ממשיך לרוץ!</div>
-  </div>
-
-  <!-- Scripts -->
   <script src="particles.js"></script>
   <script src="game.js"></script>
   <script>
-    // ─── GAME INIT ───────────────────────────────────────────────────────────
     if (!checkRoomAccess(2)) throw 'Access denied';
     new ParticleEngine('particles-canvas', 'water');
     const timer = new GameTimer();
     const checker = new PasswordChecker('room2', 'room3.html');
 
-    // ─── FRAGMENT DATA ──────────────────────────────────────────────────────
-    const realFragments = [
-      { text: 'ויקח', slotIndex: 0 },
-      { text: 'שש מאות', slotIndex: 1, highlight: true },
-      { text: 'רכב', slotIndex: 2 },
-      { text: 'בחור', slotIndex: 3 },
-      { text: 'וכל רכב מצרים', slotIndex: 4 }
-    ];
-    const fakeFragments = [
-      { text: 'ויסע פרעה' },
-      { text: 'בחיל גדול' },
-      { text: 'מרכבות זהב' }
-    ];
+    let locationFound = false;
+    let seaSplit = false, splitProgress = 0;
+    let placedCount = 0, phase3Done = false;
 
-    // Combine and shuffle
-    const allFragments = [
-      ...realFragments.map(f => ({...f, isReal: true})),
-      ...fakeFragments.map(f => ({...f, isReal: false}))
-    ];
-    for (let i = allFragments.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [allFragments[i], allFragments[j]] = [allFragments[j], allFragments[i]];
-    }
+    // ═══ PHASE 1: Location Challenge ═══
+    const correctLocations = ['פי החירות', 'פי החירת', 'פי-החירות', 'pi hahiroth', 'pi-hahiroth'];
+    const nearLocations = ['אתם', 'מגדול', 'בעל צפון', 'סוכות', 'etham', 'migdol'];
 
-    // Render fragments into grid
-    const fragmentsGrid = document.getElementById('fragments-grid');
-    allFragments.forEach(frag => {
-      const el = document.createElement('div');
-      el.className = 'scroll-fragment';
-      el.textContent = frag.text;
-      el.addEventListener('click', () => pickFragment(el, frag));
-      fragmentsGrid.appendChild(el);
+    document.getElementById('location-input').addEventListener('keydown', (e) => {
+      if (e.key === 'Enter') checkLocation();
     });
 
-    // ─── GAME STATE ─────────────────────────────────────────────────────────
-    let foundCount = 0;
-    let lives = 3;
-    let penalized = false;
-    let seaSplit = false;
-    let splitProgress = 0;
+    function checkLocation() {
+      if (locationFound) return;
+      const input = document.getElementById('location-input');
+      const feedback = document.getElementById('location-feedback');
+      const val = input.value.trim().toLowerCase().replace(/['"״׳]/g, '');
+      if (!val) return;
 
-    // ─── FRAGMENT PICK LOGIC ────────────────────────────────────────────────
-    function pickFragment(el, frag) {
-      if (el.classList.contains('picked') || penalized) return;
-      el.classList.add('picked');
-
-      if (frag.isReal) {
-        // ── CORRECT ──
-        el.classList.add('correct-pick');
-        foundCount++;
-        document.getElementById('found-count').textContent = foundCount;
-
-        // Fill verse slot
-        const slot = document.getElementById('slot-' + frag.slotIndex);
-        slot.textContent = frag.text;
-        slot.classList.add('filled');
-        if (frag.highlight) slot.classList.add('highlight');
-
-        // Progressive sea split
-        splitProgress = foundCount / 5;
-        if (foundCount >= 3) seaSplit = true;
-
-        // Update sea label progressively
-        if (foundCount < 5) {
-          const labels = [
-            '🌊 הים סוער... בחר את הקטעים הנכונים',
-            '🌊 הגלים מתחילים לזוז...',
-            '🌊 הים נפתח לאט...',
-            '🌊 כמעט שם! עוד קטע אחד...'
-          ];
-          document.getElementById('sea-label').textContent = labels[Math.min(foundCount, labels.length - 1)];
-        }
-
-        if (foundCount === 5) {
-          seaSplit = true;
-          splitProgress = 1;
-          document.getElementById('sea-label').textContent = '✨ הים נקרע! הכנס את המספר למטה';
-          setTimeout(() => document.querySelector('.password-input').focus(), 800);
-        }
+      if (correctLocations.some(loc => val.includes(loc) || loc.includes(val))) {
+        locationFound = true;
+        input.classList.add('correct');
+        input.disabled = true;
+        feedback.style.color = '#00ff88';
+        feedback.textContent = '✅ נכון! פי החירות — שם חנו בני ישראל לפני חציית הים!';
+        seaSplit = true;
+        document.getElementById('sea-label').textContent = '✨ הים נפתח! עכשיו סדר את הפסוק';
+        setTimeout(() => document.getElementById('drag-section').classList.add('unlocked'), 800);
+      } else if (nearLocations.some(loc => val.includes(loc) || loc.includes(val))) {
+        input.classList.add('wrong');
+        feedback.style.color = '#ffaa00';
+        feedback.textContent = '🟡 קרוב! אבל בני ישראל חנו במקום ספציפי "לפני" מקום אחר. חפש בשמות י"ד:ב\'';
+        setTimeout(() => { input.classList.remove('wrong'); input.value = ''; }, 2000);
       } else {
-        // ── FAKE - lose a life ──
-        el.classList.add('wrong-pick');
+        input.classList.add('wrong');
+        feedback.style.color = '#ff6666';
+        feedback.textContent = '❌ לא. חפש בשמות י"ד:ב\' — "דַּבֵּר אֶל בְּנֵי יִשְׂרָאֵל וְיָשֻׁבוּ וְיַחֲנוּ לִפְנֵי..."';
         document.body.classList.add('screen-shake');
-        const flash = document.querySelector('.red-flash');
-        flash.classList.remove('active');
-        void flash.offsetWidth;
-        flash.classList.add('active');
-        setTimeout(() => document.body.classList.remove('screen-shake'), 600);
-
-        const heart = document.getElementById('heart-' + lives);
-        if (heart) {
-          heart.classList.add('breaking');
-          setTimeout(() => heart.classList.add('lost'), 500);
-        }
-        lives--;
-
-        // Track error in game storage
-        const errors = parseInt(localStorage.getItem(GAME.STORAGE_PREFIX + 'Errors') || '0') + 1;
-        localStorage.setItem(GAME.STORAGE_PREFIX + 'Errors', errors.toString());
-
-        // All 3 lives lost — penalty
-        if (lives <= 0) startPenalty();
+        setTimeout(() => { input.classList.remove('wrong'); document.body.classList.remove('screen-shake'); input.value = ''; }, 1500);
       }
     }
 
-    // ─── PENALTY (15 sec wait, lives reset, fakes reset) ────────────────────
-    function startPenalty() {
-      penalized = true;
-      document.getElementById('penalty-screen').classList.add('active');
-      let countdown = 15;
-      const el = document.getElementById('penalty-countdown');
-      el.textContent = countdown;
-
-      const interval = setInterval(() => {
-        countdown--;
-        el.textContent = countdown;
-        if (countdown <= 0) {
-          clearInterval(interval);
-          document.getElementById('penalty-screen').classList.remove('active');
-          penalized = false;
-          lives = 3;
-          // Restore hearts
-          for (let i = 1; i <= 3; i++) {
-            const h = document.getElementById('heart-' + i);
-            h.classList.remove('lost', 'breaking');
-          }
-          // Reset fake fragments so player can try again
-          document.querySelectorAll('.scroll-fragment.wrong-pick').forEach(frag => {
-            frag.classList.remove('picked', 'wrong-pick');
-          });
-        }
-      }, 1000);
-    }
-
-    // ─── SEA CANVAS ANIMATION ───────────────────────────────────────────────
+    // ═══ SEA CANVAS ANIMATION ═══
     const seaCanvas = document.getElementById('sea-canvas');
     const seaCtx = seaCanvas.getContext('2d');
 
@@ -346,147 +278,206 @@
 
       function drawSea() {
         time += 0.02;
-
-        // Animate split progress smoothly
-        if (seaSplit && splitProgress < 1) {
-          splitProgress = Math.min(1, splitProgress + 0.012);
-        }
+        if (seaSplit && splitProgress < 1) splitProgress = Math.min(1, splitProgress + 0.008);
 
         seaCtx.clearRect(0, 0, seaCanvas.width, seaCanvas.height);
-
-        // Water gradient — shifts to lighter/brighter as sea splits
         const grad = seaCtx.createLinearGradient(0, 0, 0, seaCanvas.height);
-        grad.addColorStop(0, `rgba(0,${40 + splitProgress * 60},${80 + splitProgress * 80},0.8)`);
-        grad.addColorStop(1, `rgba(0,${20 + splitProgress * 30},${60 + splitProgress * 60},0.9)`);
+        grad.addColorStop(0, `rgba(0,${40+splitProgress*60},${80+splitProgress*80},0.8)`);
+        grad.addColorStop(1, `rgba(0,${20+splitProgress*30},${60+splitProgress*60},0.9)`);
         seaCtx.fillStyle = grad;
         seaCtx.fillRect(0, 0, seaCanvas.width, seaCanvas.height);
 
-        // Dry path between walls of water (widens with splitProgress)
         if (splitProgress > 0) {
           const pathWidth = splitProgress * 80;
-          const pathX = seaCanvas.width / 2 - pathWidth / 2;
-
-          // Sand / dry ground
+          const pathX = seaCanvas.width/2 - pathWidth/2;
           const pathGrad = seaCtx.createLinearGradient(0, 60, 0, seaCanvas.height);
-          pathGrad.addColorStop(0, `rgba(210,180,100,${splitProgress * 0.7})`);
-          pathGrad.addColorStop(1, `rgba(180,150,80,${splitProgress * 0.5})`);
+          pathGrad.addColorStop(0, `rgba(210,180,100,${splitProgress*0.7})`);
+          pathGrad.addColorStop(1, `rgba(180,150,80,${splitProgress*0.5})`);
           seaCtx.fillStyle = pathGrad;
-          seaCtx.fillRect(pathX, 60, pathWidth, seaCanvas.height - 60);
-
-          // Glowing path center line
-          if (splitProgress > 0.5) {
-            const glow = seaCtx.createLinearGradient(0, 80, 0, seaCanvas.height);
-            glow.addColorStop(0, `rgba(255,220,100,${(splitProgress - 0.5) * 0.6})`);
-            glow.addColorStop(1, 'rgba(255,180,50,0)');
-            seaCtx.fillStyle = glow;
-            seaCtx.fillRect(seaCanvas.width / 2 - 4, 60, 8, seaCanvas.height - 60);
-          }
+          seaCtx.fillRect(pathX, 60, pathWidth, seaCanvas.height-60);
         }
 
-        // Waves — left half and right half separate as splitProgress grows
         for (let layer = 0; layer < 3; layer++) {
-          const pathHalfWidth = splitProgress * 40 + layer * 10;
-
-          // Left wave wall
+          const halfW = splitProgress * 40 + layer * 10;
           seaCtx.beginPath();
           seaCtx.moveTo(0, seaCanvas.height);
-          for (let x = 0; x <= seaCanvas.width / 2 - pathHalfWidth; x += 5) {
-            const y = 40 + layer * 25
-              + Math.sin(x * 0.02 + time + layer) * 15
-              + Math.sin(x * 0.01 + time * 0.7) * 10;
+          for (let x = 0; x <= seaCanvas.width/2 - halfW; x += 5) {
+            const y = 40 + layer*25 + Math.sin(x*0.02+time+layer)*15 + Math.sin(x*0.01+time*0.7)*10;
             seaCtx.lineTo(x, y);
           }
-          // Wall of water edge — rises up when splitting
-          const wallHeight = 40 + layer * 25 - splitProgress * 30;
-          seaCtx.lineTo(seaCanvas.width / 2 - pathHalfWidth, wallHeight);
-          seaCtx.lineTo(seaCanvas.width / 2 - pathHalfWidth, seaCanvas.height);
+          const wallH = 40 + layer*25 - splitProgress*30;
+          seaCtx.lineTo(seaCanvas.width/2-halfW, wallH);
+          seaCtx.lineTo(seaCanvas.width/2-halfW, seaCanvas.height);
           seaCtx.closePath();
-
-          const waveColors = [
-            `rgba(0,${100 + splitProgress * 40},200,0.5)`,
-            `rgba(0,${80 + splitProgress * 30},180,0.4)`,
-            `rgba(0,${60 + splitProgress * 20},150,0.3)`
-          ];
-          seaCtx.fillStyle = waveColors[layer];
+          seaCtx.fillStyle = [`rgba(0,${100+splitProgress*40},200,0.5)`,`rgba(0,${80+splitProgress*30},180,0.4)`,`rgba(0,${60+splitProgress*20},150,0.3)`][layer];
           seaCtx.fill();
 
-          // Right wave wall (mirror)
           seaCtx.beginPath();
           seaCtx.moveTo(seaCanvas.width, seaCanvas.height);
-          for (let x = seaCanvas.width; x >= seaCanvas.width / 2 + pathHalfWidth; x -= 5) {
-            const y = 40 + layer * 25
-              + Math.sin(x * 0.02 - time + layer) * 15
-              + Math.sin(x * 0.01 - time * 0.7) * 10;
+          for (let x = seaCanvas.width; x >= seaCanvas.width/2+halfW; x -= 5) {
+            const y = 40 + layer*25 + Math.sin(x*0.02-time+layer)*15 + Math.sin(x*0.01-time*0.7)*10;
             seaCtx.lineTo(x, y);
           }
-          seaCtx.lineTo(seaCanvas.width / 2 + pathHalfWidth, wallHeight);
-          seaCtx.lineTo(seaCanvas.width / 2 + pathHalfWidth, seaCanvas.height);
+          seaCtx.lineTo(seaCanvas.width/2+halfW, wallH);
+          seaCtx.lineTo(seaCanvas.width/2+halfW, seaCanvas.height);
           seaCtx.closePath();
-          seaCtx.fillStyle = waveColors[layer];
+          seaCtx.fillStyle = [`rgba(0,${100+splitProgress*40},200,0.5)`,`rgba(0,${80+splitProgress*30},180,0.4)`,`rgba(0,${60+splitProgress*20},150,0.3)`][layer];
           seaCtx.fill();
         }
 
-        // Foam on wave crests (only when not fully split)
-        if (splitProgress < 0.8) {
-          for (let x = 0; x < seaCanvas.width; x += 30) {
-            // Skip the path gap
-            if (Math.abs(x - seaCanvas.width / 2) < splitProgress * 40) continue;
-            const y = 40 + Math.sin(x * 0.02 + time) * 15;
-            seaCtx.globalAlpha = (0.3 + Math.sin(time + x) * 0.2) * (1 - splitProgress * 0.8);
-            seaCtx.fillStyle = '#fff';
-            seaCtx.beginPath();
-            seaCtx.arc(x, y, 2, 0, Math.PI * 2);
-            seaCtx.fill();
-          }
-          seaCtx.globalAlpha = 1;
-        }
-
-        // Spray / mist at the water walls when splitting
-        if (splitProgress > 0.2) {
-          const wallX1 = seaCanvas.width / 2 - splitProgress * 40;
-          const wallX2 = seaCanvas.width / 2 + splitProgress * 40;
-          for (let i = 0; i < 8; i++) {
-            const sprayY = 40 + Math.random() * 60;
-            const alpha = (splitProgress - 0.2) * 0.4;
-            seaCtx.globalAlpha = alpha;
-            seaCtx.fillStyle = '#aaddff';
-            seaCtx.beginPath();
-            seaCtx.arc(wallX1 + Math.random() * 8 - 4, sprayY, 1.5, 0, Math.PI * 2);
-            seaCtx.fill();
-            seaCtx.beginPath();
-            seaCtx.arc(wallX2 + Math.random() * 8 - 4, sprayY, 1.5, 0, Math.PI * 2);
-            seaCtx.fill();
-          }
-          seaCtx.globalAlpha = 1;
-        }
-
-        // Israelites walking through when fully split
         if (splitProgress > 0.85) {
-          const alpha = (splitProgress - 0.85) / 0.15;
+          const alpha = (splitProgress-0.85)/0.15;
           seaCtx.globalAlpha = alpha;
-          seaCtx.font = '14px serif';
-          seaCtx.textAlign = 'center';
-          // Draw small figures walking through the path
-          const figurePositions = [0.2, 0.4, 0.6, 0.8];
-          figurePositions.forEach(pos => {
-            const fx = seaCanvas.width / 2;
-            const fy = 80 + pos * (seaCanvas.height - 90);
-            seaCtx.fillText('\uD83D\uDEB6', fx - 10, fy);
-            seaCtx.fillText('\uD83D\uDEB6', fx + 6, fy + 5);
+          seaCtx.font = '14px serif'; seaCtx.textAlign = 'center';
+          [0.2,0.4,0.6,0.8].forEach(pos => {
+            seaCtx.fillText('🚶', seaCanvas.width/2-10, 80+pos*(seaCanvas.height-90));
           });
-          seaCtx.globalAlpha = 1;
-          seaCtx.textAlign = 'start';
+          seaCtx.globalAlpha = 1; seaCtx.textAlign = 'start';
         }
-
         requestAnimationFrame(drawSea);
       }
-
       drawSea();
     }
-
     initSea();
-    window.addEventListener('resize', initSea);
-  </script>
 
+    // ═══ PHASE 2: Drag & Drop Verse ═══
+    const realPieces = [
+      { text: 'ויקח', slot: 0 },
+      { text: 'שש מאות', slot: 1, highlight: true },
+      { text: 'רכב', slot: 2 },
+      { text: 'בחור', slot: 3 },
+      { text: 'וכל רכב מצרים', slot: 4 }
+    ];
+    const fakePieces = [
+      { text: 'ויסע פרעה', slot: -1 },
+      { text: 'בחיל גדול', slot: -1 },
+      { text: 'מרכבות זהב', slot: -1 }
+    ];
+
+    const allPieces = [...realPieces.map(p => ({...p, real: true})), ...fakePieces.map(p => ({...p, real: false}))];
+    // Shuffle
+    for (let i = allPieces.length-1; i > 0; i--) {
+      const j = Math.floor(Math.random()*(i+1));
+      [allPieces[i], allPieces[j]] = [allPieces[j], allPieces[i]];
+    }
+
+    let draggedPiece = null;
+    const piecesContainer = document.getElementById('drag-pieces');
+
+    allPieces.forEach((piece, idx) => {
+      const el = document.createElement('div');
+      el.className = 'drag-piece' + (piece.real ? '' : ' fake-piece');
+      el.textContent = piece.text;
+      el.draggable = true;
+      el.dataset.idx = idx;
+
+      el.addEventListener('dragstart', (e) => {
+        draggedPiece = { el, piece, idx };
+        el.classList.add('dragging');
+        e.dataTransfer.effectAllowed = 'move';
+      });
+      el.addEventListener('dragend', () => { el.classList.remove('dragging'); });
+
+      // Touch support
+      el.addEventListener('touchstart', (e) => {
+        draggedPiece = { el, piece, idx };
+        el.classList.add('dragging');
+      });
+
+      piecesContainer.appendChild(el);
+    });
+
+    // Drop zones
+    document.querySelectorAll('.drop-zone').forEach(zone => {
+      zone.addEventListener('dragover', (e) => { e.preventDefault(); zone.classList.add('drag-over'); });
+      zone.addEventListener('dragleave', () => zone.classList.remove('drag-over'));
+      zone.addEventListener('drop', (e) => {
+        e.preventDefault();
+        zone.classList.remove('drag-over');
+        handleDrop(zone);
+      });
+
+      // Touch drop — simplified
+      zone.addEventListener('touchend', (e) => {
+        if (draggedPiece) handleDrop(zone);
+      });
+    });
+
+    // Also handle touch move to allow "dragging" feel
+    document.addEventListener('touchend', () => {
+      if (draggedPiece) draggedPiece.el.classList.remove('dragging');
+      draggedPiece = null;
+    });
+
+    function handleDrop(zone) {
+      if (!draggedPiece || zone.classList.contains('filled')) return;
+      const { el, piece } = draggedPiece;
+      const slotIdx = parseInt(zone.dataset.slot);
+
+      if (!piece.real) {
+        // FAKE piece — red flash
+        el.style.borderColor = 'rgba(255,50,50,0.6)';
+        el.style.background = 'rgba(100,0,0,0.2)';
+        el.style.color = '#ff6666';
+        el.style.opacity = '0.3';
+        el.draggable = false;
+        el.classList.add('placed');
+        document.body.classList.add('screen-shake');
+        const flash = document.querySelector('.red-flash');
+        flash.classList.remove('active'); void flash.offsetWidth; flash.classList.add('active');
+        setTimeout(() => document.body.classList.remove('screen-shake'), 600);
+        const errors = parseInt(localStorage.getItem(GAME.STORAGE_PREFIX+'Errors')||'0')+1;
+        localStorage.setItem(GAME.STORAGE_PREFIX+'Errors', errors.toString());
+        return;
+      }
+
+      if (piece.slot === slotIdx) {
+        // CORRECT slot
+        zone.textContent = piece.text;
+        zone.classList.add('filled');
+        if (piece.highlight) zone.classList.add('highlight-slot');
+        el.classList.add('placed');
+        placedCount++;
+        document.getElementById('placed-count').textContent = placedCount;
+
+        if (placedCount === 5) {
+          setTimeout(() => {
+            document.getElementById('hard-question').classList.add('unlocked');
+          }, 600);
+        }
+      } else {
+        // Wrong slot — shake
+        zone.classList.add('drag-over');
+        setTimeout(() => zone.classList.remove('drag-over'), 300);
+        document.body.classList.add('screen-shake');
+        setTimeout(() => document.body.classList.remove('screen-shake'), 400);
+      }
+
+      draggedPiece.el.classList.remove('dragging');
+      draggedPiece = null;
+    }
+
+    // ═══ PHASE 3: Hard Question ═══
+    function answerHQ(el, isCorrect) {
+      if (phase3Done) return;
+      document.querySelectorAll('.hq-option').forEach(o => o.classList.add('picked'));
+      el.classList.add(isCorrect ? 'correct-pick' : 'wrong-pick');
+
+      if (isCorrect) {
+        phase3Done = true;
+        setTimeout(() => document.querySelector('.password-input').focus(), 600);
+      } else {
+        document.body.classList.add('screen-shake');
+        const flash = document.querySelector('.red-flash');
+        flash.classList.remove('active'); void flash.offsetWidth; flash.classList.add('active');
+        setTimeout(() => document.body.classList.remove('screen-shake'), 600);
+        const errors = parseInt(localStorage.getItem(GAME.STORAGE_PREFIX+'Errors')||'0')+1;
+        localStorage.setItem(GAME.STORAGE_PREFIX+'Errors', errors.toString());
+        setTimeout(() => {
+          document.querySelectorAll('.hq-option').forEach(o => o.classList.remove('picked','wrong-pick'));
+        }, 1200);
+      }
+    }
+  </script>
 </body>
 </html>

@@ -1,163 +1,199 @@
 <!DOCTYPE html>
 <html lang="he" dir="rtl">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>חדר 1 — מכות מצרים</title>
-  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="style.css">
   <style>
-    .plague-grid {
-      display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; margin: 15px 0;
+    /* ── Scratch Card ── */
+    .scratch-container {
+      position: relative; margin: 15px 0; border-radius: 12px;
+      overflow: hidden; border: 1px solid rgba(200,80,80,0.3);
+      background: rgba(40,10,10,0.3);
     }
-    .plague-card {
-      background: rgba(100,0,0,0.15); border: 2px solid rgba(255,50,50,0.2);
-      border-radius: 12px; padding: 14px 8px; cursor: pointer; text-align: center;
-      transition: all 0.3s; min-height: 90px;
-      display: flex; flex-direction: column; align-items: center; justify-content: center;
+    .scratch-hidden-text {
+      padding: 25px 20px; text-align: center; direction: rtl;
+      font-family: 'Frank Ruhl Libre', serif; line-height: 2;
+      font-size: 1.05rem; color: rgba(255,255,255,0.85);
+      min-height: 120px; display: flex; align-items: center; justify-content: center;
     }
-    .plague-card:hover:not(.done) {
-      background: rgba(150,0,0,0.25); border-color: rgba(255,100,100,0.4);
-      transform: translateY(-3px);
+    .scratch-hidden-text strong { color: #ffd700; font-size: 1.3rem; }
+    .scratch-canvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='18' font-size='18'%3E🪙%3C/text%3E%3C/svg%3E") 12 12, crosshair;
+      border-radius: 12px;
     }
-    .plague-icon { font-size: 1.6rem; margin-bottom: 4px; }
-    .plague-name { font-size: 0.75rem; color: rgba(255,200,200,0.7); }
-    .plague-card.done {
-      pointer-events: none;
+    .scratch-progress {
+      text-align: center; font-size: 0.75rem; color: rgba(255,100,100,0.4); margin: 3px 0;
     }
-    .plague-card.correct-pick {
-      border-color: rgba(0,255,100,0.5) !important;
-      background: rgba(0,100,0,0.2) !important;
-      box-shadow: 0 0 15px rgba(0,255,100,0.15);
+
+    /* ── Filter Puzzle ── */
+    .filter-puzzle {
+      margin: 15px 0; padding: 18px; border-radius: 12px;
+      border: 1px solid rgba(200,80,80,0.2); background: rgba(30,10,10,0.3);
+      display: none;
     }
-    .plague-card.wrong-pick {
-      border-color: rgba(255,50,50,0.6) !important;
-      background: rgba(150,0,0,0.3) !important;
-      animation: stallExplode 0.6s ease-out;
+    .filter-puzzle.unlocked { display: block; animation: scrollReveal 0.8s ease-out; }
+    .filter-text {
+      font-family: 'Frank Ruhl Libre', serif; font-size: 1.1rem;
+      line-height: 2.2; color: rgba(255,255,255,0.85); padding: 20px;
+      direction: rtl; transition: filter 0.3s; text-align: center;
+      background: rgba(0,0,0,0.3); border-radius: 10px; margin: 10px 0;
     }
-    @keyframes stallExplode {
-      0% { transform: scale(1); }
-      20% { transform: scale(1.1); box-shadow: 0 0 30px rgba(255,0,0,0.5); }
-      40% { transform: scale(0.95); }
-      100% { transform: scale(1); }
+    .filter-sliders { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+    .slider-row {
+      display: flex; align-items: center; gap: 10px; font-size: 0.8rem;
+      color: rgba(255,150,100,0.6);
     }
-    .plague-counter {
-      text-align: center; font-family: 'Secular One', sans-serif;
-      font-size: 0.9rem; color: rgba(255,100,100,0.6); margin: 10px 0;
+    .slider-row label { min-width: 60px; text-align: left; font-family: 'Secular One', sans-serif; }
+    .slider-row input[type="range"] { flex: 1; accent-color: #ff6644; }
+    .slider-row .val { min-width: 35px; text-align: center; color: rgba(255,200,150,0.7); }
+
+    /* ── Hard Question ── */
+    .hard-question {
+      margin: 15px 0; padding: 18px; border-radius: 12px;
+      border: 1px solid rgba(255,215,0,0.2); background: rgba(50,30,0,0.2);
+      display: none; text-align: center;
     }
-    .scroll-reveal {
+    .hard-question.unlocked { display: block; animation: scrollReveal 0.8s ease-out; }
+    .hq-text { font-size: 1.1rem; color: #fff; margin-bottom: 12px; line-height: 1.6; }
+    .hq-options {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 10px 0;
+    }
+    .hq-option {
+      padding: 12px; border-radius: 10px; cursor: pointer;
+      background: rgba(255,215,0,0.05); border: 2px solid rgba(255,215,0,0.15);
+      color: rgba(255,255,255,0.7); font-size: 0.9rem; transition: all 0.3s;
+      font-family: 'Frank Ruhl Libre', serif;
+    }
+    .hq-option:hover:not(.picked) { background: rgba(255,215,0,0.12); border-color: rgba(255,215,0,0.35); transform: translateY(-2px); }
+    .hq-option.picked { pointer-events: none; }
+    .hq-option.correct-pick { border-color: rgba(0,255,100,0.5) !important; background: rgba(0,100,0,0.2) !important; color: #00ff88; }
+    .hq-option.wrong-pick { border-color: rgba(255,50,50,0.5) !important; background: rgba(100,0,0,0.2) !important; color: #ff6666; opacity: 0.5; }
+
+    /* ── Verse Reveal ── */
+    .verse-reveal {
       display: none; margin: 15px 0; padding: 18px;
       background: rgba(80,30,0,0.3); border: 1px solid rgba(255,150,50,0.3);
-      border-radius: 12px; text-align: center; animation: scrollReveal 0.8s ease-out;
+      border-radius: 12px; text-align: center;
     }
-    .scroll-reveal.visible { display: block; }
-    @keyframes scrollReveal {
-      from { opacity:0; transform: scaleY(0.3); }
-      to { opacity:1; transform: scaleY(1); }
-    }
+    .verse-reveal.visible { display: block; animation: scrollReveal 0.8s ease-out; }
+
+    .screen-shake { animation: screenShake 0.6s ease-out; }
     @keyframes screenShake {
       0%, 100% { transform: translateX(0); }
-      10% { transform: translateX(-8px); }
-      20% { transform: translateX(8px); }
-      30% { transform: translateX(-6px); }
-      40% { transform: translateX(6px); }
-      50% { transform: translateX(-4px); }
-      60% { transform: translateX(4px); }
-      70% { transform: translateX(-2px); }
-      80% { transform: translateX(2px); }
+      10% { transform: translateX(-8px); } 20% { transform: translateX(8px); }
+      30% { transform: translateX(-6px); } 40% { transform: translateX(6px); }
     }
-    .screen-shake {
-      animation: screenShake 0.6s ease-out;
-    }
+    @keyframes scrollReveal { from { opacity:0; transform:scaleY(0.3); } to { opacity:1; transform:scaleY(1); } }
     @media (max-width: 600px) {
-      .plague-grid { grid-template-columns: repeat(5, 1fr); gap: 4px; }
-      .plague-card { padding: 10px 4px; min-height: 70px; }
-      .plague-icon { font-size: 1.2rem; }
-      .plague-name { font-size: 0.6rem; }
+      .hq-options { grid-template-columns: 1fr; }
+      .filter-text { font-size: 0.9rem; padding: 15px; }
     }
   </style>
 </head>
 <body class="theme-plague">
-
-  <!-- Video Background -->
-  <video
-    class="video-bg"
-    autoplay
-    muted
-    loop
-    playsinline
-    poster="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80"
-  >
-    <source src="https://cdn.coverr.co/videos/coverr-red-ink-in-water-1549/1080p.mp4" type="video/mp4" />
+  <video class="video-bg" autoplay muted loop playsinline
+    poster="https://images.unsplash.com/photo-1519681393784-d120267933ba?w=1920&q=80">
+    <source src="https://cdn.coverr.co/videos/coverr-red-ink-in-water-1549/1080p.mp4" type="video/mp4">
   </video>
   <div class="fog-overlay"></div>
   <div class="dark-overlay"></div>
-
-  <!-- Particle Canvas -->
   <canvas id="particles-canvas"></canvas>
 
-  <!-- Timer Bar -->
   <div class="timer-bar">
     <span class="room-indicator">🩸 חדר 1 — מכות מצרים</span>
     <span class="timer-display" id="timer-display">00:00</span>
   </div>
 
-  <!-- Main Container -->
   <div class="room-container">
-
     <div class="room-icon">🩸</div>
     <h1 class="room-title">מכות מצרים</h1>
-    <p class="room-subtitle">עשר מכות. סדר אחד. רק מי שזוכר — יצא ממצרים.</p>
+    <p class="room-subtitle">מגילה עתיקה נמצאה בחולות מצרים. גרד את האבק — וחשוף את הסוד.</p>
 
-    <!-- Question -->
     <div class="question-box">
       <p class="question-text">כמה שנה ישבו בני ישראל במצרים?</p>
-      <p style="font-size: 0.85rem; color: rgba(255,150,150,0.6); margin-top: 8px;">
-        🩸 סדר את עשר המכות בסדר הנכון מהתורה. כל מכה תחשוף מילה מהפסוק.
+      <p style="font-size: 0.85rem; color: rgba(255,150,150,0.5); margin-top: 8px;">
+        🪙 שלב 1: גרד את המגילה. שלב 2: פענח את הטקסט המטושטש. שלב 3: ענה על שאלת הבונוס.
       </p>
     </div>
 
-    <!-- Plague ordering instruction -->
-    <p style="font-size:0.9rem; color:rgba(255,100,100,0.6); text-align:center; margin:10px 0;">
-      לחץ על המכות לפי הסדר: ראשונה, שנייה, שלישית...
+    <!-- ═══ PHASE 1: Scratch Card ═══ -->
+    <p style="font-size:0.85rem; color:rgba(255,100,100,0.5); text-align:center; margin:8px 0;">
+      🪙 גרד עם העכבר (או האצבע) כדי לחשוף את המגילה:
     </p>
+    <div class="scratch-container" id="scratch-container">
+      <div class="scratch-hidden-text">
+        "וּמוֹשַׁב בְּנֵי יִשְׂרָאֵל אֲשֶׁר יָשְׁבוּ בְּמִצְרָיִם —<br>
+        <strong>שְׁלֹשִׁים שָׁנָה וְאַרְבַּע מֵאוֹת</strong> שָׁנָה"<br>
+        <span style="font-size:0.75rem; color:rgba(255,215,0,0.5);">שמות י"ב:מ'</span>
+      </div>
+      <canvas class="scratch-canvas" id="scratch-canvas"></canvas>
+    </div>
+    <div class="scratch-progress">גרדת: <span id="scratch-percent">0</span>%</div>
 
-    <!-- Plague grid — shuffled by JS -->
-    <div class="plague-grid" id="plague-grid">
-      <!-- Cards inserted by JS in random order -->
+    <!-- ═══ PHASE 2: Filter Puzzle ═══ -->
+    <div class="filter-puzzle" id="filter-puzzle">
+      <p style="color: #ff8844; font-size: 0.95rem; margin-bottom: 10px;">🔍 מגילה שנייה נמצאה — אבל היא מטושטשת! כוון את הסליידרים:</p>
+      <div class="filter-text" id="filter-text">
+        "וַיֹּאמֶר ה' אֶל מֹשֶׁה: בֹּא אֶל פַּרְעֹה — כִּי אֲנִי הִכְבַּדְתִּי אֶת לִבּוֹ
+        וְאֶת לֵב עֲבָדָיו, לְמַעַן שִׁתִי אֹתֹתַי אֵלֶּה בְּקִרְבּוֹ."
+        <br><span style="font-size:0.75rem; color:rgba(255,215,0,0.5);">שמות י':א'</span>
+      </div>
+      <div class="filter-sliders">
+        <div class="slider-row">
+          <label>טשטוש:</label>
+          <input type="range" id="blur-slider" min="0" max="20" value="15">
+          <span class="val" id="blur-val">15</span>
+        </div>
+        <div class="slider-row">
+          <label>ניגודיות:</label>
+          <input type="range" id="contrast-slider" min="20" max="200" value="40">
+          <span class="val" id="contrast-val">40</span>
+        </div>
+        <div class="slider-row">
+          <label>צבע:</label>
+          <input type="range" id="hue-slider" min="0" max="360" value="180">
+          <span class="val" id="hue-val">180</span>
+        </div>
+      </div>
     </div>
 
-    <!-- Counter -->
-    <div class="plague-counter">
-      סודרו <span id="plague-count">0</span> מתוך 10 מכות
+    <!-- ═══ PHASE 3: Hard Question ═══ -->
+    <div class="hard-question" id="hard-question">
+      <p style="color:#ffd700; font-size:0.85rem; margin-bottom:8px;">⚡ שאלת בונוס — רמת חידון התנ"ך:</p>
+      <p class="hq-text">כמה ימים נמשכה מכת הדם?</p>
+      <p style="font-size:0.75rem; color:rgba(255,255,255,0.35); margin-bottom:10px;">רמז: "וַיִּמָּלֵא שִׁבְעַת יָמִים אַחֲרֵי הַכּוֹת ה' אֶת הַיְאֹר" — שמות ז':כ"ה</p>
+      <div class="hq-options">
+        <div class="hq-option" onclick="answerHQ(this, false)">3 ימים</div>
+        <div class="hq-option" onclick="answerHQ(this, true)">7 ימים</div>
+        <div class="hq-option" onclick="answerHQ(this, false)">10 ימים</div>
+        <div class="hq-option" onclick="answerHQ(this, false)">40 ימים</div>
+      </div>
     </div>
 
-    <!-- Verse assembly bar -->
-    <div style="text-align:center; margin:10px 0; padding:12px; background:rgba(255,50,50,0.05); border:1px solid rgba(255,50,50,0.15); border-radius:10px; min-height:40px;">
-      <span id="verse-assembly" style="font-family:'Frank Ruhl Libre',serif; font-size:1rem; color:rgba(255,255,255,0.5); direction:rtl;"></span>
-    </div>
-
-    <!-- Scroll reveal (after all 10 correct) -->
-    <div class="scroll-reveal" id="verse-scroll">
-      <p style="color: #ff8844; font-size: 1rem; margin-bottom: 8px;">📜 המגילה נפתחה!</p>
+    <!-- ═══ Final Verse Reveal ═══ -->
+    <div class="verse-reveal" id="verse-reveal">
+      <p style="color: #ff8844; font-size: 1rem; margin-bottom: 8px;">📜 שלושת השלבים הושלמו!</p>
       <p style="color: rgba(255,255,255,0.8); line-height: 1.8; font-size: 1rem;">
         "ומושב בני ישראל אשר ישבו במצרים —<br>
         <strong style="color: #ffd700; font-size: 1.3rem;">שלושים שנה וארבע מאות</strong> שנה"
       </p>
-      <p style="font-size: 0.8rem; color: rgba(255,215,0,0.5); margin-top: 8px;">שמות י"ב:מ' — כמה זה בספרות?</p>
+      <p style="font-size: 0.8rem; color: rgba(255,215,0,0.5); margin-top: 8px;">כמה זה בספרות? 30 + 400 = ?</p>
     </div>
 
-    <!-- Sefaria link -->
     <a href="https://www.sefaria.org/Exodus.12.40?lang=he" target="_blank" class="sefaria-link" style="margin:5px auto; display:inline-flex;">
-      📖 קרא את הפסוק בספריא
+      📖 שמות י"ב:מ' — ספריא
     </a>
 
     <div class="password-section">
       <div class="password-wrapper">
-        <input type="text" class="password-input" placeholder="המספר מהפסוק..." autocomplete="off">
+        <input type="text" class="password-input" placeholder="המספר מהפסוק..." inputmode="numeric" autocomplete="off">
         <button class="submit-btn">🔓 פתח</button>
       </div>
       <div class="attempts-display"></div>
-      <div class="hint-box">💡 סדר את המכות לפי הסדר. כל מכה חושפת מילה מהפסוק.</div>
+      <div class="hint-box">💡 גרד את המגילה ← פענח את הטשטוש ← ענה על שאלת הבונוס.</div>
       <div class="hint-box strong">🔥 שלושים + ארבע מאות = ? רשום בספרות.</div>
     </div>
   </div>
@@ -169,7 +205,6 @@
     <a href="room2.html" class="next-room-btn">→ אל ים סוף 🌊</a>
   </div>
 
-  <!-- Scripts -->
   <script src="particles.js"></script>
   <script src="game.js"></script>
   <script>
@@ -178,78 +213,135 @@
     const timer = new GameTimer();
     const checker = new PasswordChecker('room1', 'room2.html');
 
-    const plagues = [
-      { name: 'דם', icon: '🩸', word: 'ומושב' },
-      { name: 'צפרדע', icon: '🐸', word: 'בני' },
-      { name: 'כינים', icon: '🦟', word: 'ישראל' },
-      { name: 'ערוב', icon: '🪰', word: 'אשר' },
-      { name: 'דבר', icon: '🐄', word: 'ישבו' },
-      { name: 'שחין', icon: '🔴', word: 'במצרים' },
-      { name: 'ברד', icon: '🌨️', word: 'שלושים' },
-      { name: 'ארבה', icon: '🦗', word: 'שנה' },
-      { name: 'חושך', icon: '🌑', word: 'וארבע מאות' },
-      { name: 'מכת בכורות', icon: '💀', word: 'שנה' }
-    ];
+    let phase1Done = false, phase2Done = false, phase3Done = false;
 
-    let nextCorrect = 0;
-    const verseWords = [];
+    // ═══ PHASE 1: Scratch Card ═══
+    const scratchCanvas = document.getElementById('scratch-canvas');
+    const scratchCtx = scratchCanvas.getContext('2d');
+    let isScratching = false;
 
-    // Shuffle and render
-    const shuffled = [...plagues].map((p, i) => ({...p, correctIndex: i}));
-    for (let i = shuffled.length - 1; i > 0; i--) {
-      const j = Math.floor(Math.random() * (i + 1));
-      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    function initScratch() {
+      const container = document.getElementById('scratch-container');
+      scratchCanvas.width = container.offsetWidth;
+      scratchCanvas.height = container.offsetHeight;
+
+      const grad = scratchCtx.createLinearGradient(0, 0, scratchCanvas.width, scratchCanvas.height);
+      grad.addColorStop(0, '#5a3a1a'); grad.addColorStop(0.3, '#6b4a2a');
+      grad.addColorStop(0.6, '#4a2a0a'); grad.addColorStop(1, '#3a1a00');
+      scratchCtx.fillStyle = grad;
+      scratchCtx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+
+      for (let i = 0; i < 3000; i++) {
+        scratchCtx.fillStyle = `rgba(${Math.random()>0.5?255:0},${Math.random()>0.5?200:0},${Math.random()>0.5?100:0},${Math.random()*0.08})`;
+        scratchCtx.fillRect(Math.random()*scratchCanvas.width, Math.random()*scratchCanvas.height, 2, 2);
+      }
+
+      scratchCtx.fillStyle = 'rgba(255,215,100,0.4)';
+      scratchCtx.font = '18px "Frank Ruhl Libre", serif';
+      scratchCtx.textAlign = 'center';
+      scratchCtx.fillText('🪙 גרד כאן לחשוף את המגילה', scratchCanvas.width/2, scratchCanvas.height/2-10);
+      scratchCtx.font = '14px "Frank Ruhl Libre", serif';
+      scratchCtx.fillStyle = 'rgba(255,200,100,0.25)';
+      scratchCtx.fillText('מגילת יציאת מצרים', scratchCanvas.width/2, scratchCanvas.height/2+20);
     }
 
-    const grid = document.getElementById('plague-grid');
-    shuffled.forEach(plague => {
-      const card = document.createElement('div');
-      card.className = 'plague-card';
-      card.innerHTML = `
-        <div class="plague-icon">${plague.icon}</div>
-        <div class="plague-name">${plague.name}</div>
-      `;
-      card.addEventListener('click', () => pickPlague(card, plague));
-      grid.appendChild(card);
+    function scratch(x, y) {
+      scratchCtx.globalCompositeOperation = 'destination-out';
+      scratchCtx.beginPath();
+      scratchCtx.arc(x, y, 22, 0, Math.PI * 2);
+      scratchCtx.fill();
+      scratchCtx.globalCompositeOperation = 'source-over';
+    }
+
+    function checkScratchProgress() {
+      const imageData = scratchCtx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height);
+      let transparent = 0;
+      const total = scratchCanvas.width * scratchCanvas.height;
+      for (let i = 3; i < imageData.data.length; i += 4) {
+        if (imageData.data[i] < 128) transparent++;
+      }
+      const percent = Math.floor((transparent / total) * 100);
+      document.getElementById('scratch-percent').textContent = percent;
+
+      if (percent >= 40 && !phase1Done) {
+        phase1Done = true;
+        scratchCanvas.style.transition = 'opacity 0.5s';
+        scratchCanvas.style.opacity = '0';
+        setTimeout(() => {
+          scratchCanvas.style.display = 'none';
+          document.getElementById('filter-puzzle').classList.add('unlocked');
+        }, 500);
+      }
+    }
+
+    scratchCanvas.addEventListener('mousedown', () => { isScratching = true; });
+    scratchCanvas.addEventListener('mouseup', () => { isScratching = false; checkScratchProgress(); });
+    scratchCanvas.addEventListener('mouseleave', () => { isScratching = false; });
+    scratchCanvas.addEventListener('mousemove', (e) => {
+      if (!isScratching) return;
+      const rect = scratchCanvas.getBoundingClientRect();
+      scratch(e.clientX - rect.left, e.clientY - rect.top);
+    });
+    scratchCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); isScratching = true; });
+    scratchCanvas.addEventListener('touchend', () => { isScratching = false; checkScratchProgress(); });
+    scratchCanvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const rect = scratchCanvas.getBoundingClientRect();
+      scratch(touch.clientX - rect.left, touch.clientY - rect.top);
     });
 
-    function pickPlague(card, plague) {
-      if (card.classList.contains('done')) return;
+    initScratch();
 
-      if (plague.correctIndex === nextCorrect) {
-        // Correct order!
-        card.classList.add('done', 'correct-pick');
-        card.innerHTML += `<div style="font-size:0.7rem; color:#00ff88; margin-top:4px;">מכה ${nextCorrect + 1}</div>`;
+    // ═══ PHASE 2: CSS Filter Puzzle ═══
+    const filterText = document.getElementById('filter-text');
+    const blurSlider = document.getElementById('blur-slider');
+    const contrastSlider = document.getElementById('contrast-slider');
+    const hueSlider = document.getElementById('hue-slider');
 
-        verseWords.push(plague.word);
-        document.getElementById('verse-assembly').textContent = verseWords.join(' ');
-        nextCorrect++;
-        document.getElementById('plague-count').textContent = nextCorrect;
+    filterText.style.filter = 'blur(15px) contrast(0.4) hue-rotate(180deg)';
 
-        if (nextCorrect === 10) {
-          setTimeout(() => {
-            document.getElementById('verse-scroll').classList.add('visible');
-            document.querySelector('.password-input').focus();
-          }, 800);
-        }
+    function updateFilters() {
+      const b = blurSlider.value, c = contrastSlider.value, h = hueSlider.value;
+      document.getElementById('blur-val').textContent = b;
+      document.getElementById('contrast-val').textContent = c;
+      document.getElementById('hue-val').textContent = h;
+      filterText.style.filter = `blur(${b}px) contrast(${c/100}) hue-rotate(${h}deg)`;
+
+      if (parseInt(b) <= 2 && parseInt(c) >= 80 && (parseInt(h) <= 30 || parseInt(h) >= 330) && !phase2Done) {
+        phase2Done = true;
+        filterText.style.filter = 'none';
+        filterText.style.textShadow = '0 0 10px rgba(255,215,0,0.3)';
+        setTimeout(() => document.getElementById('hard-question').classList.add('unlocked'), 500);
+      }
+    }
+
+    [blurSlider, contrastSlider, hueSlider].forEach(s => s.addEventListener('input', updateFilters));
+
+    // ═══ PHASE 3: Hard Question ═══
+    function answerHQ(el, isCorrect) {
+      if (phase3Done) return;
+      document.querySelectorAll('.hq-option').forEach(o => o.classList.add('picked'));
+      el.classList.add(isCorrect ? 'correct-pick' : 'wrong-pick');
+
+      if (isCorrect) {
+        phase3Done = true;
+        setTimeout(() => {
+          document.getElementById('verse-reveal').classList.add('visible');
+          document.querySelector('.password-input').focus();
+        }, 600);
       } else {
-        // Wrong order!
-        card.classList.add('wrong-pick');
         document.body.classList.add('screen-shake');
         const flash = document.querySelector('.red-flash');
         flash.classList.remove('active'); void flash.offsetWidth; flash.classList.add('active');
-
-        setTimeout(() => {
-          card.classList.remove('wrong-pick');
-          document.body.classList.remove('screen-shake');
-        }, 600);
-
-        // Track error
+        setTimeout(() => document.body.classList.remove('screen-shake'), 600);
         const errors = parseInt(localStorage.getItem(GAME.STORAGE_PREFIX + 'Errors') || '0') + 1;
         localStorage.setItem(GAME.STORAGE_PREFIX + 'Errors', errors.toString());
+        setTimeout(() => {
+          document.querySelectorAll('.hq-option').forEach(o => o.classList.remove('picked', 'wrong-pick'));
+        }, 1200);
       }
     }
   </script>
-
 </body>
 </html>
