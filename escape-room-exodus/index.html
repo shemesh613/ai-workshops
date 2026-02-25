@@ -6,7 +6,7 @@
   <title>הסנה הבוער — חדר בריחה יציאת מצרים</title>
   <link rel="stylesheet" href="style.css">
   <style>
-    /* ── Cinematic Intro ── */
+    /* ══ Cinematic Intro ══ */
     .entrance-cinematic {
       position: fixed; top: 0; left: 0; width: 100%; height: 100%;
       background: #000; z-index: 1000;
@@ -37,8 +37,139 @@
     }
     .cinematic-skip:hover { color: rgba(255,255,255,0.5); }
 
-    /* ── Timeline Ordering ── */
-    .timeline-section { margin: 15px 0; }
+    /* ══ Professional CSS Bush ══ */
+    .bush-pro {
+      position: relative; width: 220px; height: 220px; margin: 15px auto;
+    }
+    .bush-body {
+      position: absolute; bottom: 25px; left: 50%; transform: translateX(-50%);
+      width: 130px; height: 85px;
+      background: radial-gradient(ellipse at 50% 60%, #2a7a2a 0%, #1a5a1a 40%, #0d3d0d 100%);
+      border-radius: 50%; z-index: 3;
+      box-shadow: 0 0 25px rgba(255,100,0,0.25), inset 0 -5px 15px rgba(0,0,0,0.3);
+    }
+    .bush-body::before, .bush-body::after {
+      content: ''; position: absolute; border-radius: 50%;
+      background: radial-gradient(ellipse, #2a8a2a 0%, transparent 70%);
+    }
+    .bush-body::before { width: 65px; height: 45px; top: -18px; left: 5px; }
+    .bush-body::after { width: 55px; height: 40px; top: -12px; right: 5px; }
+    .bush-trunk {
+      position: absolute; bottom: 0; left: 50%; transform: translateX(-50%);
+      width: 10px; height: 30px;
+      background: linear-gradient(to right, #3a2010, #5a3a20, #3a2010);
+      border-radius: 0 0 3px 3px; z-index: 2;
+    }
+    .fire-glow {
+      position: absolute; top: -30px; left: 50%; transform: translateX(-50%);
+      width: 250px; height: 250px;
+      background: radial-gradient(ellipse, rgba(255,100,0,0.15) 0%, rgba(255,50,0,0.05) 40%, transparent 70%);
+      animation: glowPulse 2s ease-in-out infinite alternate; z-index: 0; pointer-events: none;
+    }
+    .fire-wrap {
+      position: absolute; bottom: 40px; left: 50%; transform: translateX(-50%);
+      width: 100px; height: 140px; z-index: 4; filter: blur(1px);
+    }
+    .flame {
+      position: absolute; bottom: 0; left: 50%;
+      border-radius: 50% 50% 30% 30%; mix-blend-mode: screen;
+    }
+    .flame-1 {
+      width: 70px; height: 110px; transform: translateX(-50%);
+      background: linear-gradient(to top, rgba(255,80,0,0.9) 0%, rgba(255,160,0,0.7) 30%, rgba(255,220,0,0.4) 60%, transparent 100%);
+      animation: flameMain 0.8s ease-in-out infinite alternate;
+    }
+    .flame-2 {
+      width: 50px; height: 90px; left: calc(50% - 15px);
+      background: linear-gradient(to top, rgba(255,120,0,0.8) 0%, rgba(255,200,50,0.5) 50%, transparent 100%);
+      animation: flameSide 0.6s ease-in-out infinite alternate-reverse;
+    }
+    .flame-3 {
+      width: 45px; height: 85px; left: calc(50% + 10px);
+      background: linear-gradient(to top, rgba(255,60,0,0.8) 0%, rgba(255,180,0,0.4) 50%, transparent 100%);
+      animation: flameSide2 0.7s ease-in-out infinite alternate;
+    }
+    .flame-core {
+      width: 25px; height: 45px; transform: translateX(-50%);
+      background: radial-gradient(ellipse at 50% 80%, rgba(255,255,200,0.9) 0%, rgba(255,200,0,0.5) 40%, transparent 70%);
+      animation: coreFlicker 0.4s ease-in-out infinite alternate; z-index: 5;
+    }
+    .fire-sparks { position: absolute; width: 100%; height: 100%; z-index: 6; pointer-events: none; }
+    @keyframes flameMain {
+      from { transform: translateX(-50%) scaleY(1) scaleX(1); }
+      to { transform: translateX(-50%) scaleY(1.12) scaleX(0.92); }
+    }
+    @keyframes flameSide {
+      from { transform: scaleY(0.95) rotate(-3deg); }
+      to { transform: scaleY(1.08) rotate(3deg); }
+    }
+    @keyframes flameSide2 {
+      from { transform: scaleY(1.05) rotate(2deg); }
+      to { transform: scaleY(0.92) rotate(-2deg); }
+    }
+    @keyframes coreFlicker {
+      from { opacity: 0.7; transform: translateX(-50%) scaleY(0.95); }
+      to { opacity: 1; transform: translateX(-50%) scaleY(1.08); }
+    }
+    @keyframes glowPulse { from { opacity: 0.5; } to { opacity: 1; } }
+    @keyframes sparkUp {
+      0% { opacity: 1; transform: translateY(0) translateX(0); }
+      100% { opacity: 0; transform: translateY(-70px) translateX(var(--drift, 0px)); }
+    }
+    .bush-caption {
+      text-align: center; font-size: 0.8rem; color: rgba(255,150,50,0.5);
+      margin-top: 5px; font-family: 'Frank Ruhl Libre', serif;
+    }
+
+    /* ══ Scratch Card ══ */
+    .scratch-container {
+      position: relative; margin: 15px 0; border-radius: 12px;
+      overflow: hidden; border: 1px solid rgba(255,150,50,0.3);
+      background: rgba(40,10,0,0.3);
+    }
+    .scratch-hidden-text {
+      padding: 25px 20px; text-align: center; direction: rtl;
+      font-family: 'Frank Ruhl Libre', serif; line-height: 2;
+      font-size: 1rem; color: rgba(255,255,255,0.85);
+      min-height: 100px; display: flex; align-items: center; justify-content: center;
+    }
+    .scratch-hidden-text strong { color: #ffd700; font-size: 1.25rem; }
+    .scratch-canvas {
+      position: absolute; top: 0; left: 0; width: 100%; height: 100%;
+      cursor: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='24' height='24'%3E%3Ctext y='18' font-size='18'%3E🪙%3C/text%3E%3C/svg%3E") 12 12, crosshair;
+      border-radius: 12px;
+    }
+    .scratch-progress {
+      text-align: center; font-size: 0.75rem; color: rgba(255,100,50,0.4); margin: 3px 0;
+    }
+
+    /* ══ Filter Puzzle ══ */
+    .filter-puzzle {
+      margin: 15px 0; padding: 18px; border-radius: 12px;
+      border: 1px solid rgba(255,150,50,0.2); background: rgba(30,10,0,0.3);
+      display: none;
+    }
+    .filter-puzzle.unlocked { display: block; animation: scrollReveal 0.8s ease-out; }
+    .filter-text {
+      font-family: 'Frank Ruhl Libre', serif; font-size: 1.05rem;
+      line-height: 2.2; color: rgba(255,255,255,0.85); padding: 20px;
+      direction: rtl; transition: filter 0.3s; text-align: center;
+      background: rgba(0,0,0,0.3); border-radius: 10px; margin: 10px 0;
+    }
+    .filter-sliders { display: flex; flex-direction: column; gap: 10px; margin: 12px 0; }
+    .slider-row {
+      display: flex; align-items: center; gap: 10px; font-size: 0.8rem;
+      color: rgba(255,150,100,0.6);
+    }
+    .slider-row label { min-width: 60px; text-align: left; font-family: 'Secular One', sans-serif; }
+    .slider-row input[type="range"] { flex: 1; accent-color: #ff6644; }
+    .slider-row .val { min-width: 35px; text-align: center; color: rgba(255,200,150,0.7); }
+
+    /* ══ Timeline Ordering ══ */
+    .timeline-section {
+      margin: 15px 0; display: none;
+    }
+    .timeline-section.unlocked { display: block; animation: scrollReveal 0.8s ease-out; }
     .timeline-slots {
       display: flex; flex-direction: column; gap: 8px; margin: 10px 0;
     }
@@ -72,7 +203,6 @@
       font-family: 'Frank Ruhl Libre', serif;
       color: rgba(255,150,50,0.25); font-size: 0.8rem;
     }
-
     .quote-pool {
       display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 15px 0;
     }
@@ -87,16 +217,14 @@
       background: rgba(120,50,0,0.3); border-color: rgba(255,150,50,0.5);
       transform: translateY(-3px); box-shadow: 0 4px 15px rgba(255,100,0,0.15);
     }
-    .quote-btn.used {
-      opacity: 0.3; pointer-events: none; border-color: rgba(0,255,100,0.3);
-    }
+    .quote-btn.used { opacity: 0.3; pointer-events: none; border-color: rgba(0,255,100,0.3); }
     .quote-btn.exploded {
       border-color: rgba(255,50,50,0.5) !important;
       background: rgba(100,0,0,0.2) !important;
       color: #ff6666 !important; opacity: 0.25; pointer-events: none;
     }
 
-    /* ── Hard Question ── */
+    /* ══ Hard Question ══ */
     .hard-question {
       margin: 15px 0; padding: 18px; border-radius: 12px;
       border: 1px solid rgba(255,215,0,0.2); background: rgba(50,30,0,0.2);
@@ -135,12 +263,14 @@
       .quote-btn { font-size: 0.7rem; padding: 10px 12px; max-width: 250px; }
       .hq-options { grid-template-columns: 1fr; }
       .slot-text { font-size: 0.75rem; }
+      .filter-text { font-size: 0.9rem; padding: 15px; }
+      .bush-pro { width: 180px; height: 180px; }
     }
   </style>
 </head>
 <body class="theme-burning">
 
-  <!-- Cinematic Intro -->
+  <!-- ══ Cinematic Intro ══ -->
   <div class="entrance-cinematic" id="cinematic">
     <div class="cinematic-text" id="cinematic-text"></div>
     <div class="cinematic-sub" id="cinematic-sub">שמות ג:ב</div>
@@ -167,28 +297,78 @@
     <div class="room-header">
       <div class="room-icon">🔥</div>
       <h1 class="room-title">הסנה הבוער</h1>
-      <p class="room-subtitle">"ויבא אל הר האלוהים חורבה"</p>
+      <p class="room-subtitle">"והסנה בוער באש — והסנה איננו אוכל"</p>
     </div>
 
     <div class="question-box">
       <div class="question-text">
-        משה עמד מול הסנה — ושמע את קול ה'. סדר את תשובות משה כפי שנאמרו בשמות ג-ד.
+        משה נהג את הצאן אל הר האלוהים. מצא את שם ההר — ופתח את השער.
       </div>
       <div class="question-helper">
-        🔥 שלב 1: סדר את הציטוטים לפי הסדר בפרק. שלב 2: ענה על שאלת חידון התנ"ך.
+        🪙 שלב 1: גרד. 🔍 שלב 2: פענח. 📜 שלב 3: סדר. ⚡ שלב 4: חידון.
       </div>
     </div>
 
-    <!-- Burning Bush Scene -->
-    <div class="bush-scene">
-      <canvas id="bush-canvas"></canvas>
-      <div class="bush-label">🔥 הסנה בוער באש... והסנה איננו אוכל</div>
+    <!-- ══ Professional CSS Burning Bush ══ -->
+    <div class="bush-pro">
+      <div class="fire-glow"></div>
+      <div class="fire-wrap">
+        <div class="flame flame-1"></div>
+        <div class="flame flame-2"></div>
+        <div class="flame flame-3"></div>
+        <div class="flame flame-core"></div>
+      </div>
+      <div class="bush-body"></div>
+      <div class="bush-trunk"></div>
+      <div class="fire-sparks" id="fire-sparks"></div>
+    </div>
+    <div class="bush-caption">🔥 הסנה בוער באש... והסנה איננו אוכל</div>
+
+    <!-- ═══ PHASE 1: Scratch Card ═══ -->
+    <p style="font-size:0.85rem; color:rgba(255,150,50,0.5); text-align:center; margin:10px 0 4px;">
+      🪙 שלב 1 — גרד את המגילה העתיקה:
+    </p>
+    <div class="scratch-container" id="scratch-container">
+      <div class="scratch-hidden-text">
+        "וּמֹשֶׁה הָיָה רֹעֶה אֶת צֹאן יִתְרוֹ חֹתְנוֹ... וַיָּבֹא אֶל<br>
+        <strong>הַר הָאֱלֹהִים חֹרֵבָה</strong>"<br>
+        <span style="font-size:0.7rem; color:rgba(255,215,0,0.5);">שמות ג:א</span>
+      </div>
+      <canvas class="scratch-canvas" id="scratch-canvas"></canvas>
+    </div>
+    <div class="scratch-progress">גרדת: <span id="scratch-percent">0</span>%</div>
+
+    <!-- ═══ PHASE 2: CSS Filter Puzzle ═══ -->
+    <div class="filter-puzzle" id="filter-puzzle">
+      <p style="color: #ff8844; font-size: 0.9rem; margin-bottom: 10px;">🔍 שלב 2 — מגילה נוספת. מטושטשת! כוון את הסליידרים כדי לקרוא:</p>
+      <div class="filter-text" id="filter-text">
+        "אַל תִּקְרַב הֲלֹם — שַׁל נְעָלֶיךָ מֵעַל רַגְלֶיךָ,
+        כִּי הַמָּקוֹם אֲשֶׁר אַתָּה עוֹמֵד עָלָיו אַדְמַת קֹדֶשׁ הוּא"
+        <br><span style="font-size:0.7rem; color:rgba(255,215,0,0.5);">שמות ג:ה</span>
+      </div>
+      <div class="filter-sliders">
+        <div class="slider-row">
+          <label>טשטוש:</label>
+          <input type="range" id="blur-slider" min="0" max="20" value="15">
+          <span class="val" id="blur-val">15</span>
+        </div>
+        <div class="slider-row">
+          <label>ניגודיות:</label>
+          <input type="range" id="contrast-slider" min="20" max="200" value="40">
+          <span class="val" id="contrast-val">40</span>
+        </div>
+        <div class="slider-row">
+          <label>צבע:</label>
+          <input type="range" id="hue-slider" min="0" max="360" value="180">
+          <span class="val" id="hue-val">180</span>
+        </div>
+      </div>
     </div>
 
-    <!-- ═══ PHASE 1: Timeline Ordering ═══ -->
+    <!-- ═══ PHASE 3: Timeline Ordering ═══ -->
     <div class="timeline-section" id="timeline-section">
-      <p style="font-size:0.85rem; color:rgba(255,150,50,0.5); text-align:center; margin:8px 0;">
-        📜 לחץ על הציטוטים לפי הסדר שנאמרו. היזהר — יש גם פסוקים מפרקים אחרים!
+      <p style="font-size:0.9rem; color:rgba(255,150,50,0.6); text-align:center; margin:8px 0;">
+        📜 שלב 3 — סדר את תשובות משה לפי הסדר בשמות ג-ד. היזהר מפסוקים מזויפים!
       </p>
 
       <div class="timeline-slots" id="timeline-slots">
@@ -205,9 +385,9 @@
       </div>
     </div>
 
-    <!-- ═══ PHASE 2: Hard Question (Avitzur Q16) ═══ -->
+    <!-- ═══ PHASE 4: Hard Question (Avitzur Q16) ═══ -->
     <div class="hard-question" id="hard-question">
-      <p style="color:#ffd700; font-size:0.85rem; margin-bottom:8px;">⚡ שאלת חידון התנ"ך — מקבץ אביצור:</p>
+      <p style="color:#ffd700; font-size:0.85rem; margin-bottom:8px;">⚡ שלב 4 — שאלת חידון התנ"ך (מקבץ אביצור):</p>
       <p class="hq-text">"והמטה אשר נהפך לנחש תיקח בידך" — לפני איזו מכה נאמר הפסוק?</p>
       <div class="hq-options">
         <div class="hq-option" onclick="answerHQ(this, true)">דם</div>
@@ -219,11 +399,11 @@
 
     <!-- Verse Reveal -->
     <div class="verse-reveal" id="verse-reveal">
-      <p style="color: #ff8844; font-size: 1rem; margin-bottom: 10px;">📜 שני השלבים הושלמו!</p>
+      <p style="color: #ff8844; font-size: 1rem; margin-bottom: 10px;">🔥 כל ארבעת השלבים הושלמו!</p>
       <p style="color: rgba(255,255,255,0.8); line-height: 1.8; font-size: 1.05rem;">
         "וַיָּבֹא אֶל הַר הָאֱלֹהִים <strong style="color:#ffd700; font-size:1.3rem;">חֹרֵבָה</strong>"
       </p>
-      <p style="font-size: 0.8rem; color: rgba(255,215,0,0.5); margin-top: 10px;">שם ההר — הוא הסיסמה.</p>
+      <p style="font-size: 0.85rem; color: rgba(255,215,0,0.5); margin-top: 10px;">שם ההר — הוא הסיסמה.</p>
     </div>
 
     <div class="sefaria-link-box">
@@ -238,8 +418,8 @@
         <button class="submit-btn">🔓 פתח</button>
       </div>
       <div class="attempts-display"></div>
-      <div class="hint-box">💡 סדר את הפסוקים מתוך שמות ג-ד, וענה על השאלה.</div>
-      <div class="hint-box strong">🔥 הר האלוהים. חורב. סיני. שמות שונים לאותו מקום.</div>
+      <div class="hint-box">💡 גרד ← פענח ← סדר ← ענה. שם ההר מופיע במגילה הראשונה.</div>
+      <div class="hint-box strong">🔥 הר האלוהים = חורב = סיני. הקלד את השם הראשון.</div>
     </div>
   </div>
 
@@ -256,13 +436,13 @@
 
   <script>
     // ─── Cinematic Intro ──────────────────────────────────────
-    const verse = 'וַיֵּרָא מַלְאַךְ ה\' אֵלָיו בְּלַבַּת אֵשׁ מִתּוֹךְ הַסְּנֶה';
+    const cinematicVerse = 'וַיֵּרָא מַלְאַךְ ה\' אֵלָיו בְּלַבַּת אֵשׁ מִתּוֹךְ הַסְּנֶה';
     const cinematicText = document.getElementById('cinematic-text');
     let charIdx = 0;
 
     function typeChar() {
-      if (charIdx < verse.length) {
-        cinematicText.textContent = verse.substring(0, charIdx + 1);
+      if (charIdx < cinematicVerse.length) {
+        cinematicText.textContent = cinematicVerse.substring(0, charIdx + 1);
         charIdx++;
         setTimeout(typeChar, 65 + Math.random() * 35);
       } else {
@@ -279,77 +459,128 @@
       setTimeout(() => el.remove(), 1500);
     }
 
-    // ─── Burning Bush Canvas Animation ───────────────────────────
-    const bushCanvas = document.getElementById('bush-canvas');
-    const bushCtx = bushCanvas.getContext('2d');
+    // ─── CSS Bush Sparks ─────────────────────────────────────
+    const sparksEl = document.getElementById('fire-sparks');
+    function createSpark() {
+      const s = document.createElement('div');
+      const drift = (Math.random() * 30 - 15) + 'px';
+      s.style.cssText = `position:absolute; width:3px; height:3px; background:#ffd700;
+        border-radius:50%; bottom:${30+Math.random()*35}%; left:${35+Math.random()*30}%;
+        box-shadow: 0 0 4px rgba(255,215,0,0.8); pointer-events:none;
+        animation: sparkUp ${1+Math.random()*1.5}s ease-out forwards;
+        --drift: ${drift};`;
+      sparksEl.appendChild(s);
+      setTimeout(() => s.remove(), 2500);
+    }
+    setInterval(createSpark, 250);
 
-    function initBush() {
-      bushCanvas.width = bushCanvas.parentElement.clientWidth;
-      bushCanvas.height = 200;
+    // ─── Phase tracking ──────────────────────────────────────
+    let phase1Done = false, phase2Done = false, phase3Done = false, phase4Done = false;
 
-      const flames = [];
-      for (let i = 0; i < 50; i++) {
-        flames.push({
-          x: bushCanvas.width / 2 + (Math.random() - 0.5) * 100,
-          y: bushCanvas.height - 30 - Math.random() * 80,
-          size: Math.random() * 8 + 3,
-          speedY: -(Math.random() * 2 + 0.5),
-          life: Math.random() * 60 + 20,
-          maxLife: 80,
-          hue: Math.random() * 40 + 15
-        });
+    // ═══ PHASE 1: Scratch Card ═══
+    const scratchCanvas = document.getElementById('scratch-canvas');
+    const scratchCtx = scratchCanvas.getContext('2d');
+    let isScratching = false;
+
+    function initScratch() {
+      const container = document.getElementById('scratch-container');
+      scratchCanvas.width = container.offsetWidth;
+      scratchCanvas.height = container.offsetHeight;
+
+      const grad = scratchCtx.createLinearGradient(0, 0, scratchCanvas.width, scratchCanvas.height);
+      grad.addColorStop(0, '#5a3a1a'); grad.addColorStop(0.3, '#6b4a2a');
+      grad.addColorStop(0.6, '#4a2a0a'); grad.addColorStop(1, '#3a1a00');
+      scratchCtx.fillStyle = grad;
+      scratchCtx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+
+      for (let i = 0; i < 3000; i++) {
+        scratchCtx.fillStyle = `rgba(${Math.random()>0.5?255:0},${Math.random()>0.5?200:0},${Math.random()>0.5?100:0},${Math.random()*0.08})`;
+        scratchCtx.fillRect(Math.random()*scratchCanvas.width, Math.random()*scratchCanvas.height, 2, 2);
       }
 
-      function drawBush() {
-        bushCtx.fillStyle = 'rgba(0,0,0,0.1)';
-        bushCtx.fillRect(0, 0, bushCanvas.width, bushCanvas.height);
-
-        bushCtx.fillStyle = 'rgba(20,80,20,0.3)';
-        bushCtx.beginPath();
-        bushCtx.ellipse(bushCanvas.width / 2, bushCanvas.height - 50, 70, 50, 0, 0, Math.PI * 2);
-        bushCtx.fill();
-
-        bushCtx.fillStyle = 'rgba(80,50,20,0.5)';
-        bushCtx.fillRect(bushCanvas.width / 2 - 5, bushCanvas.height - 30, 10, 30);
-
-        flames.forEach((f, i) => {
-          f.y += f.speedY;
-          f.x += (Math.random() - 0.5) * 1.5;
-          f.life--;
-          f.size *= 0.99;
-
-          const alpha = (f.life / f.maxLife) * 0.7;
-          bushCtx.globalAlpha = alpha;
-          const grad = bushCtx.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.size);
-          grad.addColorStop(0, `hsl(${f.hue}, 100%, 70%)`);
-          grad.addColorStop(1, 'transparent');
-          bushCtx.fillStyle = grad;
-          bushCtx.beginPath();
-          bushCtx.arc(f.x, f.y, f.size, 0, Math.PI * 2);
-          bushCtx.fill();
-          bushCtx.globalAlpha = 1;
-
-          if (f.life <= 0) {
-            flames[i] = {
-              x: bushCanvas.width / 2 + (Math.random() - 0.5) * 100,
-              y: bushCanvas.height - 30 - Math.random() * 30,
-              size: Math.random() * 8 + 3,
-              speedY: -(Math.random() * 2 + 0.5),
-              life: Math.random() * 60 + 20,
-              maxLife: 80,
-              hue: Math.random() * 40 + 15
-            };
-          }
-        });
-        requestAnimationFrame(drawBush);
-      }
-      drawBush();
+      scratchCtx.fillStyle = 'rgba(255,215,100,0.4)';
+      scratchCtx.font = '18px "Frank Ruhl Libre", serif';
+      scratchCtx.textAlign = 'center';
+      scratchCtx.fillText('🪙 גרד כאן לחשוף את המגילה', scratchCanvas.width/2, scratchCanvas.height/2-10);
+      scratchCtx.font = '14px "Frank Ruhl Libre", serif';
+      scratchCtx.fillStyle = 'rgba(255,200,100,0.25)';
+      scratchCtx.fillText('מגילת הסנה הבוער', scratchCanvas.width/2, scratchCanvas.height/2+20);
     }
 
-    initBush();
-    window.addEventListener('resize', initBush);
+    function scratch(x, y) {
+      scratchCtx.globalCompositeOperation = 'destination-out';
+      scratchCtx.beginPath();
+      scratchCtx.arc(x, y, 22, 0, Math.PI * 2);
+      scratchCtx.fill();
+      scratchCtx.globalCompositeOperation = 'source-over';
+    }
 
-    // ─── PHASE 1: Timeline Ordering ──────────────────────────────
+    function checkScratchProgress() {
+      const imageData = scratchCtx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height);
+      let transparent = 0;
+      const total = scratchCanvas.width * scratchCanvas.height;
+      for (let i = 3; i < imageData.data.length; i += 4) {
+        if (imageData.data[i] < 128) transparent++;
+      }
+      const percent = Math.floor((transparent / total) * 100);
+      document.getElementById('scratch-percent').textContent = percent;
+
+      if (percent >= 40 && !phase1Done) {
+        phase1Done = true;
+        scratchCanvas.style.transition = 'opacity 0.5s';
+        scratchCanvas.style.opacity = '0';
+        setTimeout(() => {
+          scratchCanvas.style.display = 'none';
+          document.getElementById('filter-puzzle').classList.add('unlocked');
+        }, 500);
+      }
+    }
+
+    scratchCanvas.addEventListener('mousedown', () => { isScratching = true; });
+    scratchCanvas.addEventListener('mouseup', () => { isScratching = false; checkScratchProgress(); });
+    scratchCanvas.addEventListener('mouseleave', () => { isScratching = false; });
+    scratchCanvas.addEventListener('mousemove', (e) => {
+      if (!isScratching) return;
+      const rect = scratchCanvas.getBoundingClientRect();
+      scratch(e.clientX - rect.left, e.clientY - rect.top);
+    });
+    scratchCanvas.addEventListener('touchstart', (e) => { e.preventDefault(); isScratching = true; });
+    scratchCanvas.addEventListener('touchend', () => { isScratching = false; checkScratchProgress(); });
+    scratchCanvas.addEventListener('touchmove', (e) => {
+      e.preventDefault();
+      const touch = e.touches[0];
+      const rect = scratchCanvas.getBoundingClientRect();
+      scratch(touch.clientX - rect.left, touch.clientY - rect.top);
+    });
+
+    initScratch();
+
+    // ═══ PHASE 2: CSS Filter Puzzle ═══
+    const filterText = document.getElementById('filter-text');
+    const blurSlider = document.getElementById('blur-slider');
+    const contrastSlider = document.getElementById('contrast-slider');
+    const hueSlider = document.getElementById('hue-slider');
+
+    filterText.style.filter = 'blur(15px) contrast(0.4) hue-rotate(180deg)';
+
+    function updateFilters() {
+      const b = blurSlider.value, c = contrastSlider.value, h = hueSlider.value;
+      document.getElementById('blur-val').textContent = b;
+      document.getElementById('contrast-val').textContent = c;
+      document.getElementById('hue-val').textContent = h;
+      filterText.style.filter = `blur(${b}px) contrast(${c/100}) hue-rotate(${h}deg)`;
+
+      if (parseInt(b) <= 2 && parseInt(c) >= 80 && (parseInt(h) <= 30 || parseInt(h) >= 330) && !phase2Done) {
+        phase2Done = true;
+        filterText.style.filter = 'none';
+        filterText.style.textShadow = '0 0 10px rgba(255,215,0,0.3)';
+        setTimeout(() => document.getElementById('timeline-section').classList.add('unlocked'), 500);
+      }
+    }
+
+    [blurSlider, contrastSlider, hueSlider].forEach(s => s.addEventListener('input', updateFilters));
+
+    // ═══ PHASE 3: Timeline Ordering ═══
     const quotes = [
       { text: '"מי אנכי כי אלך אל פרעה"', ref: 'שמות ג:יא', order: 0, real: true },
       { text: '"ואמרו לי מה שמו מה אומר אלהם"', ref: 'שמות ג:יג', order: 1, real: true },
@@ -359,7 +590,6 @@
       { text: '"הנני עמד לפניך שם על הצור בחרב"', ref: '', order: -1, real: false },
     ];
 
-    // Shuffle
     const shuffled = [...quotes];
     for (let i = shuffled.length - 1; i > 0; i--) {
       const j = Math.floor(Math.random() * (i + 1));
@@ -367,7 +597,6 @@
     }
 
     let currentSlot = 0;
-    let phase1Done = false, phase2Done = false;
     const pool = document.getElementById('quote-pool');
 
     shuffled.forEach((q, idx) => {
@@ -380,10 +609,9 @@
     });
 
     function pickQuote(btn, quote) {
-      if (phase1Done || btn.classList.contains('used') || btn.classList.contains('exploded')) return;
+      if (phase3Done || btn.classList.contains('used') || btn.classList.contains('exploded')) return;
 
       if (!quote.real) {
-        // FAKE — explode
         btn.classList.add('exploded');
         document.body.classList.add('screen-shake');
         const flash = document.querySelector('.red-flash');
@@ -395,7 +623,6 @@
       }
 
       if (quote.order === currentSlot) {
-        // CORRECT position
         btn.classList.add('used');
         const slot = document.querySelectorAll('.timeline-slot')[currentSlot];
         slot.classList.add('filled');
@@ -410,13 +637,10 @@
         document.getElementById('placed-count').textContent = currentSlot;
 
         if (currentSlot === 4) {
-          phase1Done = true;
-          setTimeout(() => {
-            document.getElementById('hard-question').classList.add('unlocked');
-          }, 600);
+          phase3Done = true;
+          setTimeout(() => document.getElementById('hard-question').classList.add('unlocked'), 600);
         }
       } else {
-        // WRONG order — shake
         btn.style.borderColor = 'rgba(255,100,50,0.6)';
         document.body.classList.add('screen-shake');
         const flash = document.querySelector('.red-flash');
@@ -430,14 +654,14 @@
       }
     }
 
-    // ─── PHASE 2: Hard Question (Avitzur Q16) ────────────────────
+    // ═══ PHASE 4: Hard Question (Avitzur Q16) ═══
     function answerHQ(el, isCorrect) {
-      if (phase2Done) return;
+      if (phase4Done) return;
       document.querySelectorAll('.hq-option').forEach(o => o.classList.add('picked'));
       el.classList.add(isCorrect ? 'correct-pick' : 'wrong-pick');
 
       if (isCorrect) {
-        phase2Done = true;
+        phase4Done = true;
         setTimeout(() => {
           document.getElementById('verse-reveal').classList.add('visible');
           document.querySelector('.password-input').focus();
@@ -455,7 +679,7 @@
       }
     }
 
-    // ─── Initialize Game Engine ──────────────────────────────────
+    // ─── Initialize Game Engine ──────────────────────────────
     new ParticleEngine('particles-canvas', 'burning');
     const timer = new GameTimer();
     const checker = new PasswordChecker('index', 'room1.html');
