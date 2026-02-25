@@ -5,8 +5,147 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>הסנה הבוער — חדר בריחה יציאת מצרים</title>
   <link rel="stylesheet" href="style.css">
+  <style>
+    /* ── Cinematic Intro ── */
+    .entrance-cinematic {
+      position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+      background: #000; z-index: 1000;
+      display: flex; align-items: center; justify-content: center;
+      flex-direction: column; transition: opacity 1.5s ease-out;
+    }
+    .entrance-cinematic.fade-out { opacity: 0; pointer-events: none; }
+    .cinematic-text {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: clamp(1.2rem, 4vw, 2rem);
+      color: #ffd700; text-align: center; direction: rtl;
+      padding: 0 20px; min-height: 3em;
+      text-shadow: 0 0 15px rgba(255,150,0,0.6), 0 0 30px rgba(255,100,0,0.3), 0 0 60px rgba(255,50,0,0.15);
+      animation: textGlow 2s ease-in-out infinite alternate;
+    }
+    @keyframes textGlow {
+      from { text-shadow: 0 0 15px rgba(255,150,0,0.6), 0 0 30px rgba(255,100,0,0.3); }
+      to { text-shadow: 0 0 25px rgba(255,180,0,0.8), 0 0 50px rgba(255,120,0,0.5), 0 0 80px rgba(255,50,0,0.3); }
+    }
+    .cinematic-sub {
+      font-size: 0.9rem; color: rgba(255,150,50,0.5);
+      margin-top: 20px; opacity: 0; transition: opacity 1s; text-align: center;
+    }
+    .cinematic-skip {
+      position: absolute; bottom: 30px; right: 30px;
+      font-size: 0.75rem; color: rgba(255,255,255,0.2);
+      cursor: pointer; border: none; background: none; transition: color 0.3s;
+    }
+    .cinematic-skip:hover { color: rgba(255,255,255,0.5); }
+
+    /* ── Timeline Ordering ── */
+    .timeline-section { margin: 15px 0; }
+    .timeline-slots {
+      display: flex; flex-direction: column; gap: 8px; margin: 10px 0;
+    }
+    .timeline-slot {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 16px; border-radius: 10px;
+      border: 2px dashed rgba(255,150,50,0.25);
+      background: rgba(50,20,0,0.15); min-height: 50px;
+      transition: all 0.4s; direction: rtl;
+    }
+    .slot-num {
+      display: flex; align-items: center; justify-content: center;
+      width: 32px; height: 32px; border-radius: 50%;
+      background: rgba(255,150,50,0.12); color: rgba(255,150,50,0.5);
+      font-weight: bold; flex-shrink: 0;
+      font-family: 'Secular One', sans-serif; font-size: 0.9rem;
+    }
+    .timeline-slot.filled {
+      border-style: solid; border-color: rgba(255,215,0,0.4);
+      background: rgba(80,40,0,0.2);
+    }
+    .timeline-slot.filled .slot-num {
+      background: rgba(255,215,0,0.2); color: #ffd700;
+    }
+    .slot-text {
+      font-family: 'Frank Ruhl Libre', serif;
+      font-size: 0.85rem; color: rgba(255,255,255,0.8);
+      flex: 1; text-align: right; line-height: 1.5;
+    }
+    .slot-placeholder {
+      font-family: 'Frank Ruhl Libre', serif;
+      color: rgba(255,150,50,0.25); font-size: 0.8rem;
+    }
+
+    .quote-pool {
+      display: flex; flex-wrap: wrap; gap: 8px; justify-content: center; margin: 15px 0;
+    }
+    .quote-btn {
+      padding: 12px 16px; border-radius: 10px; cursor: pointer;
+      background: rgba(80,30,0,0.2); border: 2px solid rgba(255,150,50,0.25);
+      color: rgba(255,255,255,0.75); font-family: 'Frank Ruhl Libre', serif;
+      font-size: 0.8rem; transition: all 0.3s; text-align: center;
+      max-width: 300px; line-height: 1.4;
+    }
+    .quote-btn:hover:not(.used):not(.exploded) {
+      background: rgba(120,50,0,0.3); border-color: rgba(255,150,50,0.5);
+      transform: translateY(-3px); box-shadow: 0 4px 15px rgba(255,100,0,0.15);
+    }
+    .quote-btn.used {
+      opacity: 0.3; pointer-events: none; border-color: rgba(0,255,100,0.3);
+    }
+    .quote-btn.exploded {
+      border-color: rgba(255,50,50,0.5) !important;
+      background: rgba(100,0,0,0.2) !important;
+      color: #ff6666 !important; opacity: 0.25; pointer-events: none;
+    }
+
+    /* ── Hard Question ── */
+    .hard-question {
+      margin: 15px 0; padding: 18px; border-radius: 12px;
+      border: 1px solid rgba(255,215,0,0.2); background: rgba(50,30,0,0.2);
+      display: none; text-align: center;
+    }
+    .hard-question.unlocked { display: block; animation: scrollReveal 0.8s ease-out; }
+    .hq-text { font-size: 1.05rem; color: #fff; margin-bottom: 12px; line-height: 1.7; direction: rtl; }
+    .hq-options { display: grid; grid-template-columns: repeat(2, 1fr); gap: 8px; margin: 10px 0; }
+    .hq-option {
+      padding: 14px; border-radius: 10px; cursor: pointer;
+      background: rgba(255,215,0,0.05); border: 2px solid rgba(255,215,0,0.15);
+      color: rgba(255,255,255,0.7); font-size: 0.95rem; transition: all 0.3s;
+      font-family: 'Frank Ruhl Libre', serif;
+    }
+    .hq-option:hover:not(.picked) { background: rgba(255,215,0,0.12); border-color: rgba(255,215,0,0.35); transform: translateY(-2px); }
+    .hq-option.picked { pointer-events: none; }
+    .hq-option.correct-pick { border-color: rgba(0,255,100,0.5) !important; background: rgba(0,100,0,0.2) !important; color: #00ff88; }
+    .hq-option.wrong-pick { border-color: rgba(255,50,50,0.5) !important; background: rgba(100,0,0,0.2) !important; color: #ff6666; opacity: 0.5; }
+
+    .verse-reveal {
+      display: none; margin: 15px 0; padding: 20px;
+      background: rgba(80,30,0,0.3); border: 1px solid rgba(255,150,50,0.3);
+      border-radius: 12px; text-align: center;
+    }
+    .verse-reveal.visible { display: block; animation: scrollReveal 0.8s ease-out; }
+
+    .screen-shake { animation: screenShake 0.6s ease-out; }
+    @keyframes screenShake {
+      0%, 100% { transform: translateX(0); }
+      10% { transform: translateX(-8px); } 20% { transform: translateX(8px); }
+      30% { transform: translateX(-6px); } 40% { transform: translateX(6px); }
+    }
+    @keyframes scrollReveal { from { opacity:0; transform:scaleY(0.3); } to { opacity:1; transform:scaleY(1); } }
+
+    @media (max-width: 600px) {
+      .quote-btn { font-size: 0.7rem; padding: 10px 12px; max-width: 250px; }
+      .hq-options { grid-template-columns: 1fr; }
+      .slot-text { font-size: 0.75rem; }
+    }
+  </style>
 </head>
 <body class="theme-burning">
+
+  <!-- Cinematic Intro -->
+  <div class="entrance-cinematic" id="cinematic">
+    <div class="cinematic-text" id="cinematic-text"></div>
+    <div class="cinematic-sub" id="cinematic-sub">שמות ג:ב</div>
+    <button class="cinematic-skip" onclick="skipCinematic()">דלג ←</button>
+  </div>
 
   <!-- Video Background -->
   <video class="video-bg" autoplay muted loop playsinline
@@ -15,8 +154,6 @@
   </video>
   <div class="fog-overlay"></div>
   <div class="dark-overlay"></div>
-
-  <!-- Particles Canvas -->
   <canvas id="particles-canvas"></canvas>
 
   <!-- Timer Bar -->
@@ -27,21 +164,18 @@
 
   <!-- Main Content -->
   <div class="room-container">
-
-    <!-- Room Header -->
     <div class="room-header">
       <div class="room-icon">🔥</div>
       <h1 class="room-title">הסנה הבוער</h1>
-      <p class="room-subtitle">"והסנה בוער באש — והסנה איננו אוכל"</p>
+      <p class="room-subtitle">"ויבא אל הר האלוהים חורבה"</p>
     </div>
 
-    <!-- Question Box -->
     <div class="question-box">
       <div class="question-text">
-        משה ראה מראה נורא. סנה בוער שלא נשרף. באיזה הר עמד?
+        משה עמד מול הסנה — ושמע את קול ה'. סדר את תשובות משה כפי שנאמרו בשמות ג-ד.
       </div>
       <div class="question-helper">
-        🏔️ חמישה הרים. רק אחד מהם — הר האלוהים.
+        🔥 שלב 1: סדר את הציטוטים לפי הסדר בפרק. שלב 2: ענה על שאלת חידון התנ"ך.
       </div>
     </div>
 
@@ -51,50 +185,50 @@
       <div class="bush-label">🔥 הסנה בוער באש... והסנה איננו אוכל</div>
     </div>
 
-    <!-- Mountain Grid -->
-    <div class="mountain-grid">
+    <!-- ═══ PHASE 1: Timeline Ordering ═══ -->
+    <div class="timeline-section" id="timeline-section">
+      <p style="font-size:0.85rem; color:rgba(255,150,50,0.5); text-align:center; margin:8px 0;">
+        📜 לחץ על הציטוטים לפי הסדר שנאמרו. היזהר — יש גם פסוקים מפרקים אחרים!
+      </p>
 
-      <!-- הר תבור ❌ -->
-      <div class="mountain-card" onclick="examineMountain(this, 'wrong', '❌ הר תבור בצפון ישראל. דבורה הנביאה עלתה אליו — אבל הסנה לא כאן.')">
-        <div class="mountain-icon">🏔️</div>
-        <div class="mountain-name">הר תבור</div>
-        <div class="mountain-result"></div>
+      <div class="timeline-slots" id="timeline-slots">
+        <div class="timeline-slot" data-slot="0"><span class="slot-num">1</span><span class="slot-placeholder">ראשון...</span></div>
+        <div class="timeline-slot" data-slot="1"><span class="slot-num">2</span><span class="slot-placeholder">שני...</span></div>
+        <div class="timeline-slot" data-slot="2"><span class="slot-num">3</span><span class="slot-placeholder">שלישי...</span></div>
+        <div class="timeline-slot" data-slot="3"><span class="slot-num">4</span><span class="slot-placeholder">רביעי...</span></div>
       </div>
 
-      <!-- הר הכרמל ❌ -->
-      <div class="mountain-card" onclick="examineMountain(this, 'wrong', '❌ הר הכרמל — כאן אליהו ניצח את נביאי הבעל. אבל זה קרה מאות שנים אחרי.')">
-        <div class="mountain-icon">⛰️</div>
-        <div class="mountain-name">הר הכרמל</div>
-        <div class="mountain-result"></div>
-      </div>
+      <div class="quote-pool" id="quote-pool"></div>
 
-      <!-- הר חורב ✅ -->
-      <div class="mountain-card" onclick="examineMountain(this, 'correct', '✨ נכון! הר חורב — הר האלוהים!\n&quot;ויבא אל הר האלוהים חורבה&quot;\nשם ההר — הוא הסיסמה.')">
-        <div class="mountain-icon">🗻</div>
-        <div class="mountain-name">הר חורב</div>
-        <div class="mountain-result"></div>
+      <div style="text-align:center; font-size:0.8rem; color:rgba(255,150,50,0.35); margin:6px 0;">
+        נבחרו <span id="placed-count" style="color:rgba(255,150,50,0.6);">0</span> מתוך 4
       </div>
-
-      <!-- הר המוריה ❌ -->
-      <div class="mountain-card" onclick="examineMountain(this, 'wrong', '❌ הר המוריה — כאן עקד אברהם את יצחק. אבל משה טרם נולד.')">
-        <div class="mountain-icon">🏛️</div>
-        <div class="mountain-name">הר המוריה</div>
-        <div class="mountain-result"></div>
-      </div>
-
-      <!-- הר גריזים ❌ -->
-      <div class="mountain-card" onclick="examineMountain(this, 'wrong', '❌ הר גריזים — הר הברכה. אבל הסנה הבוער? לא כאן.')">
-        <div class="mountain-icon">🌄</div>
-        <div class="mountain-name">הר גריזים</div>
-        <div class="mountain-result"></div>
-      </div>
-
     </div>
 
-    <!-- Sefaria Link -->
+    <!-- ═══ PHASE 2: Hard Question (Avitzur Q16) ═══ -->
+    <div class="hard-question" id="hard-question">
+      <p style="color:#ffd700; font-size:0.85rem; margin-bottom:8px;">⚡ שאלת חידון התנ"ך — מקבץ אביצור:</p>
+      <p class="hq-text">"והמטה אשר נהפך לנחש תיקח בידך" — לפני איזו מכה נאמר הפסוק?</p>
+      <div class="hq-options">
+        <div class="hq-option" onclick="answerHQ(this, true)">דם</div>
+        <div class="hq-option" onclick="answerHQ(this, false)">צפרדע</div>
+        <div class="hq-option" onclick="answerHQ(this, false)">כינים</div>
+        <div class="hq-option" onclick="answerHQ(this, false)">חושך</div>
+      </div>
+    </div>
+
+    <!-- Verse Reveal -->
+    <div class="verse-reveal" id="verse-reveal">
+      <p style="color: #ff8844; font-size: 1rem; margin-bottom: 10px;">📜 שני השלבים הושלמו!</p>
+      <p style="color: rgba(255,255,255,0.8); line-height: 1.8; font-size: 1.05rem;">
+        "וַיָּבֹא אֶל הַר הָאֱלֹהִים <strong style="color:#ffd700; font-size:1.3rem;">חֹרֵבָה</strong>"
+      </p>
+      <p style="font-size: 0.8rem; color: rgba(255,215,0,0.5); margin-top: 10px;">שם ההר — הוא הסיסמה.</p>
+    </div>
+
     <div class="sefaria-link-box">
       <a href="https://www.sefaria.org/Exodus.3?lang=he" target="_blank" class="sefaria-link">
-        📜 קרא את שמות ג' בספריא
+        📜 שמות ג-ד בספריא
       </a>
     </div>
 
@@ -104,8 +238,8 @@
         <button class="submit-btn">🔓 פתח</button>
       </div>
       <div class="attempts-display"></div>
-      <div class="hint-box">💡 משה רעה צאן. הוא הגיע להר שנקרא גם 'הר האלוהים'.</div>
-      <div class="hint-box strong">🔥 חורב. סיני. שני שמות להר אחד. הקלד את הראשון.</div>
+      <div class="hint-box">💡 סדר את הפסוקים מתוך שמות ג-ד, וענה על השאלה.</div>
+      <div class="hint-box strong">🔥 הר האלוהים. חורב. סיני. שמות שונים לאותו מקום.</div>
     </div>
   </div>
 
@@ -121,7 +255,31 @@
   <script src="game.js"></script>
 
   <script>
-    // ─── Burning Bush Canvas Animation ───────────────────────────────────────
+    // ─── Cinematic Intro ──────────────────────────────────────
+    const verse = 'וַיֵּרָא מַלְאַךְ ה\' אֵלָיו בְּלַבַּת אֵשׁ מִתּוֹךְ הַסְּנֶה';
+    const cinematicText = document.getElementById('cinematic-text');
+    let charIdx = 0;
+
+    function typeChar() {
+      if (charIdx < verse.length) {
+        cinematicText.textContent = verse.substring(0, charIdx + 1);
+        charIdx++;
+        setTimeout(typeChar, 65 + Math.random() * 35);
+      } else {
+        document.getElementById('cinematic-sub').style.opacity = '1';
+        setTimeout(() => skipCinematic(), 2500);
+      }
+    }
+    setTimeout(typeChar, 800);
+
+    function skipCinematic() {
+      const el = document.getElementById('cinematic');
+      if (!el || el.classList.contains('fade-out')) return;
+      el.classList.add('fade-out');
+      setTimeout(() => el.remove(), 1500);
+    }
+
+    // ─── Burning Bush Canvas Animation ───────────────────────────
     const bushCanvas = document.getElementById('bush-canvas');
     const bushCtx = bushCanvas.getContext('2d');
 
@@ -146,17 +304,14 @@
         bushCtx.fillStyle = 'rgba(0,0,0,0.1)';
         bushCtx.fillRect(0, 0, bushCanvas.width, bushCanvas.height);
 
-        // Bush shape (dark green, always there — לא נשרף)
         bushCtx.fillStyle = 'rgba(20,80,20,0.3)';
         bushCtx.beginPath();
         bushCtx.ellipse(bushCanvas.width / 2, bushCanvas.height - 50, 70, 50, 0, 0, Math.PI * 2);
         bushCtx.fill();
 
-        // Trunk
         bushCtx.fillStyle = 'rgba(80,50,20,0.5)';
         bushCtx.fillRect(bushCanvas.width / 2 - 5, bushCanvas.height - 30, 10, 30);
 
-        // Flames
         flames.forEach((f, i) => {
           f.y += f.speedY;
           f.x += (Math.random() - 0.5) * 1.5;
@@ -186,30 +341,121 @@
             };
           }
         });
-
         requestAnimationFrame(drawBush);
       }
-
       drawBush();
     }
 
     initBush();
     window.addEventListener('resize', initBush);
 
-    // ─── Mountain Examination ─────────────────────────────────────────────────
-    function examineMountain(el, type, message) {
-      if (el.classList.contains('examined')) return;
-      el.classList.add('examined', type);
-      el.querySelector('.mountain-result').innerHTML = message.replace(/\n/g, '<br>');
+    // ─── PHASE 1: Timeline Ordering ──────────────────────────────
+    const quotes = [
+      { text: '"מי אנכי כי אלך אל פרעה"', ref: 'שמות ג:יא', order: 0, real: true },
+      { text: '"ואמרו לי מה שמו מה אומר אלהם"', ref: 'שמות ג:יג', order: 1, real: true },
+      { text: '"והן לא יאמינו לי ולא ישמעו בקלי"', ref: 'שמות ד:א', order: 2, real: true },
+      { text: '"שלח נא ביד תשלח"', ref: 'שמות ד:יג', order: 3, real: true },
+      { text: '"למה הרעתה לעם הזה"', ref: '', order: -1, real: false },
+      { text: '"הנני עמד לפניך שם על הצור בחרב"', ref: '', order: -1, real: false },
+    ];
 
-      if (type === 'correct') {
+    // Shuffle
+    const shuffled = [...quotes];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+
+    let currentSlot = 0;
+    let phase1Done = false, phase2Done = false;
+    const pool = document.getElementById('quote-pool');
+
+    shuffled.forEach((q, idx) => {
+      const btn = document.createElement('div');
+      btn.className = 'quote-btn';
+      btn.textContent = q.text;
+      btn.dataset.idx = idx;
+      btn.onclick = () => pickQuote(btn, q);
+      pool.appendChild(btn);
+    });
+
+    function pickQuote(btn, quote) {
+      if (phase1Done || btn.classList.contains('used') || btn.classList.contains('exploded')) return;
+
+      if (!quote.real) {
+        // FAKE — explode
+        btn.classList.add('exploded');
+        document.body.classList.add('screen-shake');
+        const flash = document.querySelector('.red-flash');
+        flash.classList.remove('active'); void flash.offsetWidth; flash.classList.add('active');
+        setTimeout(() => document.body.classList.remove('screen-shake'), 600);
+        const errors = parseInt(localStorage.getItem(GAME.STORAGE_PREFIX + 'Errors') || '0') + 1;
+        localStorage.setItem(GAME.STORAGE_PREFIX + 'Errors', errors.toString());
+        return;
+      }
+
+      if (quote.order === currentSlot) {
+        // CORRECT position
+        btn.classList.add('used');
+        const slot = document.querySelectorAll('.timeline-slot')[currentSlot];
+        slot.classList.add('filled');
+        const placeholder = slot.querySelector('.slot-placeholder');
+        if (placeholder) placeholder.remove();
+        const textEl = document.createElement('span');
+        textEl.className = 'slot-text';
+        textEl.innerHTML = quote.text + '<span style="font-size:0.65rem; color:rgba(255,215,0,0.4); margin-right:8px;">' + quote.ref + '</span>';
+        slot.appendChild(textEl);
+
+        currentSlot++;
+        document.getElementById('placed-count').textContent = currentSlot;
+
+        if (currentSlot === 4) {
+          phase1Done = true;
+          setTimeout(() => {
+            document.getElementById('hard-question').classList.add('unlocked');
+          }, 600);
+        }
+      } else {
+        // WRONG order — shake
+        btn.style.borderColor = 'rgba(255,100,50,0.6)';
+        document.body.classList.add('screen-shake');
+        const flash = document.querySelector('.red-flash');
+        flash.classList.remove('active'); void flash.offsetWidth; flash.classList.add('active');
         setTimeout(() => {
-          document.querySelector('.password-input').focus();
-        }, 800);
+          document.body.classList.remove('screen-shake');
+          btn.style.borderColor = '';
+        }, 600);
+        const errors = parseInt(localStorage.getItem(GAME.STORAGE_PREFIX + 'Errors') || '0') + 1;
+        localStorage.setItem(GAME.STORAGE_PREFIX + 'Errors', errors.toString());
       }
     }
 
-    // ─── Initialize Game Engine ──────────────────────────────────────────────
+    // ─── PHASE 2: Hard Question (Avitzur Q16) ────────────────────
+    function answerHQ(el, isCorrect) {
+      if (phase2Done) return;
+      document.querySelectorAll('.hq-option').forEach(o => o.classList.add('picked'));
+      el.classList.add(isCorrect ? 'correct-pick' : 'wrong-pick');
+
+      if (isCorrect) {
+        phase2Done = true;
+        setTimeout(() => {
+          document.getElementById('verse-reveal').classList.add('visible');
+          document.querySelector('.password-input').focus();
+        }, 600);
+      } else {
+        document.body.classList.add('screen-shake');
+        const flash = document.querySelector('.red-flash');
+        flash.classList.remove('active'); void flash.offsetWidth; flash.classList.add('active');
+        setTimeout(() => document.body.classList.remove('screen-shake'), 600);
+        const errors = parseInt(localStorage.getItem(GAME.STORAGE_PREFIX + 'Errors') || '0') + 1;
+        localStorage.setItem(GAME.STORAGE_PREFIX + 'Errors', errors.toString());
+        setTimeout(() => {
+          document.querySelectorAll('.hq-option').forEach(o => o.classList.remove('picked', 'wrong-pick'));
+        }, 1200);
+      }
+    }
+
+    // ─── Initialize Game Engine ──────────────────────────────────
     new ParticleEngine('particles-canvas', 'burning');
     const timer = new GameTimer();
     const checker = new PasswordChecker('index', 'room1.html');
