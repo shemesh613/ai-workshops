@@ -232,7 +232,7 @@ body.streak-ultra{background:radial-gradient(ellipse at bottom,#1a001a 0%,var(--
         <li>🎰 גלגל מזל + 💫 כוכבים לתפוס!</li>
         <li>🐣➜👑 הדמות מתפתחת!</li>
     </ul></div>
-    <button class="start-btn" id="startBtn" onclick="requestMicAndStart()">🚀 יאללה מתחילים!!!!</button>
+    <button class="start-btn" id="startBtn">🚀 יאללה מתחילים!!!!</button>
 </div>
 
 <div class="game-area" id="gameArea">
@@ -290,18 +290,6 @@ body.streak-ultra{background:radial-gradient(ellipse at bottom,#1a001a 0%,var(--
 
 <script>
 const $=id=>document.getElementById(id);
-
-// ====== MIC PERMISSION ON START ======
-async function requestMicAndStart(){
-    const btn=$('startBtn');
-    btn.disabled=true;btn.textContent='🎤 מבקש הרשאה...';
-    try{
-        const s=await navigator.mediaDevices.getUserMedia({audio:true});
-        s.getTracks().forEach(t=>t.stop());
-    }catch(e){}
-    btn.textContent='🚀 יאללה מתחילים!!!!';btn.disabled=false;
-    G.start();
-}
 
 // ====== AUDIO ======
 const A={ctx:null,init(){this.ctx=new(window.AudioContext||window.webkitAudioContext)()},
@@ -649,6 +637,20 @@ function resize(){cv.width=window.innerWidth;cv.height=window.innerHeight}
 function init(){resize();stars=[];for(let i=0;i<150;i++)stars.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.8+0.3,sp:Math.random()*0.4+0.1,a:Math.random()*0.5+0.3})}
 function draw(){cx.clearRect(0,0,cv.width,cv.height);stars.forEach(s=>{cx.beginPath();cx.arc(s.x,s.y,s.r,0,Math.PI*2);s.a+=(Math.random()-0.5)*0.02;s.a=Math.max(0.1,Math.min(0.8,s.a));cx.fillStyle='rgba(255,255,255,'+s.a+')';cx.fill();s.y+=s.sp;if(s.y>cv.height){s.y=0;s.x=Math.random()*cv.width}});requestAnimationFrame(draw)}
 window.addEventListener('resize',resize);init();draw()})();
+
+// ====== MIC PERMISSION ON START ======
+$('startBtn').addEventListener('click', async function(){
+    const btn=this;
+    btn.disabled=true;btn.textContent='🎤 מאשרים מיקרופון...';
+    try{
+        if(navigator.mediaDevices && navigator.mediaDevices.getUserMedia){
+            const s=await navigator.mediaDevices.getUserMedia({audio:true});
+            s.getTracks().forEach(t=>t.stop());
+        }
+    }catch(e){}
+    btn.textContent='🚀 מתחילים!';
+    G.start();
+});
 </script>
 </body>
 </html>
