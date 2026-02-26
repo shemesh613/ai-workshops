@@ -232,7 +232,7 @@ body.streak-ultra{background:radial-gradient(ellipse at bottom,#1a001a 0%,var(--
         <li>🎰 גלגל מזל + 💫 כוכבים לתפוס!</li>
         <li>🐣➜👑 הדמות מתפתחת!</li>
     </ul></div>
-    <button class="start-btn" onclick="G.start()">🚀 יאללה מתחילים!!!!</button>
+    <button class="start-btn" id="startBtn" onclick="requestMicAndStart()">🚀 יאללה מתחילים!!!!</button>
 </div>
 
 <div class="game-area" id="gameArea">
@@ -290,6 +290,18 @@ body.streak-ultra{background:radial-gradient(ellipse at bottom,#1a001a 0%,var(--
 
 <script>
 const $=id=>document.getElementById(id);
+
+// ====== MIC PERMISSION ON START ======
+async function requestMicAndStart(){
+    const btn=$('startBtn');
+    btn.disabled=true;btn.textContent='🎤 מבקש הרשאה...';
+    try{
+        const s=await navigator.mediaDevices.getUserMedia({audio:true});
+        s.getTracks().forEach(t=>t.stop());
+    }catch(e){}
+    btn.textContent='🚀 יאללה מתחילים!!!!';btn.disabled=false;
+    G.start();
+}
 
 // ====== AUDIO ======
 const A={ctx:null,init(){this.ctx=new(window.AudioContext||window.webkitAudioContext)()},
