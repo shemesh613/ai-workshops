@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>🔥 חידון המועדים המטורף 🔥</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Heebo:wght@400;700;900&display=swap');
+:root{--gold:#FFD700;--fire:#FF6B35;--ok:#00C853;--bad:#FF1744;--pri:#6C63FF;--dark:#0a0a1a;--nb:#00F5FF;--np:#FF00FF;--ng:#39FF14}
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:'Heebo',sans-serif;background:var(--dark);min-height:100vh;overflow-x:hidden;color:#fff;transition:background 0.5s}
+canvas.stars{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0}
+
+/* SCREEN FX */
+.screen-flash{position:fixed;top:0;left:0;width:100%;height:100%;z-index:999;pointer-events:none;opacity:0;transition:opacity 0.1s}
+.screen-flash.green{background:#00C853;opacity:0.4}.screen-flash.red{background:#FF1744;opacity:0.4}
+.screen-flash.gold{background:#FFD700;opacity:0.5}.screen-flash.white{background:#FFF;opacity:0.6}
+.screen-flash.rainbow{background:linear-gradient(45deg,#f00,#ff0,#0f0,#0ff,#00f,#f0f);opacity:0.3}
+
+@keyframes shake{0%,100%{transform:translate(0)}10%{transform:translate(-8px,5px)}20%{transform:translate(8px,-5px)}30%{transform:translate(-5px,8px)}40%{transform:translate(5px,-8px)}}
+.shaking{animation:shake 0.5s ease}
+@keyframes mega-shake{0%,100%{transform:translate(0) rotate(0)}10%{transform:translate(-12px,8px) rotate(-2deg)}20%{transform:translate(12px,-8px) rotate(2deg)}30%{transform:translate(-8px,12px) rotate(-1deg)}40%{transform:translate(8px,-12px) rotate(1deg)}}
+.mega-shaking{animation:mega-shake 0.7s ease}
+.tilt-wrong{animation:tilt-shake 0.6s ease}
+@keyframes tilt-shake{0%{transform:rotate(0)}15%{transform:rotate(-4deg) scale(0.98)}30%{transform:rotate(4deg)}45%{transform:rotate(-3deg)}60%{transform:rotate(2deg)}100%{transform:rotate(0)}}
+.glitch{animation:glitch 0.3s ease}
+@keyframes glitch{0%,100%{transform:translate(0);filter:none}20%{transform:translate(-5px,3px);filter:hue-rotate(90deg)}40%{transform:translate(5px,-3px);filter:hue-rotate(180deg)}60%{transform:translate(-3px,-5px);filter:hue-rotate(270deg)}80%{transform:translate(3px,5px);filter:hue-rotate(360deg)}}
+
+/* MAIN */
+.gc{position:relative;z-index:1;max-width:700px;margin:0 auto;padding:12px;min-height:100vh}
+
+/* TOP BAR */
+.top-bar{display:flex;justify-content:space-between;align-items:center;padding:10px 15px;background:rgba(255,255,255,0.06);border-radius:16px;backdrop-filter:blur(10px);margin-bottom:8px;border:1px solid rgba(255,255,255,0.08)}
+.stat{text-align:center;min-width:50px}.stat .lbl{font-size:9px;opacity:0.6;display:block}.stat .val{font-size:20px;font-weight:900;display:block;line-height:1.2}
+.stat.s-score .val{color:var(--gold)}.stat.s-streak .val{color:var(--fire)}.stat.s-mult .val{color:var(--ng)}.stat.s-level .val{color:var(--nb)}
+
+/* CHARACTER */
+.char-area{text-align:center;margin:6px 0;position:relative}
+.char-display{font-size:50px;display:inline-block;transition:all 0.5s cubic-bezier(0.175,0.885,0.32,1.275);filter:drop-shadow(0 0 15px rgba(255,215,0,0.5))}
+.char-display.evolving{animation:evolve 1s ease}
+@keyframes evolve{0%{transform:scale(1) rotate(0)}30%{transform:scale(0.3) rotate(360deg)}60%{transform:scale(1.8) rotate(720deg)}100%{transform:scale(1) rotate(0)}}
+.char-display.dancing{animation:char-dance 0.5s ease infinite}
+@keyframes char-dance{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-8px) rotate(-10deg)}75%{transform:translateY(-8px) rotate(10deg)}}
+.char-display.mega-dancing{animation:mega-dance 0.3s ease infinite}
+@keyframes mega-dance{0%,100%{transform:translateY(0) rotate(0) scale(1)}25%{transform:translateY(-12px) rotate(-15deg) scale(1.2)}75%{transform:translateY(-12px) rotate(15deg) scale(1.2)}}
+.char-name{font-size:12px;font-weight:700;color:var(--gold);margin-top:2px}
+.xp-bar{width:140px;height:5px;background:rgba(255,255,255,0.1);border-radius:3px;margin:3px auto 0;overflow:hidden}
+.xp-fill{height:100%;background:linear-gradient(90deg,var(--nb),var(--np));transition:width 0.5s;border-radius:3px}
+
+/* PET COMMENT BUBBLE */
+.pet-bubble{position:fixed;top:15%;left:50%;transform:translateX(-50%);z-index:800;pointer-events:none;animation:bubble-pop 2s ease-out forwards}
+.pet-bubble-inner{background:linear-gradient(135deg,var(--np),var(--pri));color:#fff;padding:12px 22px;border-radius:25px;font-weight:900;font-size:20px;border:3px solid #fff;box-shadow:0 4px 20px rgba(0,0,0,0.4);white-space:nowrap}
+@keyframes bubble-pop{0%{transform:translateX(-50%) translateY(20px) scale(0.3);opacity:0}15%{transform:translateX(-50%) translateY(-10px) scale(1.1);opacity:1}30%{transform:translateX(-50%) scale(1);opacity:1}80%{opacity:1}100%{transform:translateX(-50%) translateY(-80px) scale(0.5);opacity:0}}
+
+/* PROGRESS */
+.prog{width:100%;height:7px;background:rgba(255,255,255,0.08);border-radius:4px;margin-bottom:8px;overflow:hidden}
+.prog-fill{height:100%;background:linear-gradient(90deg,var(--pri),var(--ng));border-radius:4px;transition:width 0.5s}
+
+/* INVENTORY */
+.inv{display:flex;gap:5px;justify-content:center;flex-wrap:wrap;margin:4px 0;min-height:24px}
+.inv-i{background:rgba(255,255,255,0.1);border-radius:8px;padding:3px 8px;font-size:11px;font-weight:700;border:1px solid rgba(255,255,255,0.12)}
+
+/* QUESTION CARD */
+.q-card{background:rgba(255,255,255,0.05);border-radius:20px;padding:18px;border:1px solid rgba(255,255,255,0.08);position:relative;overflow:hidden;transition:all 0.3s}
+.q-card.boss-mode{border-color:var(--bad)!important;box-shadow:0 0 30px rgba(255,23,68,0.3)}
+.q-card.boss-mode::before{content:'👹 שאלת בוס! 👹';position:absolute;top:0;left:0;right:0;background:linear-gradient(90deg,#FF1744,#D50000);color:#fff;text-align:center;font-weight:900;font-size:14px;padding:4px;z-index:2;animation:boss-pulse 1s infinite}
+@keyframes boss-pulse{0%,100%{opacity:1}50%{opacity:0.7}}
+.q-card.on-fire{border-color:transparent!important;animation:fire-border 1s infinite alternate}
+@keyframes fire-border{0%{box-shadow:0 0 10px #FF6B35,0 0 20px #FF6B35,0 0 40px #FF4500,inset 0 0 10px rgba(255,107,53,0.1)}100%{box-shadow:0 0 15px #FFD700,0 0 30px #FF8C00,0 0 60px #FF4500,inset 0 0 15px rgba(255,215,0,0.1)}}
+.q-card.ultra-fire{animation:ultra-fire 0.5s infinite alternate}
+@keyframes ultra-fire{0%{box-shadow:0 0 15px #FF00FF,0 0 30px #FF1744,0 0 60px #FF4500,0 0 90px #FFD700}100%{box-shadow:0 0 20px #00F5FF,0 0 40px #FF00FF,0 0 70px #FF1744,0 0 100px #FF4500}}
+.verse-ref{display:inline-block;background:var(--pri);color:#fff;padding:3px 12px;border-radius:15px;font-size:11px;font-weight:700;margin-bottom:6px}
+.q-img{width:100%;height:190px;border-radius:14px;overflow:hidden;margin:8px 0;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0.3)}
+.q-img svg{width:100%;height:100%}
+.q-txt{font-size:21px;font-weight:900;text-align:center;margin:10px 0 4px;line-height:1.5}
+.q-hint{font-size:12px;color:rgba(255,255,255,0.35);text-align:center}
+
+/* BOMB TIMER */
+.bomb-area{text-align:center;margin:6px 0}
+.bomb-timer{display:inline-flex;align-items:center;gap:6px;background:rgba(255,0,0,0.12);border:2px solid rgba(255,0,0,0.25);border-radius:25px;padding:5px 15px;font-weight:900}
+.bomb-timer .bomb-time{color:var(--bad);font-size:22px;min-width:30px}
+.bomb-timer.danger{animation:bomb-shake 0.3s infinite;border-color:var(--bad);background:rgba(255,0,0,0.25)}
+@keyframes bomb-shake{0%,100%{transform:rotate(0)}25%{transform:rotate(-3deg)}75%{transform:rotate(3deg)}}
+.time-bonus-label{font-size:11px;color:var(--gold);font-weight:700;margin-top:2px}
+
+/* INPUT */
+.input-area{margin:12px 0 6px;text-align:center}
+.answer-input{width:100%;max-width:380px;padding:14px 18px;border-radius:14px;border:3px solid rgba(255,255,255,0.15);background:rgba(255,255,255,0.08);color:#fff;font-size:22px;font-weight:700;font-family:'Heebo';text-align:center;direction:rtl;transition:all 0.3s}
+.answer-input:focus{outline:none;border-color:var(--nb);box-shadow:0 0 20px rgba(0,245,255,0.2)}
+.answer-input::placeholder{color:rgba(255,255,255,0.2);font-weight:400}
+.mic-row{display:flex;justify-content:center;gap:8px;margin:8px 0;align-items:center}
+.mic-btn{width:50px;height:50px;border-radius:50%;border:none;background:linear-gradient(135deg,var(--pri),#8B5CF6);color:#fff;font-size:22px;cursor:pointer;transition:all 0.3s;box-shadow:0 3px 12px rgba(108,99,255,0.3);position:relative}
+.mic-btn:hover{transform:scale(1.1)}
+.mic-btn.listening{background:linear-gradient(135deg,#FF1744,#FF6D00);animation:pulse-mic 1s infinite}
+@keyframes pulse-mic{0%,100%{box-shadow:0 0 0 0 rgba(255,23,68,0.4)}50%{box-shadow:0 0 0 15px rgba(255,23,68,0)}}
+.mic-btn.listening::after{content:'';position:absolute;top:-4px;left:-4px;right:-4px;bottom:-4px;border-radius:50%;border:3px solid var(--bad);animation:listen-ring 1s infinite;pointer-events:none}
+@keyframes listen-ring{0%{transform:scale(1);opacity:0.8}100%{transform:scale(1.5);opacity:0}}
+.mic-status{font-size:11px;color:rgba(255,255,255,0.4)}
+.mic-status.error{color:#FF8A80}.mic-status.success{color:#69F0AE}
+.auto-submit-bar{width:100%;max-width:380px;height:5px;background:rgba(255,255,255,0.1);border-radius:3px;margin:5px auto 0;overflow:hidden;display:none}
+.auto-submit-bar.active{display:block}
+.auto-submit-fill{height:100%;width:0%;background:linear-gradient(90deg,var(--ng),var(--ok));border-radius:3px;transition:width 0.8s linear}
+.auto-submit-fill.go{width:100%}
+.submit-btn{width:100%;max-width:380px;padding:14px;border:none;border-radius:12px;font-size:20px;font-weight:900;cursor:pointer;background:linear-gradient(135deg,var(--ok),#00E676);color:#fff;font-family:'Heebo';box-shadow:0 4px 15px rgba(0,200,83,0.3);margin:6px auto;display:block;transition:all 0.3s}
+.submit-btn:disabled{opacity:0.2;cursor:not-allowed}.submit-btn:hover:not(:disabled){transform:translateY(-2px) scale(1.02)}
+
+/* POWER METER */
+.power-meter{position:fixed;bottom:10px;left:50%;transform:translateX(-50%);width:85%;max-width:500px;z-index:100;pointer-events:none}
+.power-bar{height:28px;background:rgba(0,0,0,0.4);border-radius:14px;border:2px solid rgba(255,255,255,0.15);overflow:hidden;position:relative;backdrop-filter:blur(5px)}
+.power-fill{height:100%;width:0%;border-radius:14px;transition:width 0.5s ease,background 0.5s}
+.power-fill.low{background:linear-gradient(90deg,#4CAF50,#8BC34A)}
+.power-fill.med{background:linear-gradient(90deg,#FF9800,#FFC107)}
+.power-fill.high{background:linear-gradient(90deg,#FF5722,#FF1744)}
+.power-fill.ultra{background:linear-gradient(90deg,#FF00FF,#FFD700,#00F5FF);animation:power-rainbow 1s linear infinite;background-size:200%}
+@keyframes power-rainbow{0%{background-position:0%}100%{background-position:200%}}
+.power-label{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);font-size:11px;font-weight:900;color:#fff;text-shadow:0 1px 3px rgba(0,0,0,0.5);z-index:2;white-space:nowrap}
+
+/* FLOATING BONUS STARS */
+.bonus-star{position:fixed;font-size:35px;cursor:pointer;z-index:200;animation:star-float 2.5s ease-in-out infinite;filter:drop-shadow(0 0 8px rgba(255,215,0,0.6));transition:transform 0.2s}
+.bonus-star:hover{transform:scale(1.3)}
+@keyframes star-float{0%,100%{transform:translateY(0) rotate(0)}50%{transform:translateY(-15px) rotate(10deg)}}
+.bonus-star.claimed{animation:star-claim 0.5s ease-out forwards!important;pointer-events:none}
+@keyframes star-claim{0%{transform:scale(1);opacity:1}100%{transform:scale(2.5) rotate(360deg);opacity:0}}
+
+/* TREASURE CHEST */
+.chest{position:fixed;bottom:80px;right:20px;font-size:55px;cursor:pointer;z-index:250;animation:chest-bounce 0.8s ease infinite}
+@keyframes chest-bounce{0%,100%{transform:translateY(0) scale(1) rotate(-2deg)}50%{transform:translateY(-15px) scale(1.1) rotate(2deg)}}
+.chest-reveal{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);z-index:900;pointer-events:none;text-align:center;animation:chest-pop 1.8s ease forwards}
+.chest-reveal .cr-emoji{font-size:80px;display:block}
+.chest-reveal .cr-text{font-size:22px;font-weight:900;color:var(--gold);margin-top:8px;text-shadow:0 2px 8px rgba(0,0,0,0.5)}
+@keyframes chest-pop{0%{transform:translate(-50%,-50%) scale(0) rotate(-360deg);opacity:1}30%{transform:translate(-50%,-50%) scale(1.4) rotate(10deg);opacity:1}60%{transform:translate(-50%,-50%) scale(1);opacity:1}100%{transform:translate(-50%,-50%) scale(0.3) translateY(-100px);opacity:0}}
+
+/* SCREEN TAKEOVER */
+.takeover{position:fixed;top:0;left:0;right:0;bottom:0;z-index:950;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle,rgba(255,215,0,0.2) 0%,rgba(0,0,0,0.8) 100%);pointer-events:none;backdrop-filter:blur(3px);animation:takeover-fade 2.5s ease-out forwards}
+.takeover-text{font-size:min(18vw,120px);font-weight:900;color:#fff;text-shadow:3px 3px 0 #FFD600,6px 6px 0 #FF6D00,9px 9px 20px rgba(0,0,0,0.5);animation:takeover-pop 2.5s cubic-bezier(0.34,1.56,0.64,1) forwards;text-align:center;line-height:1.3}
+@keyframes takeover-pop{0%{transform:scale(0) rotate(-180deg);opacity:1}30%{transform:scale(1.3) rotate(5deg);opacity:1}50%{transform:scale(1) rotate(-2deg)}100%{transform:scale(0.8) rotate(0);opacity:0}}
+@keyframes takeover-fade{0%{opacity:1}70%{opacity:1}100%{opacity:0}}
+
+/* OVERLAYS */
+.fb-overlay{position:fixed;top:0;left:0;width:100%;height:100%;display:none;align-items:center;justify-content:center;z-index:400}
+.fb-overlay.visible{display:flex}
+.fb-backdrop{position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7)}
+.fb-box{position:relative;z-index:1;text-align:center;padding:30px;border-radius:25px;max-width:360px;width:90%}
+.fb-box.correct{background:linear-gradient(135deg,#1b5e20,#2e7d32);border:3px solid var(--ok)}
+.fb-box.wrong{background:linear-gradient(135deg,#b71c1c,#c62828);border:3px solid var(--bad)}
+.fb-emoji{font-size:60px;display:block;margin-bottom:8px}.fb-title{font-size:28px;font-weight:900}
+.fb-sub{font-size:14px;opacity:0.9;margin:4px 0}.fb-pts{font-size:38px;font-weight:900;color:var(--gold);margin:6px 0}
+.fb-next{margin-top:10px;padding:12px 35px;border:none;border-radius:12px;font-size:18px;font-weight:900;cursor:pointer;background:rgba(255,255,255,0.2);color:#fff;font-family:'Heebo';transition:all 0.2s}
+.fb-next:hover{background:rgba(255,255,255,0.3);transform:scale(1.05)}
+
+.slot-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.85);z-index:500;display:none;align-items:center;justify-content:center}
+.slot-overlay.visible{display:flex}
+.slot-machine{background:linear-gradient(135deg,#1a1a3e,#2a1a4e);border:4px solid var(--gold);border-radius:24px;padding:25px;text-align:center}
+.slot-machine::before{content:'🎰 גלגל המזל! 🎰';display:block;font-size:20px;font-weight:900;color:var(--gold);margin-bottom:12px}
+.slot-reels{display:flex;gap:8px;justify-content:center;margin:12px 0}
+.slot-reel{width:65px;height:75px;background:rgba(0,0,0,0.5);border-radius:12px;border:2px solid var(--gold);display:flex;align-items:center;justify-content:center;font-size:36px}
+.slot-result{font-size:18px;font-weight:900;margin-top:8px;min-height:25px}
+.slot-btn{padding:10px 35px;border:none;border-radius:12px;background:var(--gold);color:#000;font-size:16px;font-weight:900;cursor:pointer;font-family:'Heebo';margin-top:12px;transition:all 0.2s}
+.slot-btn:hover{transform:scale(1.05)}
+
+.ev-banner{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%) scale(0);z-index:600;text-align:center;font-size:22px;font-weight:900;padding:18px 30px;border-radius:18px;transition:transform 0.4s cubic-bezier(0.175,0.885,0.32,1.275);white-space:nowrap;pointer-events:none}
+.ev-banner.visible{transform:translate(-50%,-50%) scale(1)}
+.ev-banner.mine{background:linear-gradient(135deg,#880E4F,#AD1457);border:3px solid #FF1744}
+.ev-banner.double{background:linear-gradient(135deg,#E65100,#F57C00);border:3px solid var(--gold)}
+.ev-banner.treasure{background:linear-gradient(135deg,#1A237E,#283593);border:3px solid #448AFF}
+.ev-banner.shield{background:linear-gradient(135deg,#004D40,#00695C);border:3px solid #69F0AE}
+.ev-banner.freeze{background:linear-gradient(135deg,#0D47A1,#1565C0);border:3px solid var(--nb)}
+.ev-banner.evolve{background:linear-gradient(135deg,#311B92,#4527A0);border:3px solid var(--np)}
+.ev-banner.jackpot{background:linear-gradient(135deg,#F57F17,#FF8F00);border:3px solid var(--gold);animation:jackpot-glow 0.3s infinite alternate}
+@keyframes jackpot-glow{from{box-shadow:0 0 20px rgba(255,215,0,0.5)}to{box-shadow:0 0 50px rgba(255,215,0,0.8)}}
+
+.achievement{position:fixed;top:15px;right:15px;background:linear-gradient(135deg,#1a1a3e,#2a1a4e);border:2px solid var(--gold);border-radius:14px;padding:12px 16px;z-index:800;display:flex;align-items:center;gap:10px;transform:translateX(120%);transition:transform 0.5s cubic-bezier(0.175,0.885,0.32,1.275);max-width:280px}
+.achievement.visible{transform:translateX(0)}
+.ach-icon{font-size:32px}.ach-text{flex:1}.ach-title{font-size:13px;font-weight:900;color:var(--gold)}.ach-desc{font-size:10px;opacity:0.7}.ach-label{font-size:8px;color:var(--nb);font-weight:700}
+
+.combo-text{position:fixed;top:50%;left:50%;transform:translate(-50%,-50%);font-size:min(15vw,80px);font-weight:900;z-index:750;pointer-events:none;animation:combo-pop 1.2s ease-out forwards;text-shadow:3px 3px 0 rgba(0,0,0,0.3)}
+@keyframes combo-pop{0%{opacity:0;transform:translate(-50%,-50%) scale(0.3) rotate(-30deg)}20%{opacity:1;transform:translate(-50%,-50%) scale(1.4) rotate(5deg)}40%{transform:translate(-50%,-50%) scale(1) rotate(-2deg)}100%{opacity:0;transform:translate(-50%,-50%) scale(2) translateY(-60px)}}
+
+.float-pts{position:fixed;font-size:26px;font-weight:900;z-index:700;pointer-events:none;animation:float-up 1.5s ease-out forwards;text-shadow:0 2px 8px rgba(0,0,0,0.5)}
+@keyframes float-up{0%{opacity:1;transform:translateY(0) scale(1)}100%{opacity:0;transform:translateY(-120px) scale(1.5)}}
+.confetti{position:fixed;z-index:650;pointer-events:none}
+@keyframes confetti-fall{0%{transform:translateY(-10vh) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}
+.coin{position:fixed;font-size:22px;z-index:650;pointer-events:none;animation:coin-fall 1.5s ease-in forwards}
+@keyframes coin-fall{0%{transform:translateY(-50px) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0.3}}
+.particle{position:fixed;border-radius:50%;z-index:700;pointer-events:none}
+@keyframes particle-explode{0%{transform:translate(0,0) scale(1);opacity:1}100%{transform:translate(var(--px),var(--py)) scale(0);opacity:0}}
+
+body.streak-fire{background:radial-gradient(ellipse at bottom,#1a0800 0%,var(--dark) 70%)}
+body.streak-ultra{background:radial-gradient(ellipse at bottom,#1a001a 0%,var(--dark) 60%)}
+
+/* START/END */
+.start-scr{display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:85vh;text-align:center;gap:12px}
+.start-scr h1{font-size:min(10vw,38px);font-weight:900;background:linear-gradient(135deg,var(--gold),var(--fire),var(--np));-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;animation:title-glow 3s ease infinite}
+@keyframes title-glow{0%,100%{filter:brightness(1)}50%{filter:brightness(1.3)}}
+.start-scr h2{font-size:16px;opacity:0.6}
+.start-btn{padding:16px 45px;border:none;border-radius:18px;font-size:22px;font-weight:900;cursor:pointer;background:linear-gradient(135deg,var(--pri),var(--np));color:#fff;font-family:'Heebo';box-shadow:0 8px 25px rgba(108,99,255,0.5);transition:all 0.3s;position:relative;overflow:hidden}
+.start-btn:hover{transform:translateY(-4px) scale(1.05)}
+.start-btn::after{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:linear-gradient(45deg,transparent,rgba(255,255,255,0.1),transparent);animation:btn-shine 3s linear infinite}
+@keyframes btn-shine{0%{transform:translateX(-100%)}100%{transform:translateX(100%)}}
+.rules{background:rgba(255,255,255,0.04);border-radius:14px;padding:12px 16px;text-align:right;max-width:400px;border:1px solid rgba(255,255,255,0.06)}
+.rules h3{text-align:center;margin-bottom:6px;color:var(--gold);font-size:15px}
+.rules li{margin:4px 0;font-size:13px;opacity:0.75;line-height:1.3}
+
+.end-scr{display:none;flex-direction:column;align-items:center;justify-content:center;min-height:85vh;text-align:center;gap:10px}
+.end-scr .trophy{font-size:70px;animation:trophy-bounce 2s infinite}
+@keyframes trophy-bounce{0%,100%{transform:translateY(0) rotate(0)}25%{transform:translateY(-15px) rotate(-5deg)}75%{transform:translateY(-15px) rotate(5deg)}}
+.final-score{font-size:48px;font-weight:900;color:var(--gold)}
+.rank-title{font-size:20px;font-weight:900;color:var(--np)}
+.sg{display:grid;grid-template-columns:1fr 1fr;gap:8px;width:100%;max-width:320px}
+.sg .si{background:rgba(255,255,255,0.06);border-radius:10px;padding:10px}
+.sg .sv{font-size:22px;font-weight:900;display:block}.sg .sl{font-size:10px;opacity:0.5}
+.play-again{padding:12px 35px;border:none;border-radius:12px;font-size:18px;font-weight:900;cursor:pointer;background:linear-gradient(135deg,var(--pri),var(--np));color:#fff;font-family:'Heebo';margin-top:8px;transition:all 0.3s}
+.play-again:hover{transform:scale(1.05)}
+.game-area{display:none}
+</style>
+</head>
+<body>
+<canvas class="stars" id="starsCanvas"></canvas>
+<div class="screen-flash" id="screenFlash"></div>
+
+<div class="gc" id="mainContainer">
+<div class="start-scr" id="startScr">
+    <div style="font-size:70px;animation:trophy-bounce 2s infinite">📖</div>
+    <h1>חידון המועדים המטורף!</h1>
+    <h2>ויקרא פרק כ"ג</h2>
+    <div class="rules"><h3>🤪 איך משחקים?</h3><ul>
+        <li>🖼️ תסתכלו על התמונה ותענו</li>
+        <li>🎤 תדברו או תקלידו — נשלח אוטומטית!</li>
+        <li>⏱️ ענו מהר — בונוס זמן!</li>
+        <li>🔥 רצף = כפל מטורף + מסכים מתפוצצים!</li>
+        <li>💣 מוקשים! 🛡️ מגנים! 💎 אוצרות!</li>
+        <li>🎰 גלגל מזל + 💫 כוכבים לתפוס!</li>
+        <li>🐣➜👑 הדמות מתפתחת!</li>
+    </ul></div>
+    <button class="start-btn" onclick="G.start()">🚀 יאללה מתחילים!!!!</button>
+</div>
+
+<div class="game-area" id="gameArea">
+    <div class="top-bar">
+        <div class="stat s-score"><span class="lbl">ניקוד</span><span class="val" id="vScore">0</span></div>
+        <div class="stat s-streak"><span class="lbl">🔥 רצף</span><span class="val" id="vStreak">0</span></div>
+        <div class="stat s-mult"><span class="lbl">כפל</span><span class="val" id="vMult">x1</span></div>
+        <div class="stat s-level"><span class="lbl">רמה</span><span class="val" id="vLevel">1</span></div>
+    </div>
+    <div class="prog"><div class="prog-fill" id="progFill"></div></div>
+    <div class="char-area">
+        <div class="char-display" id="charEmoji">🥒</div>
+        <div class="char-name" id="charName">חמוצון</div>
+        <div class="xp-bar"><div class="xp-fill" id="xpFill" style="width:0%"></div></div>
+    </div>
+    <div class="inv" id="inv"></div>
+    <div class="q-card" id="qCard">
+        <span class="verse-ref" id="vRef"></span>
+        <div class="q-img" id="qImg"></div>
+        <div class="q-txt" id="qTxt"></div>
+        <div class="q-hint" id="qHint"></div>
+    </div>
+    <div class="bomb-area"><div class="bomb-timer" id="bombTimer"><span>💣</span><span class="bomb-time" id="bombTime">15</span></div><div class="time-bonus-label" id="tbl"></div></div>
+    <div class="input-area">
+        <input type="text" class="answer-input" id="answerInput" placeholder="הקלידו או דברו..." autocomplete="off" onkeydown="if(event.key==='Enter'&&!G.submitted)G.submit()">
+        <div class="mic-row"><button class="mic-btn" id="micBtn" onclick="G.toggleMic()">🎤</button><span class="mic-status" id="micStatus">לחצו למיקרופון</span></div>
+        <div class="auto-submit-bar" id="autoSubBar"><div class="auto-submit-fill" id="autoSubFill"></div></div>
+        <button class="submit-btn" id="subBtn" onclick="G.submit()" disabled>🔥 בדוק תשובה!</button>
+    </div>
+</div>
+
+<div class="end-scr" id="endScr">
+    <div class="trophy" id="endTrophy">🏆</div>
+    <h1 style="color:var(--gold)">סיימתם!!</h1>
+    <div class="rank-title" id="endRank"></div>
+    <div class="final-score" id="endScore">0</div>
+    <p style="opacity:0.5;font-size:12px">נקודות</p>
+    <div id="endChar" style="font-size:55px"></div>
+    <div class="sg">
+        <div class="si"><span class="sv" id="eCorrect" style="color:var(--ok)">0</span><span class="sl">תשובות נכונות</span></div>
+        <div class="si"><span class="sv" id="eStreak" style="color:var(--fire)">0</span><span class="sl">רצף מקסימלי</span></div>
+        <div class="si"><span class="sv" id="eBonus" style="color:var(--gold)">0</span><span class="sl">בונוסים</span></div>
+        <div class="si"><span class="sv" id="eLvl" style="color:var(--nb)">1</span><span class="sl">רמה סופית</span></div>
+    </div>
+    <button class="play-again" onclick="G.restart()">🔄 שחק שוב!</button>
+</div>
+</div>
+
+<div class="fb-overlay" id="fbOverlay"><div class="fb-backdrop" onclick="G.nextQ()"></div>
+<div class="fb-box" id="fbBox"><span class="fb-emoji" id="fbE"></span><div class="fb-title" id="fbT"></div><div class="fb-sub" id="fbS"></div><div class="fb-pts" id="fbP"></div><button class="fb-next" onclick="G.nextQ()">הבא! ▶</button></div></div>
+<div class="slot-overlay" id="slotOverlay"><div class="slot-machine"><div class="slot-reels"><div class="slot-reel" id="reel1"><span>❓</span></div><div class="slot-reel" id="reel2"><span>❓</span></div><div class="slot-reel" id="reel3"><span>❓</span></div></div><div class="slot-result" id="slotResult"></div><button class="slot-btn" id="slotBtn" onclick="G.slotSpin()">🎲 סובבו!</button></div></div>
+<div class="ev-banner" id="evBanner"></div>
+<div class="achievement" id="achPopup"><div class="ach-icon" id="achIcon">🏅</div><div class="ach-text"><div class="ach-label">הישג!</div><div class="ach-title" id="achTitle"></div><div class="ach-desc" id="achDesc"></div></div></div>
+<div class="power-meter" id="powerMeter" style="display:none"><div class="power-bar"><div class="power-fill" id="powerFill"></div><div class="power-label" id="powerLabel">ניטרלי</div></div></div>
+
+<script>
+const $=id=>document.getElementById(id);
+
+// ====== AUDIO ======
+const A={ctx:null,init(){this.ctx=new(window.AudioContext||window.webkitAudioContext)()},
+play(t){if(!this.ctx)this.init();const c=this.ctx,n=c.currentTime,D=c.destination;
+const mk=(type,freq,start,dur,vol=0.1)=>{const o=c.createOscillator(),g=c.createGain();o.type=type;o.frequency.value=freq;g.gain.setValueAtTime(vol,n+start);g.gain.exponentialRampToValueAtTime(0.001,n+start+dur);o.connect(g).connect(D);o.start(n+start);o.stop(n+start+dur)};
+if(t==='correct')[523,659,784,1047].forEach((f,i)=>mk('sine',f,i*0.08,0.35,0.12));
+else if(t==='wrong'){mk('sawtooth',300,0,0.5,0.1);mk('square',150,0.1,0.3,0.06)}
+else if(t==='bonus')[784,988,1175,1319,1568].forEach((f,i)=>mk('sine',f,i*0.06,0.3,0.1));
+else if(t==='mine')[400,200,100,50].forEach((f,i)=>mk('square',f,i*0.07,0.2,0.08));
+else if(t==='epic')[523,659,784,1047,1319,1568].forEach((f,i)=>mk(i%2?'sine':'triangle',f,i*0.05,0.4,0.08));
+else if(t==='tick')mk('sine',800,0,0.05,0.04);
+else if(t==='boom'){mk('sawtooth',100,0,0.8,0.15);mk('square',50,0.2,0.5,0.08)}
+else if(t==='levelup')[440,554,659,880,1109,1319].forEach((f,i)=>mk('triangle',f,i*0.1,0.5,0.1));
+else if(t==='mega')[261,329,392,523,659,784,1047,1319].forEach((f,i)=>mk(i%2?'sine':'triangle',f,i*0.04,0.5,0.07));
+else if(t==='glitch'){for(let i=0;i<6;i++)mk('square',200+Math.random()*2000,i*0.03,0.04,0.06)}
+else if(t==='coin')mk('sine',1200,0,0.15,0.06);
+}};
+
+// ====== IMAGES ======
+const IMG={
+shabbat:`<svg viewBox="0 0 400 220"><defs><radialGradient id="g1" cx="50%" cy="60%"><stop offset="0%" stop-color="#FFF9C4"/><stop offset="100%" stop-color="#0a0a1a"/></radialGradient></defs><rect width="400" height="220" fill="url(#g1)"/><rect x="120" y="120" width="30" height="70" rx="4" fill="#E8D5B7"/><rect x="250" y="120" width="30" height="70" rx="4" fill="#E8D5B7"/><ellipse cx="135" cy="105" rx="20" ry="30" fill="#FF8F00" opacity="0.9"><animate attributeName="ry" values="30;35;30" dur="2s" repeatCount="indefinite"/></ellipse><ellipse cx="135" cy="95" rx="10" ry="18" fill="#FFD54F" opacity="0.8"/><ellipse cx="265" cy="105" rx="20" ry="30" fill="#FF8F00" opacity="0.9"><animate attributeName="ry" values="30;35;30" dur="2s" repeatCount="indefinite"/></ellipse><ellipse cx="265" cy="95" rx="10" ry="18" fill="#FFD54F" opacity="0.8"/><text x="200" y="40" text-anchor="middle" fill="#FFD54F" font-size="26" font-weight="bold" font-family="Heebo">✨ שַׁבָּת ✨</text></svg>`,
+pesach:`<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="#0a0a1a"/><circle cx="320" cy="50" r="35" fill="#FDD835" opacity="0.9"><animate attributeName="opacity" values="0.7;1;0.7" dur="4s" repeatCount="indefinite"/></circle><rect x="60" y="150" width="280" height="12" rx="6" fill="#E8D5B7"/><rect x="70" y="138" width="260" height="14" rx="3" fill="#D7CCC8"/><rect x="75" y="126" width="250" height="14" rx="3" fill="#E8D5B7"/><text x="200" y="200" text-anchor="middle" fill="#FFD54F" font-size="22" font-weight="bold" font-family="Heebo">🫓 מַצָּה 🫓</text></svg>`,
+omer:`<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="#0a0a1a"/><g opacity="0.8"><line x1="80" y1="180" x2="80" y2="60" stroke="#8BC34A" stroke-width="3"/><ellipse cx="80" cy="55" rx="8" ry="15" fill="#FDD835"/><line x1="140" y1="180" x2="140" y2="65" stroke="#8BC34A" stroke-width="3"/><ellipse cx="140" cy="60" rx="8" ry="15" fill="#FDD835"/><line x1="200" y1="180" x2="200" y2="50" stroke="#8BC34A" stroke-width="3"/><ellipse cx="200" cy="45" rx="8" ry="15" fill="#FDD835"/><line x1="260" y1="180" x2="260" y2="60" stroke="#8BC34A" stroke-width="3"/><ellipse cx="260" cy="55" rx="8" ry="15" fill="#FDD835"/><line x1="320" y1="180" x2="320" y2="55" stroke="#8BC34A" stroke-width="3"/><ellipse cx="320" cy="50" rx="8" ry="15" fill="#FDD835"/></g><rect x="40" y="170" width="320" height="25" rx="4" fill="#795548"/><text x="200" y="210" text-anchor="middle" fill="#FFD54F" font-size="20" font-weight="bold" font-family="Heebo">🌾 עֹמֶר 🌾</text></svg>`,
+shavuot:`<svg viewBox="0 0 400 220"><defs><linearGradient id="sk" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#1A237E"/><stop offset="100%" stop-color="#4A148C"/></linearGradient></defs><rect width="400" height="220" fill="url(#sk)"/><rect x="130" y="40" width="60" height="100" rx="6" fill="#90A4AE"/><rect x="210" y="40" width="60" height="100" rx="6" fill="#90A4AE"/><path d="M120 40 L200 5 L280 40" fill="none" stroke="#FFD54F" stroke-width="3"/><circle cx="200" cy="5" r="10" fill="#FFD54F"><animate attributeName="r" values="8;12;8" dur="2s" repeatCount="indefinite"/></circle><text x="200" y="180" text-anchor="middle" fill="#FFD54F" font-size="22" font-weight="bold" font-family="Heebo">📜 לוּחוֹת הַבְּרִית 📜</text></svg>`,
+shofar:`<svg viewBox="0 0 400 220"><defs><radialGradient id="g2" cx="30%" cy="50%"><stop offset="0%" stop-color="#FF8F00" stop-opacity="0.3"/><stop offset="100%" stop-color="#0a0a1a"/></radialGradient></defs><rect width="400" height="220" fill="url(#g2)"/><path d="M100 130 Q100 80 160 60 Q220 40 260 60 Q300 80 320 130 Q330 160 310 170 Q290 175 280 150 Q270 120 240 100 Q200 75 160 90 Q130 100 130 130 Q130 150 110 155 Q95 155 100 130Z" fill="#D4A056" stroke="#8D6E63" stroke-width="2"/><g opacity="0.6"><path d="M310 100 Q340 80 370 85" stroke="#FFD54F" stroke-width="2" fill="none"><animate attributeName="opacity" values="0;1;0" dur="1.5s" repeatCount="indefinite"/></path><path d="M320 115 Q355 100 385 110" stroke="#FFD54F" stroke-width="2" fill="none"><animate attributeName="opacity" values="0;1;0" dur="1.5s" begin="0.3s" repeatCount="indefinite"/></path></g><text x="200" y="210" text-anchor="middle" fill="#FFD54F" font-size="22" font-weight="bold" font-family="Heebo">🔔 שׁוֹפָר 🔔</text></svg>`,
+yomKippur:`<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="#0a0a1a"/><rect x="100" y="30" width="200" height="160" rx="12" fill="#FAFAFA"/><text x="200" y="80" text-anchor="middle" fill="#333" font-size="14" font-family="Heebo" font-weight="bold">סֵפֶר הַחַיִּים</text><line x1="130" y1="95" x2="270" y2="95" stroke="#DDD"/><line x1="130" y1="110" x2="270" y2="110" stroke="#DDD"/><line x1="130" y1="125" x2="270" y2="125" stroke="#DDD"/><circle cx="200" cy="30" r="18" fill="#E3F2FD"><animate attributeName="r" values="16;20;16" dur="3s" repeatCount="indefinite"/></circle><text x="200" y="36" text-anchor="middle" fill="#1565C0" font-size="16">🕊️</text><text x="200" y="205" text-anchor="middle" fill="#E0E0E0" font-size="20" font-weight="bold" font-family="Heebo">יוֹם הַכִּפּוּרִים</text></svg>`,
+sukkah:`<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="#0a0a1a"/><rect x="80" y="60" width="15" height="140" fill="#8D6E63"/><rect x="305" y="60" width="15" height="140" fill="#8D6E63"/><rect x="75" y="55" width="250" height="15" fill="#A1887F"/><g opacity="0.8"><rect x="80" y="42" width="240" height="8" rx="3" fill="#4CAF50" transform="rotate(-3 200 46)"/><rect x="85" y="33" width="230" height="8" rx="3" fill="#66BB6A" transform="rotate(2 200 37)"/></g><circle cx="130" cy="38" r="5" fill="#FF5722" opacity="0.7"/><circle cx="250" cy="32" r="4" fill="#FFEB3B" opacity="0.6"/><text x="200" y="140" text-anchor="middle" fill="#FFF" font-size="32">🪑</text><text x="200" y="210" text-anchor="middle" fill="#A5D6A7" font-size="22" font-weight="bold" font-family="Heebo">🏕️ סֻכָּה 🏕️</text></svg>`,
+fourSpecies:`<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="#0a0a1a"/><line x1="200" y1="190" x2="200" y2="30" stroke="#4CAF50" stroke-width="6"/><ellipse cx="200" cy="30" rx="6" ry="20" fill="#388E3C"><animate attributeName="ry" values="18;22;18" dur="2s" repeatCount="indefinite"/></ellipse><g transform="translate(140,50)"><line x1="15" y1="140" x2="15" y2="0" stroke="#66BB6A" stroke-width="3"/><ellipse cx="15" cy="15" rx="8" ry="5" fill="#81C784" transform="rotate(-20 15 15)"/><ellipse cx="15" cy="35" rx="8" ry="5" fill="#81C784" transform="rotate(20 15 35)"/></g><g transform="translate(245,50)"><line x1="15" y1="140" x2="15" y2="0" stroke="#2E7D32" stroke-width="2"/><ellipse cx="15" cy="20" rx="12" ry="6" fill="#1B5E20"/><ellipse cx="15" cy="40" rx="12" ry="6" fill="#1B5E20"/></g><ellipse cx="320" cy="140" rx="25" ry="30" fill="#FDD835" stroke="#F9A825" stroke-width="2"/><text x="200" y="215" text-anchor="middle" fill="#FFD54F" font-size="18" font-weight="bold" font-family="Heebo">אַרְבַּעַת הַמִּינִים</text></svg>`,
+counting:`<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="#0a0a1a"/><text x="60" y="60" fill="#FFD54F" font-size="36" font-weight="bold">7</text><text x="60" y="100" fill="#82B1FF" font-size="16" font-family="Heebo">שָׁבוּעוֹת</text><text x="200" y="120" fill="#FF8A80" font-size="60" font-weight="bold" text-anchor="middle">=</text><text x="310" y="60" fill="#69F0AE" font-size="36" font-weight="bold">49</text><text x="310" y="100" fill="#82B1FF" font-size="16" font-family="Heebo">יָמִים</text><text x="200" y="160" fill="#CE93D8" font-size="40" font-weight="bold" text-anchor="middle">+1</text><text x="200" y="200" fill="#FFD54F" font-size="22" font-weight="bold" font-family="Heebo" text-anchor="middle">= 50 יום! 🎉</text></svg>`,
+calendar:`<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="#0a0a1a"/><rect x="80" y="30" width="240" height="170" rx="12" fill="#fff" opacity="0.95"/><rect x="80" y="30" width="240" height="45" rx="12" fill="#E53935"/><rect x="80" y="63" width="240" height="12" fill="#E53935"/><text x="200" y="60" text-anchor="middle" fill="#FFF" font-size="20" font-weight="bold" font-family="Heebo">תִּשְׁרֵי</text><circle cx="120" cy="100" r="18" fill="none" stroke="#E53935" stroke-width="2"/><text x="120" y="107" fill="#E53935" font-size="14" font-weight="bold" text-anchor="middle">א'</text><text x="120" y="132" fill="#333" font-size="11" text-anchor="middle">ר"ה</text><circle cx="200" cy="100" r="18" fill="none" stroke="#E53935" stroke-width="2"/><text x="200" y="107" fill="#E53935" font-size="14" font-weight="bold" text-anchor="middle">י'</text><text x="200" y="132" fill="#333" font-size="11" text-anchor="middle">יוה"כ</text><circle cx="280" cy="100" r="18" fill="none" stroke="#E53935" stroke-width="2"/><text x="280" y="107" fill="#E53935" font-size="14" font-weight="bold" text-anchor="middle">ט"ו</text><text x="280" y="132" fill="#333" font-size="11" text-anchor="middle">סוכות</text></svg>`,
+moon:`<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="#0D1B2A"/><circle cx="200" cy="100" r="60" fill="#FDD835"><animate attributeName="r" values="58;63;58" dur="5s" repeatCount="indefinite"/></circle><circle cx="230" cy="85" r="50" fill="#0D1B2A"/><circle cx="100" cy="40" r="2" fill="#FFF" opacity="0.6"/><circle cx="300" cy="60" r="1.5" fill="#FFF" opacity="0.5"/><text x="200" y="210" text-anchor="middle" fill="#FDD835" font-size="18" font-weight="bold" font-family="Heebo">י"ד בְּנִיסָן — עֶרֶב פֶּסַח</text></svg>`,
+moadim:`<svg viewBox="0 0 400 220"><defs><linearGradient id="rb" x1="0" y1="0" x2="1" y2="0"><stop offset="0%" stop-color="#FF6B6B"/><stop offset="25%" stop-color="#FFD93D"/><stop offset="50%" stop-color="#6BCB77"/><stop offset="75%" stop-color="#4D96FF"/><stop offset="100%" stop-color="#9B59B6"/></linearGradient></defs><rect width="400" height="220" fill="#0a0a1a"/><text x="200" y="50" text-anchor="middle" fill="url(#rb)" font-size="30" font-weight="bold" font-family="Heebo">מוֹעֲדֵי ה'</text><text x="70" y="140" font-size="28">🕯️</text><text x="140" y="150" font-size="28">🫓</text><text x="200" y="140" font-size="28">🌾</text><text x="260" y="150" font-size="28">📜</text><text x="330" y="140" font-size="28">🏕️</text></svg>`,
+sixDays:`<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="#0a0a1a"/><g text-anchor="middle" font-weight="bold"><circle cx="65" cy="80" r="28" fill="#E53935"/><text x="65" y="88" fill="#fff" font-size="18">א</text><circle cx="135" cy="80" r="28" fill="#FF9800"/><text x="135" y="88" fill="#fff" font-size="18">ב</text><circle cx="205" cy="80" r="28" fill="#FDD835"/><text x="205" y="88" fill="#333" font-size="18">ג</text><circle cx="275" cy="80" r="28" fill="#4CAF50"/><text x="275" y="88" fill="#fff" font-size="18">ד</text><circle cx="345" cy="80" r="28" fill="#2196F3"/><text x="345" y="88" fill="#fff" font-size="18">ה</text><circle cx="100" cy="155" r="28" fill="#9C27B0"/><text x="100" y="163" fill="#fff" font-size="18">ו</text><circle cx="220" cy="155" r="35" fill="#FFD54F" stroke="#FF8F00" stroke-width="3"><animate attributeName="r" values="33;38;33" dur="2s" repeatCount="indefinite"/></circle><text x="220" y="158" fill="#333" font-size="14">שבת</text></g></svg>`,
+fasting:`<svg viewBox="0 0 400 220"><rect width="400" height="220" fill="#0a0a1a"/><circle cx="200" cy="100" r="70" fill="none" stroke="#E0E0E0" stroke-width="3"/><text x="200" y="110" text-anchor="middle" fill="#E0E0E0" font-size="50">🍽️</text><line x1="150" y1="60" x2="250" y2="140" stroke="#FF1744" stroke-width="5" stroke-linecap="round"/><text x="200" y="210" text-anchor="middle" fill="#EF9A9A" font-size="18" font-weight="bold" font-family="Heebo">צוֹם — וְעִנִּיתֶם אֶת נַפְשֹׁתֵיכֶם</text></svg>`
+};
+
+// ====== CHARS ======
+const CHARS=[{e:'🥒',n:'חמוצון',xp:0},{e:'🐣',n:'אפרוחון',xp:30},{e:'🐥',n:'פרגית',xp:70},{e:'🦅',n:'נשר',xp:120},{e:'🦁',n:'אריה',xp:180},{e:'🐉',n:'דרקון',xp:250},{e:'🦄',n:'חד קרן',xp:350},{e:'👑',n:'מלך המועדים!',xp:500}];
+
+// ====== PET COMMENTS ======
+const PET={
+ok:['🤩 יששש!!!','😎 קל מדי!','👑 אגדה!','🔥 שרפת את זה!','⚡ מטורףףף!','💎 גאון!','🎯 בול!','🚀 טיל!','✨ מושלם!','💪 חזק!'],
+no:['😅 אופס!','🤷 לא נורא!','💪 בפעם הבאה!','🤏 כמעט!','😤 קרוב!'],
+streak:['🔥 על אששש!','⚡ בלתי ניתן לעצירה!','🌋 לא נורמלי!','🤖 מכונה!','👑 שולט!'],
+boss:['👹 בוס?! קל!','💀 הרסת אותו!','⚔️ גיבור!'],
+fast:['⏱️ בזק!','💨 מהיר כברק!','🏎️ פורמולה 1!']
+};
+
+// ====== ACHIEVEMENTS ======
+const ACHS=[
+{id:'first',i:'⭐',t:'הראשונה!',d:'תשובה נכונה ראשונה',c:g=>g.correctCount===1},
+{id:'s3',i:'🔥',t:'על אש!',d:'רצף 3',c:g=>g.streak===3},
+{id:'s5',i:'⚡',t:'בלתי ניתן לעצירה!',d:'רצף 5!',c:g=>g.streak===5},
+{id:'s8',i:'🌋',t:'הר געש!',d:'רצף 8!',c:g=>g.streak===8},
+{id:'s10',i:'☄️',t:'מטאור!',d:'רצף 10!!',c:g=>g.streak===10},
+{id:'p100',i:'💯',t:'מאה!',d:'100 נקודות',c:g=>g.score>=100&&g._ps<100},
+{id:'p300',i:'💎',t:'יהלום!',d:'300 נקודות!',c:g=>g.score>=300&&g._ps<300},
+{id:'p500',i:'🏆',t:'אלוף!',d:'500 נקודות!!',c:g=>g.score>=500&&g._ps<500},
+{id:'boss',i:'👹',t:'מנצח בוס!',d:'ניצחת בוס!',c:g=>g._bossWin},
+{id:'fast',i:'⏱️',t:'בזק!',d:'תשובה ב-3 שניות!',c:g=>g._fast},
+{id:'shield',i:'🛡️',t:'שורד!',d:'המגן הציל!',c:g=>g._shieldUsed},
+{id:'evo',i:'🦋',t:'התפתחות!',d:'הדמות התפתחה!',c:g=>g._evo},
+];
+
+// ====== QUESTIONS ======
+const ALL_Q=[
+{v:"פסוק ג'",img:"sixDays",q:"כמה ימים מותר לעבוד?",a:["שישה","שש","6"],h:"סִפְרוּ את העיגולים...",p:10},
+{v:"פסוק ג'",img:"shabbat",q:"מה שם היום השביעי?",a:["שבת","שבת שבתון"],h:"מה רואים בתמונה?",p:10},
+{v:"פסוק ג'",img:"shabbat",q:"מה אסור לעשות בשבת?",a:["מלאכה","עבודה","לעבוד"],h:"ביום הזה לא עושים...",p:10},
+{v:"פסוק ד'",img:"moadim",q:"איך קוראים לחגים של ה'?",a:["מועדים","מועדי ה"],h:"מוֹעֲדֵי...",p:15},
+{v:"פסוק ה'",img:"moon",q:"באיזה תאריך חל פסח?",a:['י"ד בניסן',"ארבעה עשר",'י"ד',"14"],h:"הירח מלא ב...",p:15},
+{v:"פסוק ה'",img:"moon",q:"באיזה חודש חוגגים פסח?",a:["ניסן","הראשון"],h:"החודש ה...",p:10},
+{v:"פסוק ו'",img:"pesach",q:"מה אוכלים בחג המצות?",a:["מצה","מצות"],h:"🫓 מה בתמונה?",p:10},
+{v:"פסוק ו'",img:"pesach",q:"כמה ימים נמשך חג המצות?",a:["שבעה","שבע","7"],h:"כמו ימות השבוע...",p:15},
+{v:"פסוק י'",img:"omer",q:"מה מביאים מהשדה לכהן?",a:["עומר","שיבולים","עמר"],h:"🌾 מה בתמונה?",p:15},
+{v:'פסוק ט"ו',img:"counting",q:"כמה שבועות סופרים ספירת העומר?",a:["שבעה","שבע","7"],h:"המספר הגדול...",p:15},
+{v:'פסוק ט"ז',img:"counting",q:"כמה ימים סופרים עד שבועות?",a:["חמישים","50"],h:"49+1=?",p:20},
+{v:'פסוק כ"א',img:"shavuot",q:"מה קיבלנו בחג השבועות?",a:["תורה","לוחות","עשרת הדברות"],h:"📜 מה בתמונה?",p:15},
+{v:'פסוק כ"ד',img:"shofar",q:"מה תוקעים בראש השנה?",a:["שופר","בשופר"],h:"🔔 מה בתמונה?",p:10},
+{v:'פסוק כ"ד',img:"calendar",q:"באיזה חודש חל ראש השנה?",a:["תשרי","השביעי"],h:"הלוח שנה אומר...",p:15},
+{v:'פסוק כ"ז',img:"yomKippur",q:"מה שם החג שבו צמים?",a:["יום כיפור","יום הכיפורים","כיפור"],h:"📖 ספר החיים...",p:15},
+{v:'פסוק כ"ז',img:"fasting",q:"מה עושים ביום כיפור?",a:["צמים","צום","לא אוכלים","מתענים"],h:"❌ לא אוכלים...",p:15},
+{v:'פסוק כ"ז',img:"calendar",q:"באיזה תאריך יום כיפור?",a:["עשירי",'י\' בתשרי',"10","עשרה"],h:"באמצע הלוח...",p:20},
+{v:'פסוק ל"ד',img:"sukkah",q:"איפה יושבים בסוכות?",a:["סוכה","בסוכה"],h:"🏕️ מה בתמונה?",p:10},
+{v:'פסוק ל"ד',img:"calendar",q:"באיזה תאריך מתחיל סוכות?",a:['ט"ו בתשרי',"חמישה עשר","15",'ט"ו'],h:"הצד הימני...",p:20},
+{v:"פסוק מ'",img:"fourSpecies",q:"כמה מינים לוקחים בסוכות?",a:["ארבעה","ארבע","4"],h:"סִפְרוּ...",p:15},
+{v:"פסוק מ'",img:"fourSpecies",q:"מה שם הפרי הצהוב?",a:["אתרוג"],h:"🍋 הפרי הצהוב...",p:15},
+{v:"פסוק מ'",img:"fourSpecies",q:"מה שם ענף הדקל?",a:["לולב","כפות תמרים"],h:"🌿 הענף הגבוה...",p:15},
+];
+
+const SLOT_S=['⭐','💎','🔥','💣','🛡️','⚡','🎁','👑','🍀'];
+
+// ====== GAME ======
+const G={
+score:0,streak:0,maxStreak:0,mult:1,tempMult:1,hasShield:false,
+qi:0,qs:[],totalQ:15,correctCount:0,bonusCount:0,mineCount:0,
+xp:0,charIdx:0,submitted:false,
+timer:null,timeLeft:15,
+rec:null,listening:false,speechOk:false,_ast:null,
+_ps:0,_bossWin:false,_fast:false,_shieldUsed:false,_evo:false,
+unlockedAchs:new Set(),inventory:[],qStart:0,
+starInterval:null,chestEl:null,milestones:new Set(),
+
+start(){
+    A.init();A.play('epic');
+    this.qs=[...ALL_Q].sort(()=>Math.random()-0.5).slice(0,this.totalQ);
+    this.qs.forEach((q,i)=>{q._boss=(i+1)%5===0});
+    Object.assign(this,{qi:0,score:0,streak:0,maxStreak:0,mult:1,tempMult:1,hasShield:false,correctCount:0,bonusCount:0,mineCount:0,xp:0,charIdx:0,submitted:false,inventory:[],milestones:new Set()});
+    this.unlockedAchs=new Set();
+    $('startScr').style.display='none';$('endScr').style.display='none';
+    $('gameArea').style.display='block';$('powerMeter').style.display='block';
+    this.initSpeech().then(()=>{this.loadQ();this.autoListen()});
+    this.startBonusStars();
+},
+restart(){this.stopTimer();this.stopBonusStars();this.start()},
+
+// ====== SPEECH ======
+async initSpeech(){
+    const SR=window.SpeechRecognition||window.webkitSpeechRecognition;
+    if(!SR){this.speechOk=false;$('micStatus').textContent='אין תמיכה — הקלידו';$('micStatus').className='mic-status error';$('micBtn').style.opacity='0.3';return}
+    try{const s=await navigator.mediaDevices.getUserMedia({audio:true});s.getTracks().forEach(t=>t.stop())}catch(e){this.speechOk=false;$('micStatus').textContent='אין גישה למיקרופון';$('micStatus').className='mic-status error';$('micBtn').style.opacity='0.3';return}
+    this.rec=new SR();this.rec.lang='he-IL';this.rec.continuous=false;this.rec.interimResults=true;this.rec.maxAlternatives=5;this.speechOk=true;
+    this.rec.onstart=()=>{this.listening=true;$('micBtn').classList.add('listening');$('micStatus').textContent='🔴 מקשיב... דברו!';$('micStatus').className='mic-status success'};
+    this.rec.onresult=(e)=>{
+        let fin='',int='';
+        for(let i=e.resultIndex;i<e.results.length;i++){const t=e.results[i][0].transcript;if(e.results[i].isFinal)fin+=t;else int+=t}
+        if(fin||int){$('answerInput').value=(fin||int).trim();$('subBtn').disabled=false}
+        if(fin){
+            $('micStatus').textContent='✅ נקלט: "'+fin.trim()+'"';$('micStatus').className='mic-status success';
+            $('autoSubBar').classList.add('active');requestAnimationFrame(()=>$('autoSubFill').classList.add('go'));
+            if(this._ast)clearTimeout(this._ast);
+            this._ast=setTimeout(()=>{$('autoSubBar').classList.remove('active');$('autoSubFill').classList.remove('go');if(!this.submitted){A.play('tick');this.submit()}},900);
+        }else{$('micStatus').textContent='🎤 '+int}
+    };
+    this.rec.onerror=(e)=>{this.stopMic();const m={'no-speech':'לא שמעתי — נסו שוב','audio-capture':'אין מיקרופון','not-allowed':'אין הרשאה','network':'בעיית רשת'};$('micStatus').textContent=m[e.error]||'שגיאה: '+e.error;$('micStatus').className='mic-status error'};
+    this.rec.onend=()=>{this.stopMic();const v=$('answerInput').value.trim();if(v&&!this.submitted&&!this._ast){$('autoSubBar').classList.add('active');requestAnimationFrame(()=>$('autoSubFill').classList.add('go'));this._ast=setTimeout(()=>{$('autoSubBar').classList.remove('active');$('autoSubFill').classList.remove('go');if(!this.submitted)this.submit()},700)}};
+    $('micStatus').textContent='🎤 מוכן — דברו אחרי כל שאלה!';$('micStatus').className='mic-status success';
+},
+toggleMic(){
+    if(!this.speechOk){$('micStatus').textContent='הקלידו תשובה';$('micStatus').className='mic-status error';$('answerInput').focus();return}
+    A.play('tick');if(this.listening){this.rec.stop();return}
+    if(this._ast){clearTimeout(this._ast);this._ast=null}$('autoSubBar').classList.remove('active');$('autoSubFill').classList.remove('go');
+    try{$('answerInput').value='';$('subBtn').disabled=true;this.rec.start()}catch(e){try{this.rec.stop()}catch(e2){}setTimeout(()=>{try{this.rec.start()}catch(e3){$('micStatus').textContent='שגיאה — הקלידו';$('micStatus').className='mic-status error'}},200)}
+},
+stopMic(){this.listening=false;$('micBtn').classList.remove('listening');if(this.speechOk){$('micStatus').textContent='🎤 לחצו לדבר';$('micStatus').className='mic-status'}},
+autoListen(){
+    if(!this.speechOk||!this.rec)return;
+    if(this.listening)try{this.rec.stop()}catch(e){}
+    if(this._ast){clearTimeout(this._ast);this._ast=null}$('autoSubBar').classList.remove('active');$('autoSubFill').classList.remove('go');
+    $('answerInput').value='';$('subBtn').disabled=true;
+    setTimeout(()=>{if(this.submitted)return;try{this.rec.start()}catch(e){}},300);
+},
+
+// ====== QUESTIONS ======
+loadQ(){
+    if(this.qi>=this.qs.length){this.endGame();return}
+    const q=this.qs[this.qi];this.submitted=false;
+    this._bossWin=false;this._fast=false;this._shieldUsed=false;this._evo=false;
+    $('vRef').textContent=q.v;$('qTxt').textContent=q.q;$('qHint').textContent=q.h||'';
+    $('qImg').innerHTML=IMG[q.img]||'';$('answerInput').value='';$('answerInput').focus();$('subBtn').disabled=true;
+    $('progFill').style.width=(this.qi/this.totalQ)*100+'%';
+    const card=$('qCard');card.className='q-card';if(q._boss)card.classList.add('boss-mode');
+    if(this.streak>=8){card.classList.add('ultra-fire');document.body.classList.add('streak-ultra');$('charEmoji').classList.add('mega-dancing')}
+    else if(this.streak>=3){card.classList.add('on-fire');document.body.classList.add('streak-fire');$('charEmoji').classList.add('dancing')}
+    else{document.body.classList.remove('streak-fire','streak-ultra');$('charEmoji').className='char-display'}
+    this.timeLeft=q._boss?12:15;this.startTimer();this.qStart=Date.now();
+    this.updateUI();this.updateInv();this.updateChar();this.updatePower();
+    $('answerInput').oninput=()=>{$('subBtn').disabled=!$('answerInput').value.trim()};
+},
+
+startTimer(){this.stopTimer();$('bombTime').textContent=this.timeLeft;$('bombTimer').classList.remove('danger');$('tbl').textContent='⏱️ ענו מהר — בונוס זמן!';
+    this.timer=setInterval(()=>{this.timeLeft--;$('bombTime').textContent=this.timeLeft;if(this.timeLeft<=5){$('bombTimer').classList.add('danger');A.play('tick')}else if(this.timeLeft>5)A.play('tick');
+    if(this.timeLeft<=0){this.stopTimer();A.play('boom');this.flash('red');this.shake('mega');this.submitted=true;$('subBtn').disabled=true;this.streak=0;this.mult=1;this.petSay('no');this.showFB(false,this.qs[this.qi].a[0],0)}},1000)},
+stopTimer(){if(this.timer){clearInterval(this.timer);this.timer=null}},
+
+// ====== SUBMIT ======
+submit(){
+    if(this.submitted)return;const ans=$('answerInput').value.trim();if(!ans)return;
+    this.submitted=true;$('subBtn').disabled=true;this.stopTimer();
+    const q=this.qs[this.qi],correct=this.checkAns(ans,q.a),elapsed=(Date.now()-this.qStart)/1000;
+    const ev=this.rollEvent();
+    if(ev&&ev.id==='mine'){
+        if(this.hasShield){this.hasShield=false;this.inventory=this.inventory.filter(i=>i!=='shield');this._shieldUsed=true;this.showBanner('shield','🛡️','המגן הציל אותך!');A.play('bonus');setTimeout(()=>this.processResult(correct,q,elapsed),1800);return}
+        const loss=Math.min(this.score,15+Math.floor(Math.random()*15));this.score-=loss;this.mineCount++;this.streak=0;this.mult=1;
+        A.play('mine');this.flash('red');this.shake('mega');this.glitch();
+        this.showBanner('mine','💣','מוקש! הפסדת '+loss+' נקודות!');this.updateUI();
+        setTimeout(()=>this.processResult(correct,q,elapsed),2000);return;
+    }
+    if(ev&&ev.id!=='mine'){this.handleEvent(ev);setTimeout(()=>this.processResult(correct,q,elapsed),1800);return}
+    this.processResult(correct,q,elapsed);
+},
+processResult(correct,q,elapsed){
+    this._ps=this.score;
+    if(correct){
+        const tb=elapsed<3?15:elapsed<5?10:elapsed<8?5:0;this._fast=elapsed<3;
+        let pts=Math.round((q.p+tb)*this.mult*this.tempMult);if(q._boss)pts=Math.round(pts*1.5);
+        this.score+=pts;this.streak++;this.correctCount++;
+        if(this.streak>this.maxStreak)this.maxStreak=this.streak;
+        if(this.streak===3)this.mult=1.5;if(this.streak===5)this.mult=2;if(this.streak===8)this.mult=3;if(this.streak===10)this.mult=4;if(this.streak===12)this.mult=5;
+        this.tempMult=1;this.inventory=this.inventory.filter(i=>i!=='double');
+        this.xp+=pts;const old=this.charIdx;for(let i=CHARS.length-1;i>=0;i--)if(this.xp>=CHARS[i].xp){this.charIdx=i;break}
+        if(this.charIdx>old){this._evo=true;this.evolveChar()}
+        if(q._boss)this._bossWin=true;
+
+        // === INSANE EFFECTS ===
+        A.play('correct');this.flash('green');this.spawnConfetti();this.coinRain(4+this.streak*2);this.floatPts('+'+pts);
+        if(this._fast)this.petSay('fast');else if(q._boss)this.petSay('boss');else if(this.streak>=3)this.petSay('streak');else this.petSay('ok');
+        if(this.streak>=3){this.shake('normal');this.explodeParticles(15+this.streak*3)}
+        if(this.streak>=8){this.shake('mega');this.explodeParticles(40)}
+        if(this.streak===3)this.comboText('🔥 רצף X3!!!');
+        if(this.streak===5){this.comboText('⚡ X5 סופר!!!');this.screenTakeover('⚡ בלתי ניתן לעצירה! ⚡')}
+        if(this.streak===8){this.comboText('🌋 X8 הר געש!!!');this.screenTakeover('🌋 לא נורמלי!!! 🌋');A.play('mega')}
+        if(this.streak===10){this.comboText('☄️ X10 מטאור!!!');this.screenTakeover('☄️ אגדה חיה!!! ☄️');A.play('mega');this.flash('rainbow')}
+        if(this.streak===12){this.comboText('👑 X12 מלך!!!');this.screenTakeover('👑 אין כמוך בעולם!!! 👑');A.play('mega');A.play('epic')}
+
+        // Milestone celebrations
+        [50,100,200,300,500].forEach(m=>{if(this.score>=m&&!this.milestones.has(m)){this.milestones.add(m);this.celebrateMilestone(m)}});
+
+        this.showFB(true,null,pts);this.checkAchs();
+        if(this.correctCount%4===0||Math.random()<0.2)setTimeout(()=>this.showSlot(),1500);
+        if(Math.random()<0.15)this.spawnChest();
+    }else{
+        this.streak=0;this.mult=1;A.play('wrong');A.play('glitch');this.flash('red');this.shake('mega');this.glitch();
+        this.petSay('no');this.showFB(false,q.a[0],0);
+    }
+    this.updateUI();this.updateInv();this.updatePower();
+},
+
+// ====== ANSWER CHECK (STRICT) ======
+checkAns(user,answers){
+    const n=s=>s.trim().replace(/["\-׳״'!?.,:;]/g,'').replace(/\s+/g,' ').replace(/"/g,'');
+    const u=n(user);if(!u)return false;
+    return answers.some(a=>{const an=n(a);if(!an)return false;if(u===an)return true;
+        if(an.length>=2&&u.length>=2&&Math.abs(u.length-an.length)<=3&&(u.includes(an)||an.includes(u)))return true;
+        const md=an.length<=3?0:an.length<=5?1:2;return this.lev(u,an)<=md});
+},
+lev(a,b){const m=[];for(let i=0;i<=b.length;i++)m[i]=[i];for(let j=0;j<=a.length;j++)m[0][j]=j;for(let i=1;i<=b.length;i++)for(let j=1;j<=a.length;j++)m[i][j]=b[i-1]===a[j-1]?m[i-1][j-1]:Math.min(m[i-1][j-1]+1,m[i][j-1]+1,m[i-1][j]+1);return m[b.length][a.length]},
+
+rollEvent(){if(this.qi<2)return null;const evs=[{id:'mine',c:0.10},{id:'double',c:0.10},{id:'treasure',c:0.08},{id:'shield',c:0.07},{id:'freeze',c:0.06}];for(const e of evs.sort(()=>Math.random()-0.5))if(Math.random()<e.c)return e;return null},
+handleEvent(ev){this.bonusCount++;A.play('bonus');
+    if(ev.id==='double'){this.tempMult=2;this.inventory.push('double');this.showBanner('double','⚡','הנקודות הבאות כפולות!')}
+    else if(ev.id==='treasure'){const b=25+Math.floor(Math.random()*35);this.score+=b;this.showBanner('treasure','💎','אוצר! '+b+' נקודות בונוס!');this.coinRain(15);this.explodeParticles(20)}
+    else if(ev.id==='shield'){this.hasShield=true;this.inventory.push('shield');this.showBanner('shield','🛡️','מגן! הגנה מהמוקש הבא!')}
+    else if(ev.id==='freeze'){this.timeLeft+=8;$('bombTime').textContent=this.timeLeft;this.showBanner('freeze','❄️','הקפאת זמן! +8 שניות!')}
+    this.updateUI()},
+
+// ====== FEEDBACK ======
+showFB(ok,correctAns,pts){
+    if(ok){const em=['🎉','⭐','🌟','💫','🔥','💪','🥳','🎊','✨','🏆','🤩','😎'],ti=['מעולה!','נכון!','יופי!','אלוף!','וואו!','בול!','מדהים!','פצצה!','גאון!','מושלם!','סותה!','חיית בר!'];
+        $('fbE').textContent=em[Math.floor(Math.random()*em.length)];$('fbT').textContent=ti[Math.floor(Math.random()*ti.length)];
+        $('fbS').textContent=this.streak>=3?'🔥 רצף '+this.streak+' — כפל x'+this.mult+'!':'';$('fbP').textContent='+'+pts;$('fbBox').className='fb-box correct'}
+    else{$('fbE').textContent='😅';$('fbT').textContent='לא נורא!';$('fbS').textContent='התשובה הנכונה: '+correctAns;$('fbP').textContent='';$('fbBox').className='fb-box wrong'}
+    $('fbOverlay').classList.add('visible')},
+nextQ(){$('fbOverlay').classList.remove('visible');$('slotOverlay').classList.remove('visible');this.qi++;this.loadQ();this.autoListen()},
+
+// ====== SLOT ======
+showSlot(){$('slotOverlay').classList.add('visible');$('slotResult').textContent='';$('slotBtn').disabled=false;$('slotBtn').textContent='🎲 סובבו!';$('slotBtn').onclick=()=>G.slotSpin();
+    ['reel1','reel2','reel3'].forEach(id=>{$(id).innerHTML='<span>❓</span>'})},
+slotSpin(){A.play('bonus');$('slotBtn').disabled=true;$('slotBtn').textContent='...מסתובב';
+    const r=()=>SLOT_S[Math.floor(Math.random()*SLOT_S.length)];let sp=[r(),r(),r()];
+    ['reel1','reel2','reel3'].forEach((id,i)=>{setTimeout(()=>{if(Math.random()<0.05)sp=[sp[0],sp[0],sp[0]];else if(i===1&&Math.random()<0.2)sp[1]=sp[0];$(id).innerHTML='<span>'+sp[i]+'</span>';A.play('tick')},800+i*500)});
+    setTimeout(()=>{const all=sp[0]===sp[1]&&sp[1]===sp[2],two=sp[0]===sp[1]||sp[1]===sp[2]||sp[0]===sp[2];let pts=0,lb='';
+        if(all){pts=50+Math.floor(Math.random()*50);lb="ג'קפוט!!! "+pts+' נקודות!';A.play('mega');this.flash('gold');this.shake('mega');this.spawnConfetti();this.spawnConfetti();this.coinRain(25);this.explodeParticles(40);this.screenTakeover('🎰 ג\'קפוט!!! 🎰')}
+        else if(two){pts=15+Math.floor(Math.random()*15);lb='זוג! '+pts+' נקודות!';A.play('bonus');this.coinRain(6)}
+        else{pts=5;lb='פרס ניחומים — 5 נקודות!';A.play('tick')}
+        this.score+=pts;this.xp+=pts;$('slotResult').textContent=lb;this.floatPts('+'+pts);this.updateUI();
+        $('slotBtn').textContent='הבא! ▶';$('slotBtn').disabled=false;$('slotBtn').onclick=()=>{$('slotOverlay').classList.remove('visible');G.qi++;G.loadQ();G.autoListen()}},2300)},
+
+// ====== NEW INSANE FEATURES ======
+petSay(type){
+    const list=PET[type]||PET.ok;const msg=list[Math.floor(Math.random()*list.length)];
+    const el=document.createElement('div');el.className='pet-bubble';el.innerHTML='<div class="pet-bubble-inner">'+msg+'</div>';
+    document.body.appendChild(el);setTimeout(()=>el.remove(),2200);
+    // Character instant reaction
+    const ch=$('charEmoji'),old=ch.textContent;
+    const reactions={ok:'🤩',no:'😵',streak:'🤯',boss:'😈',fast:'💨'};
+    ch.textContent=reactions[type]||'🤩';setTimeout(()=>{ch.textContent=CHARS[this.charIdx].e},800);
+},
+screenTakeover(text){
+    const el=document.createElement('div');el.className='takeover';el.innerHTML='<div class="takeover-text">'+text+'</div>';
+    document.body.appendChild(el);setTimeout(()=>el.remove(),2600)},
+celebrateMilestone(m){
+    const emojis={50:'🌟',100:'💯',200:'💎',300:'🏆',500:'👑'};
+    const texts={50:'50 נקודות!',100:'מאה!!!',200:'200! מטורף!',300:'300! אגדה!',500:'500! אלוף העולם!'};
+    this.showBanner('treasure',emojis[m]||'🌟',texts[m]||m+' נקודות!');A.play('mega');this.spawnConfetti();this.explodeParticles(30)},
+spawnChest(){
+    if(this.chestEl)return;
+    const el=document.createElement('div');el.className='chest';el.textContent='📦';
+    el.onclick=()=>{this.openChest();el.remove();this.chestEl=null};
+    document.body.appendChild(el);this.chestEl=el;
+    A.play('coin');setTimeout(()=>{if(el.parentNode){el.remove();this.chestEl=null}},6000)},
+openChest(){
+    const rewards=[{t:'מגן!',e:'🛡️',fn:()=>{this.hasShield=true;this.inventory.push('shield')}},{t:'כפל!',e:'⚡',fn:()=>{this.tempMult=2;this.inventory.push('double')}},{t:'+8 שניות!',e:'❄️',fn:()=>{this.timeLeft+=8;$('bombTime').textContent=this.timeLeft}},{t:'+25 נקודות!',e:'💎',fn:()=>{this.score+=25}},{t:'סופר כפל x3!',e:'🔥',fn:()=>{this.tempMult=3}}];
+    const r=rewards[Math.floor(Math.random()*rewards.length)];r.fn();
+    const el=document.createElement('div');el.className='chest-reveal';el.innerHTML='<div class="cr-emoji">'+r.e+'</div><div class="cr-text">'+r.t+'</div>';
+    document.body.appendChild(el);A.play('epic');this.shake('mega');this.explodeParticles(25);this.spawnConfetti();
+    setTimeout(()=>el.remove(),2000);this.updateUI();this.updateInv()},
+startBonusStars(){this.stopBonusStars();this.starInterval=setInterval(()=>{if(this.submitted||!$('gameArea').style.display||$('gameArea').style.display==='none')return;
+    const el=document.createElement('div');el.className='bonus-star';el.textContent=['💫','⭐','✨','🌟'][Math.floor(Math.random()*4)];
+    el.style.left=Math.random()*70+15+'%';el.style.top=Math.random()*50+20+'%';
+    el.onclick=()=>{const b=3+Math.floor(Math.random()*8);this.score+=b;this.xp+=b;A.play('coin');this.floatPts('+'+b);el.classList.add('claimed');setTimeout(()=>el.remove(),500);this.updateUI()};
+    document.body.appendChild(el);setTimeout(()=>{if(el.parentNode&&!el.classList.contains('claimed'))el.remove()},3500)},2500)},
+stopBonusStars(){if(this.starInterval){clearInterval(this.starInterval);this.starInterval=null}},
+
+// ====== POWER METER ======
+updatePower(){
+    const pct=Math.min(100,(this.streak/12)*100);
+    $('powerFill').style.width=pct+'%';
+    const f=$('powerFill');f.classList.remove('low','med','high','ultra');
+    if(this.streak>=10)f.classList.add('ultra');else if(this.streak>=5)f.classList.add('high');else if(this.streak>=3)f.classList.add('med');else f.classList.add('low');
+    const labels={0:'ניטרלי',1:'מתחמם...',3:'🔥 על אש!',5:'⚡ סופר!',8:'🌋 הר געש!',10:'☄️ מטאור!',12:'👑 מלך!'};
+    let lbl='ניטרלי';for(const[k,v]of Object.entries(labels))if(this.streak>=+k)lbl=v;
+    $('powerLabel').textContent=lbl},
+
+// ====== EFFECTS ======
+showBanner(t,e,txt){const b=$('evBanner');b.className='ev-banner '+t;b.innerHTML=e+' '+txt;b.classList.add('visible');setTimeout(()=>b.classList.remove('visible'),1800)},
+checkAchs(){for(const a of ACHS)if(!this.unlockedAchs.has(a.id)&&a.c(this)){this.unlockedAchs.add(a.id);this.showAch(a)}},
+showAch(a){$('achIcon').textContent=a.i;$('achTitle').textContent=a.t;$('achDesc').textContent=a.d;$('achPopup').classList.add('visible');A.play('levelup');setTimeout(()=>$('achPopup').classList.remove('visible'),3500)},
+evolveChar(){$('charEmoji').classList.add('evolving');A.play('levelup');this.flash('white');this.showBanner('evolve','🦋','התפתחות! '+CHARS[this.charIdx].n+'!');this.screenTakeover('🦋 '+CHARS[this.charIdx].e+' '+CHARS[this.charIdx].n+'! 🦋');setTimeout(()=>{$('charEmoji').classList.remove('evolving');this.updateChar()},1000)},
+updateChar(){$('charEmoji').textContent=CHARS[this.charIdx].e;$('charName').textContent=CHARS[this.charIdx].n;const nx=CHARS[this.charIdx+1];$('xpFill').style.width=(nx?Math.min(100,((this.xp-CHARS[this.charIdx].xp)/(nx.xp-CHARS[this.charIdx].xp))*100):100)+'%';$('vLevel').textContent=this.charIdx+1},
+updateUI(){$('vScore').textContent=this.score;$('vStreak').textContent=this.streak;$('vMult').textContent='x'+this.mult},
+updateInv(){$('inv').innerHTML=this.inventory.map(i=>i==='shield'?'<div class="inv-i">🛡️ מגן</div>':i==='double'?'<div class="inv-i">⚡ כפל</div>':'').join('')},
+flash(c){const f=$('screenFlash');f.className='screen-flash '+c;setTimeout(()=>f.className='screen-flash',300)},
+shake(l){const m=$('mainContainer');m.classList.add(l==='mega'?'mega-shaking':'shaking');setTimeout(()=>m.classList.remove('shaking','mega-shaking'),700)},
+glitch(){$('mainContainer').classList.add('glitch');setTimeout(()=>$('mainContainer').classList.remove('glitch'),300)},
+floatPts(t){const el=document.createElement('div');el.className='float-pts';el.textContent=t;el.style.left=(Math.random()*50+25)+'%';el.style.top='35%';document.body.appendChild(el);setTimeout(()=>el.remove(),1500)},
+spawnConfetti(){const c=['#FF6B6B','#FFD93D','#6BCB77','#4D96FF','#9B59B6','#FF8A65','#00BCD4','#FF00FF','#39FF14'];for(let i=0;i<35;i++){const e=document.createElement('div');e.className='confetti';e.style.left=Math.random()*100+'vw';e.style.background=c[Math.floor(Math.random()*c.length)];e.style.borderRadius=Math.random()>0.5?'50%':'2px';e.style.width=(Math.random()*10+4)+'px';e.style.height=(Math.random()*10+4)+'px';e.style.animation='confetti-fall '+(Math.random()*2+1.5)+'s ease-out '+(Math.random()*0.5)+'s forwards';document.body.appendChild(e);setTimeout(()=>e.remove(),3500)}},
+coinRain(n){for(let i=0;i<n;i++){const c=document.createElement('div');c.className='coin';c.textContent='🪙';c.style.left=Math.random()*100+'vw';c.style.animationDelay=Math.random()*0.8+'s';document.body.appendChild(c);setTimeout(()=>c.remove(),2500)}},
+explodeParticles(n){const cx=window.innerWidth/2,cy=window.innerHeight/2,colors=['#FF1744','#FFD700','#00E676','#00B0FF','#FF00FF','#FF6D00','#39FF14'];for(let i=0;i<n;i++){const p=document.createElement('div');p.className='particle';const a=Math.random()*Math.PI*2,d=80+Math.random()*200;p.style.cssText='left:'+cx+'px;top:'+cy+'px;background:'+colors[Math.floor(Math.random()*colors.length)]+';--px:'+(Math.cos(a)*d)+'px;--py:'+(Math.sin(a)*d)+'px;animation:particle-explode '+(0.4+Math.random()*0.5)+'s ease-out forwards;width:'+(4+Math.random()*6)+'px;height:'+(4+Math.random()*6)+'px';document.body.appendChild(p);setTimeout(()=>p.remove(),1200)}},
+comboText(t){const el=document.createElement('div');el.className='combo-text';el.textContent=t;el.style.background='linear-gradient(135deg,var(--gold),var(--fire),var(--np))';el.style.webkitBackgroundClip='text';el.style.webkitTextFillColor='transparent';el.style.backgroundClip='text';document.body.appendChild(el);setTimeout(()=>el.remove(),1300)},
+
+endGame(){this.stopTimer();this.stopBonusStars();if(this.chestEl){this.chestEl.remove();this.chestEl=null}
+    $('gameArea').style.display='none';$('powerMeter').style.display='none';$('endScr').style.display='flex';
+    $('endScore').textContent=this.score;$('eCorrect').textContent=this.correctCount;$('eStreak').textContent=this.maxStreak;$('eBonus').textContent=this.bonusCount;$('eLvl').textContent=this.charIdx+1;$('endChar').textContent=CHARS[this.charIdx].e;
+    const ranks=['תלמיד','מתחיל','טוב','מצוין','אלוף','אגדה!'];const pct=this.correctCount/this.totalQ;
+    const ri=pct>=0.95?5:pct>=0.8?4:pct>=0.65?3:pct>=0.5?2:pct>=0.3?1:0;
+    $('endRank').textContent=CHARS[this.charIdx].e+' '+ranks[ri];$('endTrophy').textContent=ri>=4?'👑':'🏆';
+    A.play('epic');this.spawnConfetti();setTimeout(()=>{this.spawnConfetti();this.coinRain(25);this.explodeParticles(50)},500);setTimeout(()=>this.spawnConfetti(),1000);
+    if(ri>=4)this.screenTakeover('👑 '+ranks[ri]+' 👑')}
+};
+
+// ====== STARFIELD ======
+(function(){const cv=$('starsCanvas'),cx=cv.getContext('2d');let stars=[];
+function resize(){cv.width=window.innerWidth;cv.height=window.innerHeight}
+function init(){resize();stars=[];for(let i=0;i<150;i++)stars.push({x:Math.random()*cv.width,y:Math.random()*cv.height,r:Math.random()*1.8+0.3,sp:Math.random()*0.4+0.1,a:Math.random()*0.5+0.3})}
+function draw(){cx.clearRect(0,0,cv.width,cv.height);stars.forEach(s=>{cx.beginPath();cx.arc(s.x,s.y,s.r,0,Math.PI*2);s.a+=(Math.random()-0.5)*0.02;s.a=Math.max(0.1,Math.min(0.8,s.a));cx.fillStyle='rgba(255,255,255,'+s.a+')';cx.fill();s.y+=s.sp;if(s.y>cv.height){s.y=0;s.x=Math.random()*cv.width}});requestAnimationFrame(draw)}
+window.addEventListener('resize',resize);init();draw()})();
+</script>
+</body>
+</html>
