@@ -701,58 +701,98 @@
       <div class="carousel" id="carousel-download">
         <div class="carousel-track">
 
+          <!-- Step 1: Download Git -->
           <div class="carousel-slide">
             <div class="guide-card">
               <div class="step-num">1</div>
-              <h3>מורידים Git (64-bit)</h3>
+              <h3>מורידים Git לווינדוס</h3>
               <div class="screenshot-wrap">
                 <img src="img/guide-git.png" alt="Git download page">
                 <div class="click-circle" style="width:380px;height:26px;border-radius:6px;top:27%;left:33%;"></div>
                 <div class="click-arrow" style="top:21%;left:50%;">👆</div>
                 <span class="click-label" style="top:33%;left:33%;">לחצו כאן — Click here to download!</span>
               </div>
-              <p>לוחצים <strong>Click here to download</strong> (גרסת 64-bit) ומתקינים — Next, Next, Finish</p>
-              <a href="https://git-scm.com/downloads/win" target="_blank" class="action-link">🔗 פתחו הורדת Git</a>
+              <p>
+                לוחצים על הקישור למטה, ואז על <strong>"Click here to download"</strong><br>
+                <span style="color:rgba(255,255,255,0.5);">📦 קובץ הורדה ישמר במחשב (כ-60MB)</span>
+              </p>
+              <a href="https://git-scm.com/downloads/win" target="_blank" class="action-link">🔗 לחצו כאן לדף ההורדה של Git</a>
             </div>
           </div>
 
+          <!-- Step 2: Install Git -->
           <div class="carousel-slide">
             <div class="guide-card">
               <div class="step-num">2</div>
+              <h3>מתקינים את Git</h3>
+              <div style="font-size:4rem;margin:1rem 0;">⚙️</div>
+              <p style="font-size:1.1rem;line-height:2;">
+                פותחים את הקובץ שהורדתם<br>
+                ווינדוס ישאל "לאפשר שינויים?" — לוחצים <strong style="color:#4ecdc4;">Yes</strong><br><br>
+                עכשיו פשוט לוחצים <strong style="color:#ffd700;">Next</strong> בכל מסך! ➡️<br>
+                <span style="color:rgba(255,255,255,0.5);">(יש כ-14 מסכים — פשוט Next, Next, Next...)</span><br><br>
+                במסך האחרון לוחצים <strong style="color:#4ecdc4;">Install</strong> ואז <strong style="color:#4ecdc4;">Finish</strong><br>
+                <strong style="color:#ffd700;">✅ Git מותקן!</strong>
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 3: Open PowerShell -->
+          <div class="carousel-slide">
+            <div class="guide-card">
+              <div class="step-num">3</div>
+              <h3>פותחים PowerShell</h3>
+              <div style="font-size:3.5rem;margin:1rem 0;">🔍 ⊞</div>
+              <p style="font-size:1.1rem;line-height:2;">
+                לוחצים על <strong style="color:#4ecdc4;">מקש Windows</strong> במקלדת<br>
+                <span style="color:rgba(255,255,255,0.5);">(המקש עם הלוגו של ווינדוס, ליד Ctrl)</span><br><br>
+                מקלידים: <strong style="color:#ffd700;">PowerShell</strong><br><br>
+                לוחצים על <strong>"Windows PowerShell"</strong> שמופיע<br>
+                <span style="color:rgba(255,255,255,0.5);">⚠️ לא צריך "הפעל כמנהל" — פשוט לחיצה רגילה!</span>
+              </p>
+            </div>
+          </div>
+
+          <!-- Step 4: Run Install Command -->
+          <div class="carousel-slide">
+            <div class="guide-card">
+              <div class="step-num">4</div>
               <h3>מתקינים Claude Code</h3>
               <div class="screenshot-wrap">
-                <img src="img/guide-powershell.png" alt="PowerShell install command">
-                <span class="click-label" style="top:6%;left:50%;transform:translateX(-50%);font-size:1rem;background:linear-gradient(135deg,#667eea,#764ba2);">ככה זה נראה ב-PowerShell!</span>
+                <img src="img/guide-powershell.png" alt="PowerShell install">
+                <span class="click-label" style="top:6%;left:50%;transform:translateX(-50%);font-size:1rem;background:linear-gradient(135deg,#667eea,#764ba2);">ככה זה נראה!</span>
               </div>
               <p>
-                פותחים <strong>PowerShell</strong> (חיפוש "PowerShell" בתפריט התחל)<br>
-                ומעתיקים את הפקודה:
+                מעתיקים את הפקודה ומדביקים ב-PowerShell:
               </p>
               <div class="code-wrap">
                 <code id="cmd-install">irm https://claude.ai/install.ps1 | iex</code>
                 <button class="copy-btn" onclick="copyCmd('cmd-install', this)">📋 העתק</button>
               </div>
+              <p style="color:rgba(255,255,255,0.5);font-size:0.9rem;margin-top:0.5rem;">
+                לוחצים Enter וממתינים כ-1-2 דקות ⏳
+              </p>
             </div>
           </div>
 
+          <!-- Step 5: Run Claude -->
           <div class="carousel-slide">
             <div class="guide-card">
-              <div class="step-num">3</div>
-              <h3>מפעילים Claude Code! 🎉</h3>
-              <div class="screenshot-wrap">
-                <img src="img/guide-quickstart.png" alt="Claude Code quickstart">
-                <span class="click-label" style="top:8%;left:50%;transform:translateX(-50%);font-size:1rem;background:linear-gradient(135deg,#667eea,#764ba2);">כאן תמצאו את כל השלבים!</span>
-              </div>
-              <p>
-                פותחים <strong>PowerShell</strong> חדש ומריצים:
+              <div class="step-num">5</div>
+              <h3>מפעילים את Claude Code! 🎉</h3>
+              <div style="font-size:3.5rem;margin:1rem 0;">🚀</div>
+              <p style="font-size:1.1rem;line-height:2;">
+                <strong>סוגרים</strong> את PowerShell ו<strong>פותחים חדש</strong> (שלב 3)<br><br>
+                מקלידים:
               </p>
               <div class="code-wrap">
                 <code id="cmd-claude">claude</code>
                 <button class="copy-btn" onclick="copyCmd('cmd-claude', this)">📋 העתק</button>
               </div>
-              <p style="margin-top:1rem;">
-                מתחברים עם חשבון הקלוד שלכם — וזהו!<br>
-                <strong style="color:#ffd700;">מוכנים לייצר סרטונים!</strong>
+              <p style="font-size:1.1rem;line-height:2;margin-top:1rem;">
+                ולוחצים <strong>Enter</strong> — הדפדפן ייפתח אוטומטית 🌐<br>
+                מתחברים עם חשבון הקלוד שלכם<br>
+                חוזרים ל-PowerShell — <strong style="color:#ffd700;">מוכנים!</strong>
               </p>
               <a href="https://docs.anthropic.com/en/docs/claude-code/quickstart" target="_blank" class="action-link">📚 מדריך Quickstart רשמי</a>
             </div>
@@ -765,6 +805,8 @@
             <span class="carousel-dot active" onclick="goToSlide('download', 0)"></span>
             <span class="carousel-dot" onclick="goToSlide('download', 1)"></span>
             <span class="carousel-dot" onclick="goToSlide('download', 2)"></span>
+            <span class="carousel-dot" onclick="goToSlide('download', 3)"></span>
+            <span class="carousel-dot" onclick="goToSlide('download', 4)"></span>
           </div>
           <button class="carousel-btn" onclick="moveCarousel('download', 1)">←</button>
         </div>
