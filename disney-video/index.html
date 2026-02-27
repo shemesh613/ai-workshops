@@ -285,6 +285,54 @@
     color: rgba(255,255,255,0.5);
   }
 
+  .cta-links {
+    display: flex;
+    justify-content: center;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .cta-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.8rem 1.8rem;
+    border-radius: 50px;
+    text-decoration: none;
+    font-size: 1rem;
+    font-weight: 700;
+    transition: transform 0.3s, box-shadow 0.3s;
+  }
+
+  .cta-link:hover {
+    transform: scale(1.05);
+  }
+
+  .cta-link.zoom {
+    background: linear-gradient(135deg, #2D8CFF, #1a6fd1);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(45,140,255,0.3);
+  }
+
+  .cta-link.zoom:hover {
+    box-shadow: 0 8px 35px rgba(45,140,255,0.5);
+  }
+
+  .cta-link.calendar {
+    background: linear-gradient(135deg, #34a853, #1e8e3e);
+    color: #fff;
+    box-shadow: 0 4px 20px rgba(52,168,83,0.3);
+  }
+
+  .cta-link.calendar:hover {
+    box-shadow: 0 8px 35px rgba(52,168,83,0.5);
+  }
+
+  .cta-link .link-icon {
+    font-size: 1.3rem;
+  }
+
   /* === Footer === */
   footer {
     text-align: center;
@@ -439,6 +487,14 @@
     </p>
     <a href="#" class="cta-button">בואו נתחיל!</a>
     <p class="cta-sub">השיעור הקרוב: יום ראשון, 1 במרץ 2026 בשעה 12:15</p>
+    <div class="cta-links">
+      <a href="https://zoom.us/j/ZOOM_ID_HERE" target="_blank" class="cta-link zoom">
+        <span class="link-icon">📹</span> הצטרפו בזום
+      </a>
+      <a href="https://calendar.google.com/calendar/render?action=TEMPLATE&text=%D7%A9%D7%99%D7%A2%D7%95%D7%A8%20%D7%94%D7%A4%D7%A7%D7%AA%20%D7%A1%D7%A8%D7%98%D7%95%D7%9F%20%D7%93%D7%99%D7%A1%D7%A0%D7%99%20AI&dates=20260301T121500%2F20260301T131500&details=%F0%9F%8E%AC%20%D7%94%D7%A4%D7%A7%D7%AA%20%D7%A1%D7%A8%D7%98%D7%95%D7%9F%20%D7%93%D7%99%D7%A1%D7%A0%D7%99%20AI%20-%20%D7%A9%D7%99%D7%A2%D7%95%D7%A8%20%D7%A4%D7%A8%D7%98%D7%99" target="_blank" class="cta-link calendar">
+        <span class="link-icon">📅</span> הוסיפו ליומן
+      </a>
+    </div>
   </section>
 
   <footer>
