@@ -440,8 +440,18 @@
     background: rgba(0,0,0,0.4); padding: 0.8rem 1.5rem; border-radius: 8px;
     font-family: 'Courier New', monospace; font-size: 1rem; display: block;
     margin: 1rem 0; direction: ltr; text-align: left; color: #4ecdc4;
-    border: 1px solid rgba(78,205,196,0.3);
+    border: 1px solid rgba(78,205,196,0.3); position: relative;
   }
+  .code-wrap { position: relative; }
+  .copy-btn {
+    position: absolute; top: 50%; left: 8px; transform: translateY(-50%);
+    background: linear-gradient(135deg,#667eea,#764ba2); color: #fff;
+    border: none; border-radius: 6px; padding: 6px 14px; cursor: pointer;
+    font-family: 'Heebo', sans-serif; font-size: 0.85rem; font-weight: 700;
+    transition: all 0.3s; z-index: 2;
+  }
+  .copy-btn:hover { transform: translateY(-50%) scale(1.08); box-shadow: 0 4px 15px rgba(102,126,234,0.4); }
+  .copy-btn.copied { background: linear-gradient(135deg,#2ecc71,#27ae60); }
 
   /* Carousel Nav */
   .carousel-nav {
@@ -647,12 +657,15 @@
             <div class="guide-card">
               <div class="step-num">2</div>
               <h3>משדרגים לתוכנית Pro</h3>
-              <div style="font-size:4rem;margin:1.5rem 0;">💳</div>
-              <p style="font-size:1.15rem;line-height:2;">
-                אחרי ההרשמה, נכנסים ל-<strong>Settings → Billing</strong><br>
-                ובוחרים תוכנית <strong style="color:#ffd700;">Pro — $20 לחודש</strong><br><br>
-                משלמים עם כרטיס אשראי בינלאומי (ויזה / מאסטרקארד)<br>
-                לוחצים <strong>Subscribe</strong> — וזהו!
+              <div class="screenshot-wrap">
+                <img src="img/guide-pricing-cards.png" alt="Claude pricing plans">
+                <div class="click-circle" style="width:280px;height:55px;border-radius:12px;top:53%;left:35%;"></div>
+                <div class="click-arrow" style="top:47%;left:50%;">👆</div>
+                <span class="click-label" style="top:60%;left:33%;">לחצו Try Claude תחת Pro!</span>
+              </div>
+              <p>
+                בוחרים תוכנית <strong style="color:#ffd700;">Pro — $20 לחודש</strong><br>
+                כולל Claude Code! משלמים עם כרטיס אשראי בינלאומי
               </p>
               <a href="https://claude.ai/settings/billing" target="_blank" class="action-link">💳 פתחו את עמוד התשלום</a>
             </div>
@@ -708,34 +721,38 @@
               <div class="step-num">2</div>
               <h3>מתקינים Claude Code</h3>
               <div class="screenshot-wrap">
-                <img src="img/guide-setup-docs.png" alt="Claude Code install docs">
-                <div class="click-circle" style="width:300px;height:40px;border-radius:8px;top:83%;left:28%;"></div>
-                <div class="click-arrow" style="top:77%;left:42%;">👆</div>
-                <span class="click-label" style="top:90%;left:28%;">זו הפקודה ל-Windows!</span>
+                <img src="img/guide-powershell.png" alt="PowerShell install command">
+                <span class="click-label" style="top:6%;left:50%;transform:translateX(-50%);font-size:1rem;background:linear-gradient(135deg,#667eea,#764ba2);">ככה זה נראה ב-PowerShell!</span>
               </div>
               <p>
-                פותחים <strong>PowerShell</strong> (חיפוש בתפריט התחל)<br>
-                ומריצים את הפקודה:
+                פותחים <strong>PowerShell</strong> (חיפוש "PowerShell" בתפריט התחל)<br>
+                ומעתיקים את הפקודה:
               </p>
-              <code>irm https://claude.ai/install.ps1 | iex</code>
+              <div class="code-wrap">
+                <code id="cmd-install">irm https://claude.ai/install.ps1 | iex</code>
+                <button class="copy-btn" onclick="copyCmd('cmd-install', this)">📋 העתק</button>
+              </div>
             </div>
           </div>
 
           <div class="carousel-slide">
             <div class="guide-card">
               <div class="step-num">3</div>
-              <h3>מפעילים Claude Code!</h3>
+              <h3>מפעילים Claude Code! 🎉</h3>
               <div class="screenshot-wrap">
                 <img src="img/guide-quickstart.png" alt="Claude Code quickstart">
-                <span class="click-label" style="top:8%;left:50%;transform:translateX(-50%);font-size:1rem;background:linear-gradient(135deg,#667eea,#764ba2);">הכל מוכן — עקבו אחרי השלבים!</span>
+                <span class="click-label" style="top:8%;left:50%;transform:translateX(-50%);font-size:1rem;background:linear-gradient(135deg,#667eea,#764ba2);">כאן תמצאו את כל השלבים!</span>
               </div>
               <p>
-                פותחים <strong>PowerShell</strong> חדש וכותבים:
+                פותחים <strong>PowerShell</strong> חדש ומריצים:
               </p>
-              <code>claude</code>
+              <div class="code-wrap">
+                <code id="cmd-claude">claude</code>
+                <button class="copy-btn" onclick="copyCmd('cmd-claude', this)">📋 העתק</button>
+              </div>
               <p style="margin-top:1rem;">
                 מתחברים עם חשבון הקלוד שלכם — וזהו!<br>
-                <strong style="color:#ffd700;">מוכנים לייצר סרטונים! 🎉</strong>
+                <strong style="color:#ffd700;">מוכנים לייצר סרטונים!</strong>
               </p>
               <a href="https://docs.anthropic.com/en/docs/claude-code/quickstart" target="_blank" class="action-link">📚 מדריך Quickstart רשמי</a>
             </div>
@@ -851,6 +868,15 @@ function switchTab(tab) {
   document.querySelectorAll('.tab-content').forEach(t => t.classList.remove('active'));
   event.target.classList.add('active');
   document.getElementById('tab-' + tab).classList.add('active');
+}
+
+function copyCmd(id, btn) {
+  const text = document.getElementById(id).textContent;
+  navigator.clipboard.writeText(text).then(() => {
+    btn.textContent = '✅ הועתק!';
+    btn.classList.add('copied');
+    setTimeout(() => { btn.textContent = '📋 העתק'; btn.classList.remove('copied'); }, 2000);
+  });
 }
 
 function moveCarousel(id, dir) {
