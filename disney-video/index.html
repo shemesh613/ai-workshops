@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>א. הפקות לימוד תלמידה — AI Video Production</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Heebo:wght@300;400;700;900&display=swap');
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: 'Heebo', sans-serif;
+    color: #fff;
+    overflow-x: hidden;
+    background: #0a0a1a;
+  }
+
+  /* === Video Background === */
+  .video-bg {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    object-fit: cover; z-index: -3;
+    opacity: 0.5;
+  }
+
+  .dark-overlay {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: linear-gradient(180deg, rgba(10,10,30,0.7) 0%, rgba(10,10,30,0.4) 50%, rgba(10,10,30,0.8) 100%);
+    z-index: -2;
+  }
+
+  .fog-overlay {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    background: radial-gradient(ellipse at 50% 50%, rgba(100,60,200,0.15) 0%, transparent 70%);
+    z-index: -1;
+    animation: fogMove 8s ease-in-out infinite alternate;
+  }
+
+  @keyframes fogMove {
+    0% { opacity: 0.4; transform: scale(1); }
+    100% { opacity: 0.8; transform: scale(1.1); }
+  }
+
+  #particles-canvas {
+    position: fixed; top: 0; left: 0;
+    width: 100%; height: 100%;
+    z-index: 0; pointer-events: none;
+  }
+
+  /* === Content === */
+  .content { position: relative; z-index: 1; }
+
+  /* === Hero === */
+  .hero {
+    min-height: 100vh;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 2rem;
+  }
+
+  .hero-badge {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea, #764ba2);
+    padding: 0.5rem 1.5rem;
+    border-radius: 50px;
+    font-size: 0.9rem;
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 1.5rem;
+    animation: fadeInDown 1s ease;
+  }
+
+  .hero h1 {
+    font-size: clamp(2.5rem, 7vw, 5rem);
+    font-weight: 900;
+    background: linear-gradient(135deg, #ffd700, #ff6b6b, #667eea, #4ecdc4);
+    background-size: 300% 300%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientShift 5s ease infinite, fadeInUp 1s ease 0.2s both;
+    line-height: 1.2;
+    margin-bottom: 1rem;
+  }
+
+  .hero p {
+    font-size: clamp(1.1rem, 2.5vw, 1.5rem);
+    font-weight: 300;
+    color: rgba(255,255,255,0.8);
+    max-width: 700px;
+    animation: fadeInUp 1s ease 0.4s both;
+    line-height: 1.8;
+  }
+
+  .hero-arrow {
+    margin-top: 3rem;
+    font-size: 2rem;
+    animation: bounce 2s infinite, fadeInUp 1s ease 0.6s both;
+    opacity: 0.6;
+  }
+
+  @keyframes gradientShift {
+    0% { background-position: 0% 50%; }
+    50% { background-position: 100% 50%; }
+    100% { background-position: 0% 50%; }
+  }
+
+  @keyframes bounce {
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(15px); }
+  }
+
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* === Pipeline Section === */
+  .section {
+    padding: 5rem 2rem;
+    max-width: 1100px;
+    margin: 0 auto;
+  }
+
+  .section-title {
+    font-size: 2.5rem;
+    font-weight: 900;
+    text-align: center;
+    margin-bottom: 3rem;
+    background: linear-gradient(135deg, #ffd700, #ff6b6b);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+  }
+
+  /* === Pipeline Steps === */
+  .pipeline {
+    display: flex; flex-direction: column;
+    gap: 2rem;
+    position: relative;
+  }
+
+  .pipeline::before {
+    content: '';
+    position: absolute;
+    right: 40px;
+    top: 0; bottom: 0;
+    width: 3px;
+    background: linear-gradient(180deg, #ffd700, #667eea, #4ecdc4, #ff6b6b);
+    border-radius: 3px;
+  }
+
+  .step {
+    display: flex; align-items: flex-start;
+    gap: 2rem;
+    opacity: 0;
+    animation: fadeInRight 0.6s ease forwards;
+  }
+
+  .step:nth-child(1) { animation-delay: 0.1s; }
+  .step:nth-child(2) { animation-delay: 0.3s; }
+  .step:nth-child(3) { animation-delay: 0.5s; }
+  .step:nth-child(4) { animation-delay: 0.7s; }
+  .step:nth-child(5) { animation-delay: 0.9s; }
+  .step:nth-child(6) { animation-delay: 1.1s; }
+  .step:nth-child(7) { animation-delay: 1.3s; }
+
+  @keyframes fadeInRight {
+    from { opacity: 0; transform: translateX(30px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .step-icon {
+    min-width: 80px; height: 80px;
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 2rem;
+    background: rgba(255,255,255,0.05);
+    border: 2px solid rgba(255,255,255,0.15);
+    backdrop-filter: blur(10px);
+    flex-shrink: 0;
+  }
+
+  .step-content {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 1.5rem 2rem;
+    backdrop-filter: blur(10px);
+    flex: 1;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+
+  .step-content:hover {
+    transform: translateX(-5px);
+    border-color: rgba(255,215,0,0.4);
+  }
+
+  .step-content h3 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    color: #ffd700;
+  }
+
+  .step-content p {
+    font-weight: 300;
+    color: rgba(255,255,255,0.7);
+    line-height: 1.7;
+  }
+
+  .step-content .tech-tag {
+    display: inline-block;
+    background: rgba(102,126,234,0.3);
+    padding: 0.2rem 0.8rem;
+    border-radius: 20px;
+    font-size: 0.8rem;
+    margin-top: 0.5rem;
+    margin-left: 0.3rem;
+    border: 1px solid rgba(102,126,234,0.4);
+  }
+
+  /* === Features Grid === */
+  .features {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1.5rem;
+    margin-top: 2rem;
+  }
+
+  .feature-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 16px;
+    padding: 2rem;
+    backdrop-filter: blur(10px);
+    text-align: center;
+    transition: transform 0.3s, border-color 0.3s;
+  }
+
+  .feature-card:hover {
+    transform: translateY(-5px);
+    border-color: rgba(255,215,0,0.4);
+  }
+
+  .feature-card .icon { font-size: 3rem; margin-bottom: 1rem; }
+  .feature-card h3 { font-size: 1.2rem; margin-bottom: 0.5rem; color: #ffd700; }
+  .feature-card p { font-weight: 300; color: rgba(255,255,255,0.7); font-size: 0.95rem; line-height: 1.6; }
+
+  /* === CTA === */
+  .cta-section {
+    text-align: center;
+    padding: 5rem 2rem;
+  }
+
+  .cta-button {
+    display: inline-block;
+    background: linear-gradient(135deg, #ffd700, #ff6b6b);
+    color: #000;
+    font-family: 'Heebo', sans-serif;
+    font-size: 1.3rem;
+    font-weight: 900;
+    padding: 1rem 3rem;
+    border-radius: 50px;
+    text-decoration: none;
+    transition: transform 0.3s, box-shadow 0.3s;
+    box-shadow: 0 5px 30px rgba(255,215,0,0.3);
+  }
+
+  .cta-button:hover {
+    transform: scale(1.05);
+    box-shadow: 0 10px 50px rgba(255,215,0,0.5);
+  }
+
+  .cta-sub {
+    margin-top: 1rem;
+    font-size: 1rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  /* === Footer === */
+  footer {
+    text-align: center;
+    padding: 2rem;
+    color: rgba(255,255,255,0.3);
+    font-size: 0.85rem;
+  }
+
+  /* === Responsive === */
+  @media (max-width: 768px) {
+    .pipeline::before { right: 25px; }
+    .step-icon { min-width: 50px; height: 50px; font-size: 1.3rem; }
+    .step-content { padding: 1rem 1.2rem; }
+    .step { gap: 1rem; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Background layers -->
+<video class="video-bg" autoplay loop muted playsinline
+  poster="https://images.unsplash.com/photo-1534796636912-3b95b3ab5986?w=1920">
+  <source src="https://videos.pexels.com/video-files/3129671/3129671-uhd_2560_1440_30fps.mp4" type="video/mp4">
+</video>
+<div class="dark-overlay"></div>
+<div class="fog-overlay"></div>
+<canvas id="particles-canvas"></canvas>
+
+<!-- Content -->
+<div class="content">
+
+  <!-- Hero -->
+  <section class="hero">
+    <div class="hero-badge">AI VIDEO PRODUCTION</div>
+    <h1>הפקת סרטונים<br>עם בינה מלאכותית</h1>
+    <p>
+      מתמונה אחת שלך — לסרטון דיסני מונפש באיכות גבוהה.
+      <br>קריינות, אנימציה, אפקטים — הכל אוטומטי עם Claude Code.
+    </p>
+    <div class="hero-arrow">&#8595;</div>
+  </section>
+
+  <!-- Pipeline -->
+  <section class="section">
+    <h2 class="section-title">איך זה עובד?</h2>
+    <div class="pipeline">
+
+      <div class="step">
+        <div class="step-icon">📸</div>
+        <div class="step-content">
+          <h3>1. תמונת רפרנס</h3>
+          <p>מעלים תמונה אחת של הפנים — סלפי עם תאורה טובה מספיק.</p>
+          <span class="tech-tag">Face Reference</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-icon">🎨</div>
+        <div class="step-content">
+          <h3>2. סטוריבורד דיסני</h3>
+          <p>Gemini AI יוצר תמונות תלת-ממד בסגנון פיקסאר עם הפנים שלכם — 4 סצנות עם סיפור.</p>
+          <span class="tech-tag">Google Gemini</span>
+          <span class="tech-tag">Pixar Style</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-icon">🎬</div>
+        <div class="step-content">
+          <h3>3. הנפשה בגרוק</h3>
+          <p>כל תמונה הופכת לקליפ וידאו מונפש — תנועת מצלמה, אפקטים, חיים.</p>
+          <span class="tech-tag">Grok xAI</span>
+          <span class="tech-tag">Puppeteer</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-icon">🧠</div>
+        <div class="step-content">
+          <h3>4. שדרוג AI לאיכות גבוהה</h3>
+          <p>Real-ESRGAN מוסיף פרט אמיתי — לא רק הגדלה, אלא יצירת חדות חדשה.</p>
+          <span class="tech-tag">Real-ESRGAN</span>
+          <span class="tech-tag">Full HD</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-icon">🎤</div>
+        <div class="step-content">
+          <h3>5. קריינות דינמית</h3>
+          <p>טקסט הופך לקול — קריינות בעברית עם אינטונציה טבעית ודרמטית.</p>
+          <span class="tech-tag">ElevenLabs</span>
+          <span class="tech-tag">Hebrew TTS</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-icon">🎵</div>
+        <div class="step-content">
+          <h3>6. מוזיקת רקע</h3>
+          <p>מוזיקה אורקסטרלית מותאמת — קסומה כמו סרט דיסני אמיתי.</p>
+          <span class="tech-tag">AI Music</span>
+          <span class="tech-tag">Orchestral</span>
+        </div>
+      </div>
+
+      <div class="step">
+        <div class="step-icon">🎥</div>
+        <div class="step-content">
+          <h3>7. סרטון סופי</h3>
+          <p>הכל מתחבר — מעברי crossfade, fade in/out, ויואדיו + קול = סרטון מוכן.</p>
+          <span class="tech-tag">ffmpeg</span>
+          <span class="tech-tag">1080p</span>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Features -->
+  <section class="section">
+    <h2 class="section-title">מה מקבלים?</h2>
+    <div class="features">
+      <div class="feature-card">
+        <div class="icon">🎭</div>
+        <h3>הפנים שלך</h3>
+        <p>הדמות בסרטון נראית כמוך — משקפיים, זקן, שיער — הכל נשמר.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">✨</div>
+        <h3>איכות פיקסאר</h3>
+        <p>עיצוב תלת-ממד בסגנון דיסני פיקסאר — חם, קסום, מקצועי.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">🔊</div>
+        <h3>קריינות בעברית</h3>
+        <p>קול טבעי ודינמי — לא רובוטי, אלא כמו מספר סיפורים אמיתי.</p>
+      </div>
+      <div class="feature-card">
+        <div class="icon">⚡</div>
+        <h3>אוטומטי לגמרי</h3>
+        <p>פקודה אחת ב-Claude Code — וכל הקסם קורה לבד.</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="cta-section">
+    <h2 class="section-title">מוכנים ליצור?</h2>
+    <p style="color: rgba(255,255,255,0.6); margin-bottom: 2rem; font-size: 1.1rem;">
+      נתקין Claude Code, נגדיר את הסקיל, ותוך דקות — סרטון דיסני שלכם מוכן.
+    </p>
+    <a href="#" class="cta-button">בואו נתחיל!</a>
+    <p class="cta-sub">השיעור הקרוב: יום ראשון, 1 במרץ 2026 בשעה 12:15</p>
+  </section>
+
+  <footer>
+    Powered by Claude Code + Gemini + Grok + Real-ESRGAN + ElevenLabs + ffmpeg
+  </footer>
+
+</div>
+
+<!-- Particle Engine -->
+<script>
+class ParticleEngine {
+  constructor(canvasId, type = 'gold') {
+    this.canvas = document.getElementById(canvasId);
+    if (!this.canvas) return;
+    this.ctx = this.canvas.getContext('2d');
+    this.particles = [];
+    this.type = type;
+    this.resize();
+    window.addEventListener('resize', () => this.resize());
+    this.init();
+    this.animate();
+  }
+  resize() {
+    this.canvas.width = window.innerWidth;
+    this.canvas.height = window.innerHeight;
+  }
+  init() {
+    const count = 80;
+    for (let i = 0; i < count; i++) this.particles.push(this.create());
+  }
+  create() {
+    return {
+      x: Math.random() * this.canvas.width,
+      y: Math.random() * this.canvas.height,
+      size: Math.random() * 3 + 1,
+      speedX: (Math.random() - 0.5) * 0.5,
+      speedY: Math.random() * 0.8 + 0.2,
+      opacity: Math.random() * 0.6 + 0.2,
+      hue: 45 + Math.random() * 15
+    };
+  }
+  update() {
+    this.particles.forEach(p => {
+      p.x += p.speedX;
+      p.y += p.speedY;
+      if (p.y > this.canvas.height) { p.y = -5; p.x = Math.random() * this.canvas.width; }
+      if (p.x < 0) p.x = this.canvas.width;
+      if (p.x > this.canvas.width) p.x = 0;
+    });
+  }
+  draw() {
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    this.particles.forEach(p => {
+      this.ctx.save();
+      this.ctx.globalAlpha = p.opacity;
+      this.ctx.fillStyle = `hsl(${p.hue}, 80%, 60%)`;
+      this.ctx.shadowBlur = 10;
+      this.ctx.shadowColor = `hsl(${p.hue}, 80%, 60%)`;
+      this.ctx.beginPath();
+      this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+      this.ctx.fill();
+      this.ctx.restore();
+    });
+  }
+  animate() {
+    this.update();
+    this.draw();
+    requestAnimationFrame(() => this.animate());
+  }
+}
+new ParticleEngine('particles-canvas', 'gold');
+</script>
+</body>
+</html>
