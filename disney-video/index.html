@@ -724,33 +724,20 @@
       </div>
     </div>
 
-    <!-- Tab 2: Download -->
+    <!-- Tab 2: Download (8 steps) -->
     <div class="tab-content" id="tab-download">
       <div class="carousel" id="carousel-download">
         <div class="carousel-track">
 
-          <!-- Step 0: Download Claude Desktop -->
-          <div class="carousel-slide"><div class="guide-card"><div class="step-num">1</div>
-            <h3>מורידים את Claude Desktop</h3>
-            <div class="screenshot-wrap"><img src="img/real-download-clean.png" alt="Download Claude">
-              <div class="click-circle" style="width:130px;height:38px;border-radius:10px;top:72%;left:40%;"></div>
-              <span class="click-label" style="top:79%;left:38%;">Windows — לוחצים כאן</span>
-            </div>
-            <p>נכנסים ל-<strong>claude.com/download</strong> ולוחצים על <strong>Windows</strong><br>
-            מוריד קובץ <strong>ClaudeSetup.exe</strong><br>
-            <span style="color:rgba(255,255,255,0.5);">📦 גודל הקובץ ~150MB</span></p>
-            <a href="https://claude.ai/api/desktop/win32/x64/exe/latest/redirect" target="_blank" class="action-link">⬇️ הורדת Claude Desktop לווינדוס</a>
-          </div></div>
-
           <!-- Step 1: Download Git -->
           <div class="carousel-slide">
             <div class="guide-card">
-              <div class="step-num">2</div>
+              <div class="step-num">1</div>
               <h3>מורידים Git לווינדוס</h3>
               <div class="screenshot-wrap">
                 <img src="img/real-git.png" alt="Git download page">
-                <div class="click-circle" style="width:310px;height:20px;border-radius:6px;top:17%;left:17%;"></div>
-                <span class="click-label" style="top:21%;left:17%;">לחצו כאן — Click here to download</span>
+                <div class="click-circle" style="width:280px;height:18px;border-radius:6px;top:16.5%;left:18%;"></div>
+                <span class="click-label" style="top:20%;left:18%;">Click here to download — לוחצים כאן</span>
               </div>
               <p>
                 לוחצים על הכפתור למטה → נפתח דף הורדה<br>
@@ -761,10 +748,10 @@
             </div>
           </div>
 
-          <!-- Step 3: UAC Prompt -->
+          <!-- Step 2: UAC Prompt -->
           <div class="carousel-slide">
             <div class="guide-card">
-              <div class="step-num">3</div>
+              <div class="step-num">2</div>
               <h3>פותחים את הקובץ שהורדנו</h3>
               <div class="screenshot-wrap">
                 <img src="img/mock-uac.png" alt="Windows UAC prompt">
@@ -777,10 +764,10 @@
             </div>
           </div>
 
-          <!-- Step 4: Install Git - Next Next -->
+          <!-- Step 3: Install Git - Next Next -->
           <div class="carousel-slide">
             <div class="guide-card">
-              <div class="step-num">4</div>
+              <div class="step-num">3</div>
               <h3>לוחצים Next בכל מסך</h3>
               <div class="screenshot-wrap">
                 <img src="img/mock-git-installer.png" alt="Git installer">
@@ -793,10 +780,10 @@
             </div>
           </div>
 
-          <!-- Step 5: Finish -->
+          <!-- Step 4: Finish -->
           <div class="carousel-slide">
             <div class="guide-card">
-              <div class="step-num">5</div>
+              <div class="step-num">4</div>
               <h3>Git מותקן! ✅</h3>
               <div class="screenshot-wrap">
                 <img src="img/mock-git-finish.png" alt="Git install complete">
@@ -809,10 +796,10 @@
             </div>
           </div>
 
-          <!-- Step 6: Open PowerShell -->
+          <!-- Step 5: Open PowerShell -->
           <div class="carousel-slide">
             <div class="guide-card">
-              <div class="step-num">6</div>
+              <div class="step-num">5</div>
               <h3>פותחים PowerShell</h3>
               <div class="screenshot-wrap">
                 <img src="img/mock-start-menu.png" alt="Start menu PowerShell search">
@@ -826,14 +813,13 @@
             </div>
           </div>
 
-          <!-- Step 7: Paste & Run Install Command -->
+          <!-- Step 6: Paste & Run Install Command -->
           <div class="carousel-slide">
             <div class="guide-card">
-              <div class="step-num">7</div>
+              <div class="step-num">6</div>
               <h3>מדביקים את פקודת ההתקנה</h3>
               <div class="screenshot-wrap">
-                <img src="img/real-setup-docs.png" alt="Claude Code setup docs">
-                <span class="click-label" style="top:5%;left:25%;background:#27ae60;">📄 ההוראות הרשמיות — הפקודה למטה!</span>
+                <img src="img/mock-ps-installing.png" alt="PowerShell installing">
               </div>
               <p>
                 לוחצים <strong>📋 העתק</strong> למטה, ואז <strong>קליק ימני</strong> ב-PowerShell להדבקה:
@@ -848,10 +834,10 @@
             </div>
           </div>
 
-          <!-- Step 8: Install Complete -->
+          <!-- Step 7: Install Complete -->
           <div class="carousel-slide">
             <div class="guide-card">
-              <div class="step-num">8</div>
+              <div class="step-num">7</div>
               <h3>ההתקנה הצליחה! ✅</h3>
               <div class="screenshot-wrap">
                 <img src="img/mock-ps-done.png" alt="Install complete">
@@ -864,10 +850,10 @@
             </div>
           </div>
 
-          <!-- Step 9: Run Claude & Login -->
+          <!-- Step 8: Run Claude & Login -->
           <div class="carousel-slide">
             <div class="guide-card">
-              <div class="step-num">9</div>
+              <div class="step-num">8</div>
               <h3>מפעילים Claude Code! 🚀</h3>
               <div class="screenshot-wrap">
                 <img src="img/mock-claude-login.png" alt="Claude Code first run">
@@ -897,7 +883,6 @@
             <span class="carousel-dot" onclick="goToSlide('download', 5)"></span>
             <span class="carousel-dot" onclick="goToSlide('download', 6)"></span>
             <span class="carousel-dot" onclick="goToSlide('download', 7)"></span>
-            <span class="carousel-dot" onclick="goToSlide('download', 8)"></span>
           </div>
           <button class="carousel-btn" onclick="moveCarousel('download', 1)">←</button>
         </div>
