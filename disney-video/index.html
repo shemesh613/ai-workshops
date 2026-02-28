@@ -381,7 +381,20 @@
   }
 
   .guide-card h3 { font-size: 1.5rem; margin-bottom: 1rem; color: #ffd700; }
-  .guide-card p { color: rgba(255,255,255,0.75); line-height: 1.8; font-size: 1.05rem; max-width: 600px; }
+  .guide-card p { color: rgba(255,255,255,0.85); line-height: 1.9; font-size: 1.1rem; max-width: 600px; }
+
+  /* Progress bar */
+  .progress-bar {
+    display: flex; align-items: center; justify-content: center; gap: 0.5rem;
+    margin-bottom: 1.5rem; color: rgba(255,255,255,0.7); font-size: 1rem; font-weight: 700;
+  }
+  .progress-track {
+    width: 200px; height: 8px; background: rgba(255,255,255,0.15); border-radius: 8px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; background: linear-gradient(90deg, #ffd700, #ff6b6b); border-radius: 8px;
+    transition: width 0.5s ease;
+  }
 
   .guide-card .screenshot-wrap {
     position: relative; margin: 1.5rem 0; width: 100%; max-width: 600px;
@@ -486,12 +499,21 @@
     font-size: 0.85rem;
   }
 
+  /* Focus states for keyboard nav */
+  button:focus-visible, a:focus-visible {
+    outline: 3px solid #64b5f6; outline-offset: 2px; border-radius: 4px;
+  }
+
   /* === Responsive === */
   @media (max-width: 768px) {
     .pipeline::before { right: 25px; }
     .step-icon { min-width: 50px; height: 50px; font-size: 1.3rem; }
     .step-content { padding: 1rem 1.2rem; }
     .step { gap: 1rem; }
+    .guide-card p { font-size: 1.15rem; line-height: 2; }
+    .guide-card h3 { font-size: 1.4rem; }
+    .carousel-btn { width: 44px; height: 44px; }
+    .click-label { font-size: 0.75rem; padding: 3px 8px; }
   }
 </style>
 </head>
@@ -638,7 +660,11 @@
 
     <!-- Tab 1: Subscribe (8 steps) -->
     <div class="tab-content active" id="tab-subscribe">
-      <div class="carousel" id="carousel-subscribe">
+      <div class="progress-bar" id="progress-subscribe">
+        <span>שלב <strong id="progress-num-subscribe">1</strong> מתוך 8</span>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill-subscribe" style="width:12.5%"></div></div>
+      </div>
+      <div class="carousel" id="carousel-subscribe" role="region" aria-label="מדריך הרשמה">
         <div class="carousel-track">
 
           <div class="carousel-slide"><div class="guide-card"><div class="step-num">1</div>
@@ -703,9 +729,12 @@
               <span class="click-label" style="top:76%;left:37%;">לוחצים Try Claude תחת Pro</span>
             </div>
             <p>בעמודה האמצעית כתוב <strong>Pro</strong><br>
-            לוחצים על הכפתור השחור <strong>Try Claude</strong> שמתחת<br>
-            <strong style="color:#ffd700;">⚠️ חשוב:</strong> בדף התשלום, מעבירים ל-<strong style="color:#4ecdc4;">Monthly (חודשי)</strong> — <strong style="color:#ffd700;">$20 לחודש</strong><br>
-            <span style="color:rgba(255,255,255,0.5);">ברירת המחדל היא שנתי — שנו לחודשי כדי שתוכלו לבטל בכל רגע</span></p>
+            לוחצים על הכפתור השחור <strong>Try Claude</strong> שמתחת</p>
+            <div style="background:rgba(255,215,0,0.15);border:2px solid #ffd700;border-radius:12px;padding:1rem;margin-top:1rem;max-width:500px;">
+              <p style="margin:0;color:#ffd700;font-weight:700;font-size:1.1rem;">⚠️ שימו לב! בדף התשלום:</p>
+              <p style="margin:0.5rem 0 0;color:#fff;">מעבירים מ-Annual (שנתי) ל-<strong style="color:#4ecdc4;font-size:1.15rem;">Monthly (חודשי)</strong><br>
+              זה <strong style="color:#ffd700;">$20 לחודש</strong> — ואפשר לבטל בכל רגע</p>
+            </div>
           </div></div>
 
           <div class="carousel-slide"><div class="guide-card"><div class="step-num">8</div>
@@ -739,7 +768,11 @@
 
     <!-- Tab 2: Download (8 steps) -->
     <div class="tab-content" id="tab-download">
-      <div class="carousel" id="carousel-download">
+      <div class="progress-bar" id="progress-download">
+        <span>שלב <strong id="progress-num-download">1</strong> מתוך 8</span>
+        <div class="progress-track"><div class="progress-fill" id="progress-fill-download" style="width:12.5%"></div></div>
+      </div>
+      <div class="carousel" id="carousel-download" role="region" aria-label="מדריך התקנה">
         <div class="carousel-track">
 
           <!-- Step 1: Download Git -->
@@ -749,13 +782,14 @@
               <h3>🔧 מורידים תוכנה בשם Git</h3>
               <div class="screenshot-wrap">
                 <img src="img/real-git.png" alt="Git download page">
-                <div class="click-circle" style="width:16%;height:2.2%;border-radius:4px;top:13%;left:16%;"></div>
-                <span class="click-label" style="top:16%;left:16%;">לוחצים על הקישור הכתום הזה</span>
+                <div class="click-circle" style="width:14%;height:2%;border-radius:4px;top:21%;left:21%;"></div>
+                <span class="click-label" style="top:24%;left:21%;">Git for Windows/x64 — לוחצים כאן</span>
               </div>
               <p>
                 זו תוכנת עזר שנדרשת — <strong>פעם אחת ונגמר!</strong><br>
                 לוחצים על הכפתור הסגול למטה → נפתח אתר ההורדה<br>
-                שם לוחצים על הקישור הכתום <strong>"Click here to download"</strong><br>
+                מחפשים <strong>"Standalone Installer"</strong> ולוחצים על:<br>
+                <strong style="color:#4ecdc4;">Git for Windows/x64 Setup</strong> (זו גרסת 64-bit)<br>
                 <span style="color:rgba(255,255,255,0.5);">📦 ~60MB | ⏱ דקה</span>
               </p>
               <a href="https://git-scm.com/downloads/win" target="_blank" class="action-link">🔗 לחצו כאן לדף ההורדה של Git</a>
@@ -1032,7 +1066,25 @@ function goToSlide(id, index) {
 function updateDots(id) {
   const dots = document.querySelectorAll('#dots-' + id + ' .carousel-dot');
   dots.forEach((d, i) => d.classList.toggle('active', i === carousels[id]));
+  // Update progress bar
+  const total = dots.length;
+  const current = carousels[id] + 1;
+  const numEl = document.getElementById('progress-num-' + id);
+  const fillEl = document.getElementById('progress-fill-' + id);
+  if (numEl) numEl.textContent = current;
+  if (fillEl) fillEl.style.width = ((current / total) * 100) + '%';
 }
+
+// Keyboard navigation (arrow keys)
+document.addEventListener('keydown', e => {
+  if (e.key === 'ArrowLeft' || e.key === 'ArrowRight') {
+    const activeTab = document.querySelector('.tab-content.active');
+    if (!activeTab) return;
+    const id = activeTab.id.replace('tab-', '');
+    const dir = e.key === 'ArrowLeft' ? 1 : -1;
+    moveCarousel(id, dir);
+  }
+});
 
 // Swipe support
 document.querySelectorAll('.carousel').forEach(c => {
