@@ -1,0 +1,282 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>איך מעלים לגיטהב ומפרסמים אתר</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    background: #0d1117;
+    color: #e6edf3;
+    line-height: 1.7;
+    padding: 16px;
+    max-width: 700px;
+    margin: 0 auto;
+  }
+
+  .hero {
+    text-align: center;
+    padding: 32px 16px;
+    background: linear-gradient(135deg, #238636 0%, #1f6feb 100%);
+    border-radius: 16px;
+    margin-bottom: 24px;
+  }
+  .hero h1 { font-size: 1.6em; margin-bottom: 8px; }
+  .hero p { opacity: 0.9; font-size: 0.95em; }
+
+  .step {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 20px;
+    margin-bottom: 16px;
+    position: relative;
+  }
+
+  .step-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    background: #238636;
+    color: white;
+    border-radius: 50%;
+    font-weight: bold;
+    font-size: 0.9em;
+    margin-left: 10px;
+  }
+
+  .step h2 {
+    display: inline;
+    font-size: 1.15em;
+    color: #58a6ff;
+  }
+
+  .step p { margin-top: 10px; color: #8b949e; }
+
+  pre {
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 12px;
+    overflow-x: auto;
+    direction: ltr;
+    text-align: left;
+    font-size: 0.85em;
+    line-height: 1.6;
+  }
+  code { font-family: 'Courier New', monospace; color: #79c0ff; }
+  .comment { color: #8b949e; }
+  .cmd { color: #d2a8ff; }
+
+  .url-box {
+    background: #0d1117;
+    border: 2px solid #238636;
+    border-radius: 8px;
+    padding: 12px;
+    margin-top: 12px;
+    direction: ltr;
+    text-align: center;
+    font-size: 0.95em;
+    color: #58a6ff;
+  }
+
+  .pros-cons {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 12px;
+    margin-bottom: 16px;
+  }
+  .pros, .cons {
+    background: #161b22;
+    border: 1px solid #30363d;
+    border-radius: 12px;
+    padding: 16px;
+  }
+  .pros { border-top: 3px solid #238636; }
+  .cons { border-top: 3px solid #f85149; }
+  .pros h3 { color: #238636; margin-bottom: 8px; }
+  .cons h3 { color: #f85149; margin-bottom: 8px; }
+  .pros li, .cons li { font-size: 0.88em; margin-bottom: 4px; color: #8b949e; list-style: none; }
+  .pros li::before { content: "✅ "; }
+  .cons li::before { content: "❌ "; }
+
+  .file-tree {
+    direction: ltr;
+    text-align: left;
+    background: #0d1117;
+    border: 1px solid #30363d;
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 12px;
+    font-family: monospace;
+    font-size: 0.88em;
+    line-height: 1.8;
+    color: #e6edf3;
+  }
+  .file-tree .folder { color: #58a6ff; }
+  .file-tree .file { color: #79c0ff; }
+  .file-tree .desc { color: #8b949e; }
+
+  .summary-table {
+    width: 100%;
+    margin-top: 12px;
+    border-collapse: collapse;
+    direction: ltr;
+    text-align: left;
+    font-size: 0.85em;
+  }
+  .summary-table th {
+    background: #238636;
+    color: white;
+    padding: 8px 12px;
+    text-align: left;
+  }
+  .summary-table td {
+    padding: 8px 12px;
+    border-bottom: 1px solid #30363d;
+  }
+  .summary-table tr:nth-child(even) { background: #161b22; }
+
+  .tip {
+    background: #1a2332;
+    border-right: 4px solid #58a6ff;
+    border-radius: 8px;
+    padding: 14px;
+    margin-top: 16px;
+    font-size: 0.9em;
+  }
+  .tip strong { color: #58a6ff; }
+
+  .footer {
+    text-align: center;
+    padding: 20px;
+    color: #484f58;
+    font-size: 0.8em;
+    margin-top: 24px;
+  }
+
+  @media (max-width: 500px) {
+    .pros-cons { grid-template-columns: 1fr; }
+    .hero h1 { font-size: 1.3em; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <h1>🚀 איך מעלים לגיטהב ומפרסמים אתר</h1>
+  <p>המדריך המלא — מאפס עד אתר חי באוויר</p>
+</div>
+
+<!-- Step 1 -->
+<div class="step">
+  <span class="step-number">1</span>
+  <h2>יוצרים Repository חדש בגיטהב</h2>
+  <p>נכנסים לגיטהב, לוחצים על "New Repository", נותנים שם ולוחצים Create.</p>
+  <div class="url-box">GitHub.com → <strong>+</strong> → New Repository → Create</div>
+</div>
+
+<!-- Step 2 -->
+<div class="step">
+  <span class="step-number">2</span>
+  <h2>מעלים את הקבצים מהמחשב</h2>
+  <p>פותחים Terminal בתיקיית הפרויקט ומריצים:</p>
+  <pre><code><span class="comment"># מאתחלים Git בתיקייה</span>
+<span class="cmd">git</span> init
+<span class="cmd">git</span> add .
+<span class="cmd">git</span> commit -m "first commit"
+
+<span class="comment"># מחברים לגיטהב</span>
+<span class="cmd">git</span> remote add origin https://github.com/<span class="comment">USERNAME</span>/<span class="comment">REPO</span>.git
+<span class="cmd">git</span> push -u origin main</code></pre>
+</div>
+
+<!-- Step 3 -->
+<div class="step">
+  <span class="step-number">3</span>
+  <h2>מפרסמים את האתר (GitHub Pages)</h2>
+  <p>הולכים להגדרות הריפו ומדליקים את GitHub Pages:</p>
+  <pre><code>Repository → <span class="cmd">Settings</span> → <span class="cmd">Pages</span>
+→ Source: <span class="cmd">main</span> branch
+→ Folder: <span class="cmd">/ (root)</span>
+→ <span class="cmd">Save</span> ✅</code></pre>
+  <p>אחרי כמה דקות האתר עולה לאוויר:</p>
+  <div class="url-box">https://<strong>USERNAME</strong>.github.io/<strong>REPO</strong>/</div>
+</div>
+
+<!-- Step 4 -->
+<div class="step">
+  <span class="step-number">4</span>
+  <h2>מעלים עדכונים (בכל זמן)</h2>
+  <p>כל פעם שמשנים משהו — שלוש פקודות וזה באוויר:</p>
+  <pre><code><span class="cmd">git</span> add .
+<span class="cmd">git</span> commit -m "תיאור השינוי"
+<span class="cmd">git</span> push</code></pre>
+</div>
+
+<!-- File Structure -->
+<div class="step">
+  <span class="step-number">📁</span>
+  <h2>מבנה תיקייה לדוגמה</h2>
+  <div class="file-tree">
+    <span class="folder">my-site/</span><br>
+    ├── <span class="file">index.html</span> <span class="desc">← הדף הראשי (חובה!)</span><br>
+    ├── <span class="file">style.css</span> <span class="desc">← עיצוב</span><br>
+    └── <span class="file">script.js</span> <span class="desc">← קוד</span>
+  </div>
+</div>
+
+<!-- Quick Reference -->
+<div class="step">
+  <span class="step-number">⚡</span>
+  <h2>סיכום מהיר</h2>
+  <table class="summary-table">
+    <tr><th>פקודה</th><th>מה עושה</th></tr>
+    <tr><td><code>git init</code></td><td>מאתחל Git</td></tr>
+    <tr><td><code>git add .</code></td><td>מוסיף את כל הקבצים</td></tr>
+    <tr><td><code>git commit -m "..."</code></td><td>שומר שינויים</td></tr>
+    <tr><td><code>git push</code></td><td>מעלה לגיטהב</td></tr>
+    <tr><td><strong>Settings → Pages</strong></td><td>מפרסם אתר</td></tr>
+  </table>
+</div>
+
+<!-- Pros & Cons -->
+<div class="pros-cons">
+  <div class="pros">
+    <h3>✅ יתרונות</h3>
+    <ul>
+      <li>חינם לגמרי</li>
+      <li>HTTPS אוטומטי</li>
+      <li>CDN מהיר עולמי</li>
+      <li>מתעדכן אוטומטי</li>
+      <li>אפשר דומיין אישי</li>
+    </ul>
+  </div>
+  <div class="cons">
+    <h3>❌ מגבלות</h3>
+    <ul>
+      <li>אין Backend</li>
+      <li>אין מסד נתונים</li>
+      <li>עד 1GB לריפו</li>
+      <li>הקוד ציבורי (חינם)</li>
+      <li>עד 100GB תעבורה/חודש</li>
+    </ul>
+  </div>
+</div>
+
+<div class="tip">
+  <strong>💡 טיפ:</strong> אם צריכים Backend (שרת, מסד נתונים, לוגין) — שווה להסתכל על Vercel או Netlify. גם שם יש תוכנית חינמית.
+</div>
+
+<div class="footer">
+  נבנה עם ❤️ | שמשון יעקב | 2026
+</div>
+
+</body>
+</html>
