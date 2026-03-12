@@ -5,68 +5,70 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>🌾 דף פתיחה - חג הפסח 🌾</title>
 <style>
-  @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700&display=swap');
-
+  @import url('https://fonts.googleapis.com/css2?family=Rubik:wght@400;500;700;900&display=swap');
   * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Rubik', sans-serif; background: linear-gradient(135deg, #fff8e1 0%, #e8f5e9 50%, #e3f2fd 100%); min-height: 100vh; direction: rtl; }
 
-  body {
-    font-family: 'Rubik', sans-serif;
-    background: linear-gradient(135deg, #fff8e1 0%, #e8f5e9 50%, #e3f2fd 100%);
-    min-height: 100vh;
-    direction: rtl;
+  /* ===== SCREENS ===== */
+  .screen { display: none; min-height: 100vh; padding: 20px; }
+  .screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+  #worksheet-screen.active { display: block; }
+
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pop { 0% { transform: scale(0); } 70% { transform: scale(1.1); } 100% { transform: scale(1); } }
+  @keyframes pulse { 0%,100% { transform: scale(1); } 50% { transform: scale(1.05); } }
+
+  /* ===== SETUP SCREEN ===== */
+  .setup-box {
+    background: white; border-radius: 25px; padding: 35px; max-width: 550px; width: 100%;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.12); text-align: center; animation: fadeIn 0.5s;
+  }
+  .setup-box h1 { font-size: 2.2em; color: #5d4037; margin-bottom: 5px; }
+  .setup-box h2 { font-size: 1.3em; color: #795548; margin-bottom: 25px; font-weight: 500; }
+  .setup-box label { display: block; text-align: right; font-weight: 700; color: #5d4037; margin-bottom: 6px; font-size: 1.05em; }
+  .setup-input {
+    width: 100%; padding: 14px; border: 2px solid #e0e0e0; border-radius: 12px; font-size: 1.1em;
+    font-family: 'Rubik', sans-serif; direction: ltr; text-align: left; margin-bottom: 15px; transition: border-color 0.3s;
+  }
+  .setup-input:focus { outline: none; border-color: #ffb74d; box-shadow: 0 0 0 3px rgba(255,183,77,0.2); }
+  .setup-steps { text-align: right; background: #fff8e1; border-radius: 12px; padding: 15px; margin-bottom: 20px; font-size: 0.95em; color: #5d4037; line-height: 1.8; }
+  .setup-steps a { color: #1e88e5; font-weight: 700; }
+  .btn-primary {
+    padding: 14px 40px; background: linear-gradient(135deg, #ff8f00, #e65100); color: white; border: none;
+    border-radius: 15px; font-size: 1.3em; font-family: 'Rubik', sans-serif; font-weight: 700; cursor: pointer;
+    transition: all 0.3s; box-shadow: 0 4px 15px rgba(230,81,0,0.3);
+  }
+  .btn-primary:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(230,81,0,0.4); }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
+  .or-divider { margin: 20px 0; color: #bdbdbd; font-size: 1.1em; }
+  .btn-secondary {
+    padding: 12px 30px; background: white; color: #5d4037; border: 2px solid #bdbdbd;
+    border-radius: 12px; font-size: 1.1em; font-family: 'Rubik', sans-serif; cursor: pointer; transition: all 0.3s;
+  }
+  .btn-secondary:hover { border-color: #ffb74d; background: #fff8e1; }
+  .room-code-display {
+    display: inline-block; padding: 10px 25px; background: #e8f5e9; border-radius: 10px;
+    font-size: 1.5em; font-weight: 900; color: #2e7d32; letter-spacing: 3px; margin: 10px 0; direction: ltr;
+  }
+  .copy-btn {
+    padding: 8px 20px; background: #43a047; color: white; border: none; border-radius: 8px;
+    font-family: 'Rubik', sans-serif; cursor: pointer; font-size: 0.9em; margin-right: 10px;
   }
 
-  /* GROUP SELECTION SCREEN */
-  #group-select {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    min-height: 100vh;
-    padding: 20px;
-    animation: fadeIn 0.5s ease;
-  }
+  /* ===== JOIN SCREEN ===== */
+  .join-box { background: white; border-radius: 25px; padding: 35px; max-width: 450px; width: 100%; box-shadow: 0 8px 30px rgba(0,0,0,0.12); text-align: center; animation: fadeIn 0.5s; }
+  .join-box h1 { font-size: 2em; color: #5d4037; margin-bottom: 20px; }
+  .join-input { width: 200px; padding: 14px; border: 3px solid #e0e0e0; border-radius: 12px; font-size: 1.8em; font-family: 'Rubik', sans-serif; text-align: center; direction: ltr; letter-spacing: 5px; font-weight: 900; }
+  .join-input:focus { outline: none; border-color: #ffb74d; }
 
-  #group-select h1 {
-    font-size: 2.5em;
-    color: #5d4037;
-    margin-bottom: 10px;
-    text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
-  }
-
-  #group-select p {
-    font-size: 1.3em;
-    color: #795548;
-    margin-bottom: 30px;
-  }
-
-  .groups-grid {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-    max-width: 500px;
-    width: 100%;
-  }
-
+  /* ===== GROUP SELECT ===== */
+  .groups-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px; max-width: 500px; width: 100%; margin-top: 20px; }
   .group-btn {
-    padding: 25px 20px;
-    border: 3px solid transparent;
-    border-radius: 20px;
-    font-size: 1.4em;
-    font-family: 'Rubik', sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    color: white;
-    text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
-    box-shadow: 0 4px 15px rgba(0,0,0,0.15);
+    padding: 25px 20px; border: 3px solid transparent; border-radius: 20px; font-size: 1.4em;
+    font-family: 'Rubik', sans-serif; font-weight: 700; cursor: pointer; transition: all 0.3s;
+    color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.2); box-shadow: 0 4px 15px rgba(0,0,0,0.15);
   }
-
-  .group-btn:hover {
-    transform: scale(1.08);
-    box-shadow: 0 6px 20px rgba(0,0,0,0.25);
-  }
-
+  .group-btn:hover { transform: scale(1.08); box-shadow: 0 6px 20px rgba(0,0,0,0.25); }
   .group-btn:nth-child(1) { background: linear-gradient(135deg, #ef5350, #e53935); }
   .group-btn:nth-child(2) { background: linear-gradient(135deg, #42a5f5, #1e88e5); }
   .group-btn:nth-child(3) { background: linear-gradient(135deg, #66bb6a, #43a047); }
@@ -74,678 +76,684 @@
   .group-btn:nth-child(5) { background: linear-gradient(135deg, #ab47bc, #8e24aa); }
   .group-btn:nth-child(6) { background: linear-gradient(135deg, #26c6da, #00acc1); }
 
-  .teacher-btn {
-    margin-top: 25px;
-    padding: 12px 30px;
-    background: linear-gradient(135deg, #5d4037, #4e342e);
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-size: 1.1em;
-    font-family: 'Rubik', sans-serif;
-    cursor: pointer;
-    transition: all 0.3s ease;
-  }
-
-  .teacher-btn:hover { transform: scale(1.05); opacity: 0.9; }
-
-  /* MAIN WORKSHEET */
-  #worksheet {
-    display: none;
-    padding: 15px;
-    max-width: 900px;
-    margin: 0 auto;
-    animation: fadeIn 0.5s ease;
-  }
-
-  @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(20px); }
-    to { opacity: 1; transform: translateY(0); }
-  }
-
+  /* ===== WORKSHEET ===== */
+  #worksheet-screen { max-width: 900px; margin: 0 auto; animation: fadeIn 0.5s; }
   .header {
-    text-align: center;
-    padding: 20px;
-    background: linear-gradient(135deg, #fff3e0, #ffe0b2);
-    border-radius: 25px;
-    margin-bottom: 20px;
-    border: 3px dashed #ffb74d;
-    position: relative;
+    text-align: center; padding: 20px; background: linear-gradient(135deg, #fff3e0, #ffe0b2);
+    border-radius: 25px; margin-bottom: 20px; border: 3px dashed #ffb74d; position: relative;
   }
-
-  .header h1 {
-    font-size: 2.2em;
-    color: #e65100;
-    margin-bottom: 5px;
-  }
-
-  .header .subtitle {
-    font-size: 1.2em;
-    color: #bf360c;
-  }
-
+  .header h1 { font-size: 2.2em; color: #e65100; margin-bottom: 5px; }
+  .header .subtitle { font-size: 1.2em; color: #bf360c; }
   .group-badge {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    padding: 8px 18px;
-    border-radius: 15px;
-    color: white;
-    font-weight: 700;
-    font-size: 1em;
-    box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+    position: absolute; top: 10px; left: 10px; padding: 8px 18px; border-radius: 15px;
+    color: white; font-weight: 700; font-size: 1em; box-shadow: 0 2px 8px rgba(0,0,0,0.2);
+  }
+  .decorations { font-size: 2em; margin: 5px 0; }
+  .online-count {
+    position: absolute; top: 10px; right: 10px; padding: 6px 14px; background: #4caf50;
+    color: white; border-radius: 12px; font-size: 0.85em; animation: pulse 2s infinite;
   }
 
-  .decorations {
-    font-size: 2em;
-    margin: 5px 0;
-  }
-
-  /* SECTIONS */
   .section {
-    background: white;
-    border-radius: 20px;
-    padding: 20px;
-    margin-bottom: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.08);
-    border: 2px solid #e0e0e0;
-    transition: border-color 0.3s;
+    background: white; border-radius: 20px; padding: 20px; margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.08); border: 2px solid #e0e0e0; transition: border-color 0.3s;
   }
-
   .section:hover { border-color: #ffb74d; }
-
   .section-title {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    font-size: 1.5em;
-    color: #5d4037;
-    margin-bottom: 15px;
-    padding-bottom: 10px;
-    border-bottom: 3px dotted #ffe0b2;
+    display: flex; align-items: center; gap: 10px; font-size: 1.5em; color: #5d4037;
+    margin-bottom: 15px; padding-bottom: 10px; border-bottom: 3px dotted #ffe0b2;
   }
-
   .section-title .icon { font-size: 1.3em; }
 
-  /* CONCEPT BANK */
+  /* Concept Bank */
   .concept-bank {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 10px;
-    justify-content: center;
-    padding: 15px;
-    background: #fffde7;
-    border-radius: 15px;
-    border: 2px dashed #fdd835;
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: center;
+    padding: 15px; background: #fffde7; border-radius: 15px; border: 2px dashed #fdd835;
   }
-
   .concept-chip {
-    padding: 10px 18px;
-    background: linear-gradient(135deg, #fff9c4, #fff176);
-    border: 2px solid #f9a825;
-    border-radius: 25px;
-    font-size: 1.15em;
-    font-family: 'Rubik', sans-serif;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    user-select: none;
-    font-weight: 500;
-    color: #5d4037;
+    padding: 10px 18px; background: linear-gradient(135deg, #fff9c4, #fff176); border: 2px solid #f9a825;
+    border-radius: 25px; font-size: 1.15em; font-family: 'Rubik', sans-serif; cursor: pointer;
+    transition: all 0.2s; user-select: none; font-weight: 500; color: #5d4037; position: relative;
   }
+  .concept-chip:hover { transform: scale(1.1); background: linear-gradient(135deg, #ffee58, #fdd835); box-shadow: 0 3px 10px rgba(0,0,0,0.15); }
+  .concept-chip.used { background: linear-gradient(135deg, #c8e6c9, #a5d6a7); border-color: #66bb6a; color: #2e7d32; }
+  .concept-chip .who { position: absolute; top: -8px; left: -5px; width: 20px; height: 20px; border-radius: 50%; font-size: 10px; display: flex; align-items: center; justify-content: center; color: white; font-weight: 700; }
 
-  .concept-chip:hover {
-    transform: scale(1.1);
-    background: linear-gradient(135deg, #ffee58, #fdd835);
-    box-shadow: 0 3px 10px rgba(0,0,0,0.15);
+  /* Cards Board */
+  .cards-board { display: flex; flex-wrap: wrap; gap: 10px; min-height: 60px; margin-top: 10px; }
+  .card-item {
+    padding: 10px 16px; border-radius: 12px; font-size: 1.05em; color: white;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.15); animation: pop 0.3s ease; max-width: 100%;
+    word-break: break-word; display: flex; align-items: center; gap: 8px;
   }
-
-  .concept-chip.used {
-    background: linear-gradient(135deg, #c8e6c9, #a5d6a7);
-    border-color: #66bb6a;
-    color: #2e7d32;
+  .card-item .group-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.5); flex-shrink: 0; }
+  .add-form { display: flex; gap: 8px; margin-top: 12px; }
+  .add-input {
+    flex: 1; padding: 12px; border: 2px dashed #bdbdbd; border-radius: 12px; font-size: 1.1em;
+    font-family: 'Rubik', sans-serif; direction: rtl;
   }
-
-  /* TEXT AREAS */
-  .write-area {
-    width: 100%;
-    min-height: 120px;
-    padding: 15px;
-    border: 2px dashed #bdbdbd;
-    border-radius: 15px;
-    font-size: 1.15em;
-    font-family: 'Rubik', sans-serif;
-    resize: vertical;
-    direction: rtl;
-    line-height: 1.8;
-    transition: border-color 0.3s;
-    background: #fafafa;
+  .add-input:focus { outline: none; border-color: #ffb74d; border-style: solid; }
+  .add-btn {
+    padding: 12px 24px; background: linear-gradient(135deg, #66bb6a, #43a047); color: white;
+    border: none; border-radius: 12px; font-family: 'Rubik', sans-serif; font-size: 1.1em;
+    font-weight: 700; cursor: pointer; transition: all 0.2s; white-space: nowrap;
   }
+  .add-btn:hover { transform: scale(1.05); }
 
-  .write-area:focus {
-    outline: none;
-    border-color: #ffb74d;
-    background: #fff;
-    box-shadow: 0 0 0 3px rgba(255, 183, 77, 0.2);
-  }
-
-  .write-area::placeholder { color: #bdbdbd; font-size: 0.95em; }
-
-  .helper-text {
-    font-size: 0.95em;
-    color: #9e9e9e;
-    margin-bottom: 10px;
-    font-style: italic;
-  }
-
-  /* DRAWING CANVAS */
-  .canvas-container {
-    text-align: center;
-  }
-
+  /* Canvas */
+  .canvas-container { text-align: center; }
   .toolbar {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-    justify-content: center;
-    margin-bottom: 12px;
-    padding: 10px;
-    background: #f5f5f5;
-    border-radius: 12px;
+    display: flex; flex-wrap: wrap; gap: 8px; justify-content: center;
+    margin-bottom: 12px; padding: 10px; background: #f5f5f5; border-radius: 12px;
   }
-
   .color-btn {
-    width: 36px;
-    height: 36px;
-    border-radius: 50%;
-    border: 3px solid white;
-    cursor: pointer;
-    transition: all 0.2s;
-    box-shadow: 0 2px 5px rgba(0,0,0,0.15);
+    width: 36px; height: 36px; border-radius: 50%; border: 3px solid white;
+    cursor: pointer; transition: all 0.2s; box-shadow: 0 2px 5px rgba(0,0,0,0.15);
   }
-
-  .color-btn:hover, .color-btn.active {
-    transform: scale(1.2);
-    box-shadow: 0 3px 10px rgba(0,0,0,0.3);
-  }
-
+  .color-btn:hover, .color-btn.active { transform: scale(1.2); box-shadow: 0 3px 10px rgba(0,0,0,0.3); }
   .tool-btn {
-    padding: 8px 16px;
-    border: 2px solid #bdbdbd;
-    border-radius: 10px;
-    background: white;
-    font-family: 'Rubik', sans-serif;
-    font-size: 1em;
-    cursor: pointer;
-    transition: all 0.2s;
+    padding: 8px 16px; border: 2px solid #bdbdbd; border-radius: 10px; background: white;
+    font-family: 'Rubik', sans-serif; font-size: 1em; cursor: pointer; transition: all 0.2s;
   }
-
   .tool-btn:hover { background: #e0e0e0; }
   .tool-btn.active { background: #ffe0b2; border-color: #ffb74d; }
+  #drawing-canvas { border: 3px solid #bdbdbd; border-radius: 15px; cursor: crosshair; background: white; touch-action: none; max-width: 100%; }
 
-  .size-slider {
-    width: 100px;
-    cursor: pointer;
+  /* Status */
+  .status-bar {
+    position: fixed; bottom: 0; left: 0; right: 0; padding: 8px 20px;
+    background: rgba(255,255,255,0.95); border-top: 1px solid #e0e0e0;
+    display: flex; justify-content: space-between; align-items: center; font-size: 0.85em; color: #999; z-index: 100;
   }
-
-  #drawing-canvas {
-    border: 3px solid #bdbdbd;
-    border-radius: 15px;
-    cursor: crosshair;
-    background: white;
-    touch-action: none;
-    max-width: 100%;
-  }
-
-  /* TEACHER VIEW */
-  #teacher-view {
-    display: none;
-    padding: 20px;
-    max-width: 1200px;
-    margin: 0 auto;
-    animation: fadeIn 0.5s ease;
-  }
-
-  .teacher-header {
-    text-align: center;
-    padding: 20px;
-    background: linear-gradient(135deg, #5d4037, #4e342e);
-    color: white;
-    border-radius: 20px;
-    margin-bottom: 20px;
-  }
-
-  .teacher-header h1 { font-size: 2em; }
-
-  .teacher-groups {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-    gap: 20px;
-  }
-
-  .teacher-group-card {
-    background: white;
-    border-radius: 15px;
-    padding: 20px;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-    border-top: 5px solid;
-  }
-
-  .teacher-group-card:nth-child(1) { border-top-color: #ef5350; }
-  .teacher-group-card:nth-child(2) { border-top-color: #42a5f5; }
-  .teacher-group-card:nth-child(3) { border-top-color: #66bb6a; }
-  .teacher-group-card:nth-child(4) { border-top-color: #ffa726; }
-  .teacher-group-card:nth-child(5) { border-top-color: #ab47bc; }
-  .teacher-group-card:nth-child(6) { border-top-color: #26c6da; }
-
-  .teacher-group-card h3 { margin-bottom: 10px; color: #5d4037; }
-  .teacher-group-card .label { font-weight: 700; color: #795548; margin-top: 10px; }
-  .teacher-group-card .content {
-    background: #f5f5f5;
-    padding: 10px;
-    border-radius: 8px;
-    margin-top: 5px;
-    min-height: 40px;
-    white-space: pre-wrap;
-    font-size: 0.95em;
-  }
-
+  .status-dot { width: 8px; height: 8px; border-radius: 50%; display: inline-block; margin-left: 5px; }
+  .status-dot.connected { background: #4caf50; }
+  .status-dot.disconnected { background: #ef5350; }
   .back-btn {
-    position: fixed;
-    bottom: 20px;
-    left: 20px;
-    padding: 12px 24px;
-    background: #5d4037;
-    color: white;
-    border: none;
-    border-radius: 12px;
-    font-family: 'Rubik', sans-serif;
-    font-size: 1em;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    z-index: 100;
+    padding: 12px 24px; background: #5d4037; color: white; border: none; border-radius: 12px;
+    font-family: 'Rubik', sans-serif; font-size: 1em; cursor: pointer; box-shadow: 0 4px 15px rgba(0,0,0,0.2);
   }
-
   .back-btn:hover { background: #4e342e; }
 
-  /* RESPONSIVE */
+  /* Responsive */
   @media (max-width: 600px) {
     .groups-grid { grid-template-columns: repeat(2, 1fr); }
     .header h1 { font-size: 1.6em; }
     .section-title { font-size: 1.2em; }
     .concept-chip { font-size: 1em; padding: 8px 14px; }
     #drawing-canvas { width: 100% !important; height: 300px !important; }
-    .teacher-groups { grid-template-columns: 1fr; }
+    .add-form { flex-direction: column; }
   }
-
-  /* SAVE INDICATOR */
-  .save-indicator {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    padding: 8px 16px;
-    background: #4caf50;
-    color: white;
-    border-radius: 20px;
-    font-size: 0.9em;
-    opacity: 0;
-    transition: opacity 0.3s;
-    z-index: 100;
-  }
-
-  .save-indicator.show { opacity: 1; }
-
-  /* Print styles */
   @media print {
     body { background: white; }
-    .toolbar, .back-btn, .save-indicator, .group-badge { display: none; }
+    .toolbar, .status-bar, .add-form { display: none; }
     .section { break-inside: avoid; box-shadow: none; border: 1px solid #ccc; }
   }
 </style>
 </head>
 <body>
 
-<!-- GROUP SELECTION -->
-<div id="group-select">
-  <h1>🌾 דף פתיחה - חג הפסח 🌾</h1>
-  <p>בחרו את הקבוצה שלכם:</p>
-  <div class="groups-grid">
-    <button class="group-btn" onclick="selectGroup(1)">🌟 קבוצה 1</button>
-    <button class="group-btn" onclick="selectGroup(2)">⭐ קבוצה 2</button>
-    <button class="group-btn" onclick="selectGroup(3)">💫 קבוצה 3</button>
-    <button class="group-btn" onclick="selectGroup(4)">✨ קבוצה 4</button>
-    <button class="group-btn" onclick="selectGroup(5)">🌙 קבוצה 5</button>
-    <button class="group-btn" onclick="selectGroup(6)">☀️ קבוצה 6</button>
+<!-- ===== SCREEN 1: SETUP (Teacher) ===== -->
+<div class="screen active" id="setup-screen">
+  <div class="setup-box">
+    <div style="font-size:3em;margin-bottom:10px">🌾🍷📖</div>
+    <h1>דף פתיחה — חג הפסח</h1>
+    <h2>כיתה ב׳ — פעילות שיתופית</h2>
+
+    <div id="setup-new">
+      <div class="setup-steps">
+        <strong>⚙️ הגדרה ראשונית (פעם אחת):</strong><br>
+        1. היכנסו ל-<a href="https://console.firebase.google.com" target="_blank">Firebase Console</a><br>
+        2. צרו פרויקט חדש (שם חופשי, בלי Analytics)<br>
+        3. לחצו <strong>Build → Realtime Database → Create Database</strong><br>
+        4. בחרו <strong>Start in test mode</strong> ← חשוב!<br>
+        5. העתיקו את כתובת ה-Database (למשל: <code style="font-size:0.85em">https://xxx.firebaseio.com</code>)
+      </div>
+      <label>🔗 כתובת Firebase Database:</label>
+      <input class="setup-input" id="firebase-url" placeholder="https://your-project.firebaseio.com" oninput="validateUrl()">
+      <br>
+      <button class="btn-primary" id="create-room-btn" onclick="createRoom()" disabled>🚀 צרו כיתה חדשה</button>
+    </div>
+
+    <div id="setup-created" style="display:none">
+      <p style="font-size:1.1em;color:#5d4037;margin-bottom:10px">✅ הכיתה מוכנה! שתפו את הקוד עם התלמידים:</p>
+      <div class="room-code-display" id="room-code-display"></div>
+      <br>
+      <button class="copy-btn" onclick="copyLink()">📋 העתק קישור</button>
+      <br><br>
+      <button class="btn-primary" onclick="goToGroups()">👩‍🏫 כניסה לכיתה</button>
+    </div>
+
+    <div class="or-divider">— או —</div>
+    <button class="btn-secondary" onclick="showJoin()">📝 יש לי קוד כיתה — כניסה</button>
   </div>
-  <button class="teacher-btn" onclick="openTeacherView()">👩‍🏫 תצוגת מורה</button>
 </div>
 
-<!-- WORKSHEET -->
-<div id="worksheet">
+<!-- ===== SCREEN 2: JOIN ===== -->
+<div class="screen" id="join-screen">
+  <div class="join-box">
+    <div style="font-size:3em;margin-bottom:10px">🌾</div>
+    <h1>הכניסו קוד כיתה</h1>
+    <input class="join-input" id="join-code" placeholder="ABCD" maxlength="4" oninput="this.value=this.value.toUpperCase()">
+    <br><br>
+    <button class="btn-primary" onclick="joinRoom()">🚪 כניסה</button>
+    <br><br>
+    <button class="btn-secondary" onclick="showScreen('setup-screen')">⬅️ חזרה</button>
+    <p id="join-error" style="color:#e53935;margin-top:10px;display:none">❌ קוד לא נמצא, נסו שוב</p>
+  </div>
+</div>
+
+<!-- ===== SCREEN 3: GROUP SELECT ===== -->
+<div class="screen" id="group-screen">
+  <div style="text-align:center;animation:fadeIn 0.5s">
+    <div style="font-size:3em;margin-bottom:10px">🌾🍷📖</div>
+    <h1 style="font-size:2.2em;color:#5d4037;margin-bottom:10px">חג הפסח — בחרו קבוצה</h1>
+    <p style="font-size:1.2em;color:#795548;margin-bottom:5px">קוד כיתה: <span id="show-room-code" style="font-weight:900;letter-spacing:2px"></span></p>
+    <div class="groups-grid" style="margin:20px auto">
+      <button class="group-btn" onclick="selectGroup(1)">🌟 קבוצה 1</button>
+      <button class="group-btn" onclick="selectGroup(2)">⭐ קבוצה 2</button>
+      <button class="group-btn" onclick="selectGroup(3)">💫 קבוצה 3</button>
+      <button class="group-btn" onclick="selectGroup(4)">✨ קבוצה 4</button>
+      <button class="group-btn" onclick="selectGroup(5)">🌙 קבוצה 5</button>
+      <button class="group-btn" onclick="selectGroup(6)">☀️ קבוצה 6</button>
+    </div>
+  </div>
+</div>
+
+<!-- ===== SCREEN 4: WORKSHEET ===== -->
+<div class="screen" id="worksheet-screen">
   <div class="header">
     <div class="group-badge" id="group-badge">קבוצה 1</div>
+    <div class="online-count" id="online-count">🟢 מחוברים</div>
     <div class="decorations">🍷 🥚 🌿 🫓 🍎 🌰</div>
     <h1>חג הפסח</h1>
-    <div class="subtitle">כיתה ב׳ — דף פתיחה</div>
+    <div class="subtitle">כיתה ב׳ — דף פתיחה שיתופי</div>
     <div class="decorations">🏠 ⭐ 🌙 🔥 📖 🎉</div>
   </div>
 
   <!-- CONCEPT BANK -->
   <div class="section">
-    <div class="section-title">
-      <span class="icon">📦</span>
-      מחסן מילים — לחצו על מילה כדי להוסיף אותה!
-    </div>
-    <div class="concept-bank" id="concept-bank">
-      <span class="concept-chip" onclick="useWord(this)">מצה</span>
-      <span class="concept-chip" onclick="useWord(this)">סדר פסח</span>
-      <span class="concept-chip" onclick="useWord(this)">ארבע כוסות</span>
-      <span class="concept-chip" onclick="useWord(this)">הגדה</span>
-      <span class="concept-chip" onclick="useWord(this)">מרור</span>
-      <span class="concept-chip" onclick="useWord(this)">חרוסת</span>
-      <span class="concept-chip" onclick="useWord(this)">קערת הסדר</span>
-      <span class="concept-chip" onclick="useWord(this)">עשר מכות</span>
-      <span class="concept-chip" onclick="useWord(this)">יציאת מצרים</span>
-      <span class="concept-chip" onclick="useWord(this)">פרעה</span>
-      <span class="concept-chip" onclick="useWord(this)">משה רבנו</span>
-      <span class="concept-chip" onclick="useWord(this)">בני ישראל</span>
-      <span class="concept-chip" onclick="useWord(this)">עבדות</span>
-      <span class="concept-chip" onclick="useWord(this)">חירות</span>
-      <span class="concept-chip" onclick="useWord(this)">אפיקומן</span>
-      <span class="concept-chip" onclick="useWord(this)">מה נשתנה</span>
-      <span class="concept-chip" onclick="useWord(this)">כרפס</span>
-      <span class="concept-chip" onclick="useWord(this)">ביעור חמץ</span>
-      <span class="concept-chip" onclick="useWord(this)">קריעת ים סוף</span>
-      <span class="concept-chip" onclick="useWord(this)">ארבעה בנים</span>
-    </div>
+    <div class="section-title"><span class="icon">📦</span> מחסן מילים — לחצו על מילה!</div>
+    <div class="concept-bank" id="concept-bank"></div>
   </div>
 
   <!-- WHAT WE KNOW -->
   <div class="section">
-    <div class="section-title">
-      <span class="icon">🧠</span>
-      מה אנחנו כבר יודעים על פסח?
+    <div class="section-title"><span class="icon">🧠</span> מה אנחנו כבר יודעים על פסח?</div>
+    <div class="cards-board" id="know-board"></div>
+    <div class="add-form">
+      <input class="add-input" id="know-input" placeholder="כתבו משהו שאתם יודעים על פסח..." onkeydown="if(event.key==='Enter')addKnow()">
+      <button class="add-btn" onclick="addKnow()">➕ הוסיפו</button>
     </div>
-    <div class="helper-text">כתבו כל מה שאתם יודעים, או לחצו על מילים מהמחסן למעלה ⬆️</div>
-    <textarea class="write-area" id="what-we-know"
-      placeholder="למשל: בפסח אוכלים מצה... יש סדר פסח... בני ישראל יצאו ממצרים..."
-      oninput="autoSave()"></textarea>
   </div>
 
   <!-- WHAT WE WANT TO KNOW -->
   <div class="section">
-    <div class="section-title">
-      <span class="icon">❓</span>
-      מה היינו רוצים לדעת?
+    <div class="section-title"><span class="icon">❓</span> מה היינו רוצים לדעת?</div>
+    <div class="cards-board" id="want-board"></div>
+    <div class="add-form">
+      <input class="add-input" id="want-input" placeholder="כתבו שאלה שמעניינת אתכם..." onkeydown="if(event.key==='Enter')addWant()">
+      <button class="add-btn" onclick="addWant()">➕ הוסיפו</button>
     </div>
-    <div class="helper-text">כתבו שאלות שמעניינות אתכם על חג הפסח 🤔</div>
-    <textarea class="write-area" id="what-we-want"
-      placeholder="למשל: למה אוכלים מצה ולא לחם? מה קרה בעשר המכות? איך נראה ים סוף כשנקרע?"
-      oninput="autoSave()"></textarea>
   </div>
 
-  <!-- DRAWING -->
+  <!-- SHARED DRAWING -->
   <div class="section">
-    <div class="section-title">
-      <span class="icon">🎨</span>
-      ציירו ציור שקשור לחג הפסח!
-    </div>
+    <div class="section-title"><span class="icon">🎨</span> ציירו ביחד ציור על פסח!</div>
     <div class="canvas-container">
       <div class="toolbar">
-        <button class="color-btn active" style="background:#000000" onclick="setColor('#000000', this)"></button>
-        <button class="color-btn" style="background:#e53935" onclick="setColor('#e53935', this)"></button>
-        <button class="color-btn" style="background:#1e88e5" onclick="setColor('#1e88e5', this)"></button>
-        <button class="color-btn" style="background:#43a047" onclick="setColor('#43a047', this)"></button>
-        <button class="color-btn" style="background:#fb8c00" onclick="setColor('#fb8c00', this)"></button>
-        <button class="color-btn" style="background:#8e24aa" onclick="setColor('#8e24aa', this)"></button>
-        <button class="color-btn" style="background:#f06292" onclick="setColor('#f06292', this)"></button>
-        <button class="color-btn" style="background:#5d4037" onclick="setColor('#5d4037', this)"></button>
-        <button class="color-btn" style="background:#fdd835" onclick="setColor('#fdd835', this)"></button>
-        <span style="margin: 0 5px; color:#999">|</span>
+        <button class="color-btn active" style="background:#000000" onclick="setColor('#000000',this)"></button>
+        <button class="color-btn" style="background:#e53935" onclick="setColor('#e53935',this)"></button>
+        <button class="color-btn" style="background:#1e88e5" onclick="setColor('#1e88e5',this)"></button>
+        <button class="color-btn" style="background:#43a047" onclick="setColor('#43a047',this)"></button>
+        <button class="color-btn" style="background:#fb8c00" onclick="setColor('#fb8c00',this)"></button>
+        <button class="color-btn" style="background:#8e24aa" onclick="setColor('#8e24aa',this)"></button>
+        <button class="color-btn" style="background:#f06292" onclick="setColor('#f06292',this)"></button>
+        <button class="color-btn" style="background:#5d4037" onclick="setColor('#5d4037',this)"></button>
+        <button class="color-btn" style="background:#fdd835" onclick="setColor('#fdd835',this)"></button>
+        <span style="margin:0 5px;color:#999">|</span>
         <label style="display:flex;align-items:center;gap:5px;font-size:0.9em;color:#666">
-          עובי: <input type="range" class="size-slider" min="2" max="20" value="4" oninput="brushSize=this.value">
+          עובי: <input type="range" min="2" max="20" value="4" oninput="brushSize=+this.value" style="width:80px">
         </label>
-        <button class="tool-btn" onclick="toggleEraser()">🧹 מחק</button>
-        <button class="tool-btn" onclick="clearCanvas()">🗑️ נקה הכל</button>
-        <button class="tool-btn" onclick="downloadDrawing()">💾 שמור ציור</button>
+        <button class="tool-btn" id="eraser-btn" onclick="toggleEraser()">🧹 מחק</button>
+        <button class="tool-btn" onclick="clearCanvas()">🗑️ נקה</button>
+        <button class="tool-btn" onclick="downloadDrawing()">💾 שמור</button>
       </div>
       <canvas id="drawing-canvas" width="800" height="400"></canvas>
     </div>
   </div>
 
-  <button class="back-btn" onclick="goBack()">⬅️ חזרה</button>
-</div>
-
-<!-- TEACHER VIEW -->
-<div id="teacher-view">
-  <div class="teacher-header">
-    <h1>👩‍🏫 תצוגת מורה — חג הפסח</h1>
-    <p>צפייה בעבודות כל הקבוצות</p>
-    <button onclick="refreshTeacher()" style="margin-top:10px;padding:8px 20px;background:#ffb74d;border:none;border-radius:8px;font-family:'Rubik';font-size:1em;cursor:pointer">🔄 רענון</button>
+  <div style="text-align:center;margin:10px 0 60px">
+    <button class="back-btn" onclick="goBack()">⬅️ חזרה לבחירת קבוצה</button>
   </div>
-  <div class="teacher-groups" id="teacher-groups"></div>
-  <button class="back-btn" onclick="goBack()">⬅️ חזרה</button>
 </div>
 
-<div class="save-indicator" id="save-indicator">✅ נשמר!</div>
+<!-- STATUS BAR -->
+<div class="status-bar" id="status-bar" style="display:none">
+  <span><span class="status-dot" id="status-dot"></span> <span id="status-text">מתחבר...</span></span>
+  <span id="room-label"></span>
+</div>
 
 <script>
-  // ===== STATE =====
-  let currentGroup = null;
-  let brushColor = '#000000';
-  let brushSize = 4;
-  let isErasing = false;
-  let isDrawing = false;
-  let ctx, canvas;
-  const STORAGE_PREFIX = 'pesach_worksheet_';
+// ===== CONFIG =====
+const GROUP_COLORS = ['','#e53935','#1e88e5','#43a047','#fb8c00','#8e24aa','#00acc1'];
+const GROUP_NAMES = ['','קבוצה 1 🌟','קבוצה 2 ⭐','קבוצה 3 💫','קבוצה 4 ✨','קבוצה 5 🌙','קבוצה 6 ☀️'];
+const CONCEPTS = ['מצה','סדר פסח','ארבע כוסות','הגדה','מרור','חרוסת','קערת הסדר','עשר מכות','יציאת מצרים','פרעה','משה רבנו','בני ישראל','עבדות','חירות','אפיקומן','מה נשתנה','כרפס','ביעור חמץ','קריעת ים סוף','ארבעה בנים'];
 
-  // ===== GROUP SELECTION =====
-  function selectGroup(num) {
-    currentGroup = num;
-    document.getElementById('group-select').style.display = 'none';
-    document.getElementById('worksheet').style.display = 'block';
+let firebaseUrl = '';
+let roomCode = '';
+let currentGroup = null;
+let eventSource = null;
+let brushColor = '#000000';
+let brushSize = 4;
+let isErasing = false;
+let isDrawing = false;
+let currentStroke = null;
+let allStrokes = {};
+let ctx, canvas;
 
-    const colors = ['', '#ef5350', '#42a5f5', '#66bb6a', '#ffa726', '#ab47bc', '#26c6da'];
-    const badge = document.getElementById('group-badge');
-    badge.textContent = 'קבוצה ' + num;
-    badge.style.background = colors[num];
+// ===== FIREBASE REST API =====
+async function fbWrite(path, data) {
+  const url = `${firebaseUrl}/rooms/${roomCode}/${path}.json`;
+  await fetch(url, { method: 'PATCH', body: JSON.stringify(data), headers: {'Content-Type':'application/json'} });
+}
 
-    loadGroupData();
-    initCanvas();
+async function fbPush(path, data) {
+  const url = `${firebaseUrl}/rooms/${roomCode}/${path}.json`;
+  const res = await fetch(url, { method: 'POST', body: JSON.stringify(data), headers: {'Content-Type':'application/json'} });
+  return (await res.json()).name;
+}
+
+async function fbRead(path) {
+  const url = `${firebaseUrl}/rooms/${roomCode}/${path}.json`;
+  const res = await fetch(url);
+  return await res.json();
+}
+
+async function fbDelete(path) {
+  const url = `${firebaseUrl}/rooms/${roomCode}/${path}.json`;
+  await fetch(url, { method: 'DELETE' });
+}
+
+function fbListen(path, callback) {
+  const url = `${firebaseUrl}/rooms/${roomCode}/${path}.json`;
+  const es = new EventSource(url);
+  es.addEventListener('put', e => callback('put', JSON.parse(e.data)));
+  es.addEventListener('patch', e => callback('patch', JSON.parse(e.data)));
+  es.onerror = () => {
+    document.getElementById('status-dot').className = 'status-dot disconnected';
+    document.getElementById('status-text').textContent = 'מנותק — מנסה להתחבר...';
+  };
+  es.onopen = () => {
+    document.getElementById('status-dot').className = 'status-dot connected';
+    document.getElementById('status-text').textContent = 'מחובר ✓';
+  };
+  return es;
+}
+
+// ===== SCREEN NAVIGATION =====
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+function validateUrl() {
+  const url = document.getElementById('firebase-url').value.trim();
+  document.getElementById('create-room-btn').disabled = !url.includes('firebaseio.com');
+}
+
+function generateCode() {
+  const chars = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
+  let code = '';
+  for (let i = 0; i < 4; i++) code += chars[Math.floor(Math.random() * chars.length)];
+  return code;
+}
+
+async function createRoom() {
+  firebaseUrl = document.getElementById('firebase-url').value.trim().replace(/\/+$/, '');
+  roomCode = generateCode();
+  localStorage.setItem('pesach_fb_url', firebaseUrl);
+  localStorage.setItem('pesach_room', roomCode);
+
+  // Init room in Firebase
+  await fbWrite('', { created: new Date().toISOString(), concepts: {}, know: {}, want: {}, strokes: {} });
+
+  document.getElementById('setup-new').style.display = 'none';
+  document.getElementById('setup-created').style.display = 'block';
+  document.getElementById('room-code-display').textContent = roomCode;
+}
+
+function copyLink() {
+  const link = window.location.origin + window.location.pathname + '?room=' + roomCode + '&fb=' + encodeURIComponent(firebaseUrl);
+  navigator.clipboard.writeText(link);
+  event.target.textContent = '✅ הועתק!';
+  setTimeout(() => event.target.textContent = '📋 העתק קישור', 2000);
+}
+
+function showJoin() { showScreen('join-screen'); }
+
+async function joinRoom() {
+  const code = document.getElementById('join-code').value.trim().toUpperCase();
+  if (code.length !== 4) return;
+
+  const savedUrl = localStorage.getItem('pesach_fb_url');
+  // Try URL param first, then localStorage
+  const urlFb = new URLSearchParams(window.location.search).get('fb');
+  firebaseUrl = urlFb || savedUrl || '';
+
+  if (!firebaseUrl) {
+    document.getElementById('join-error').style.display = 'block';
+    document.getElementById('join-error').textContent = '❌ חסרה כתובת Firebase — בקשו מהמורה קישור';
+    return;
   }
 
-  // ===== CONCEPT BANK =====
-  function useWord(chip) {
-    const word = chip.textContent;
-    const textarea = document.getElementById('what-we-know');
-    const current = textarea.value.trim();
-
-    if (current.length > 0 && !current.endsWith('،') && !current.endsWith(',') && !current.endsWith('\n')) {
-      textarea.value += ', ';
+  roomCode = code;
+  // Verify room exists
+  try {
+    const data = await fbRead('created');
+    if (!data) {
+      document.getElementById('join-error').style.display = 'block';
+      document.getElementById('join-error').textContent = '❌ קוד לא נמצא, נסו שוב';
+      return;
     }
-    textarea.value += word;
-    chip.classList.add('used');
-    autoSave();
-
-    // Visual feedback
-    chip.style.transform = 'scale(0.9)';
-    setTimeout(() => chip.style.transform = '', 200);
+  } catch(e) {
+    document.getElementById('join-error').style.display = 'block';
+    document.getElementById('join-error').textContent = '❌ שגיאת חיבור — בדקו את הקישור';
+    return;
   }
 
-  // ===== CANVAS DRAWING =====
-  function initCanvas() {
-    canvas = document.getElementById('drawing-canvas');
-    ctx = canvas.getContext('2d');
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
+  localStorage.setItem('pesach_fb_url', firebaseUrl);
+  localStorage.setItem('pesach_room', roomCode);
+  goToGroups();
+}
 
-    // Load saved drawing
-    const savedDrawing = localStorage.getItem(STORAGE_PREFIX + currentGroup + '_drawing');
-    if (savedDrawing) {
-      const img = new Image();
-      img.onload = () => ctx.drawImage(img, 0, 0);
-      img.src = savedDrawing;
+function goToGroups() {
+  showScreen('group-screen');
+  document.getElementById('show-room-code').textContent = roomCode;
+}
+
+// ===== GROUP SELECTION =====
+function selectGroup(num) {
+  currentGroup = num;
+  showScreen('worksheet-screen');
+  document.getElementById('status-bar').style.display = 'flex';
+  document.getElementById('room-label').textContent = 'כיתה: ' + roomCode + ' | ' + GROUP_NAMES[num];
+
+  const badge = document.getElementById('group-badge');
+  badge.textContent = GROUP_NAMES[num];
+  badge.style.background = GROUP_COLORS[num];
+
+  initConceptBank();
+  initCanvas();
+  startListening();
+  registerPresence();
+}
+
+// ===== CONCEPT BANK =====
+function initConceptBank() {
+  const bank = document.getElementById('concept-bank');
+  bank.innerHTML = CONCEPTS.map(word =>
+    `<span class="concept-chip" data-word="${word}" onclick="toggleConcept(this)">${word}</span>`
+  ).join('');
+}
+
+async function toggleConcept(chip) {
+  const word = chip.dataset.word;
+  const existing = await fbRead('concepts');
+  const found = existing ? Object.entries(existing).find(([k,v]) => v.word === word) : null;
+
+  if (found) {
+    // Already selected — unselect
+    await fbDelete('concepts/' + found[0]);
+  } else {
+    // Select it
+    await fbPush('concepts', { word, group: currentGroup, ts: Date.now() });
+  }
+}
+
+function renderConcepts(data) {
+  const used = data ? Object.values(data) : [];
+  document.querySelectorAll('.concept-chip').forEach(chip => {
+    const match = used.find(u => u.word === chip.dataset.word);
+    chip.classList.toggle('used', !!match);
+    // Show which group selected it
+    const existing = chip.querySelector('.who');
+    if (existing) existing.remove();
+    if (match) {
+      const dot = document.createElement('span');
+      dot.className = 'who';
+      dot.style.background = GROUP_COLORS[match.group];
+      dot.textContent = match.group;
+      chip.appendChild(dot);
+    }
+  });
+}
+
+// ===== CARDS (Know & Want) =====
+function renderCards(boardId, data) {
+  const board = document.getElementById(boardId);
+  if (!data) { board.innerHTML = '<span style="color:#bdbdbd;font-style:italic">עדיין אין תשובות — היו הראשונים! 🌟</span>'; return; }
+
+  const items = Object.entries(data).sort((a,b) => a[1].ts - b[1].ts);
+  board.innerHTML = items.map(([id, item]) =>
+    `<div class="card-item" style="background:${GROUP_COLORS[item.group]}">
+      <span class="group-dot"></span>${item.text}
+    </div>`
+  ).join('');
+}
+
+async function addKnow() {
+  const input = document.getElementById('know-input');
+  const text = input.value.trim();
+  if (!text) return;
+  await fbPush('know', { text, group: currentGroup, ts: Date.now() });
+  input.value = '';
+}
+
+async function addWant() {
+  const input = document.getElementById('want-input');
+  const text = input.value.trim();
+  if (!text) return;
+  await fbPush('want', { text, group: currentGroup, ts: Date.now() });
+  input.value = '';
+}
+
+// ===== CANVAS =====
+function initCanvas() {
+  canvas = document.getElementById('drawing-canvas');
+  ctx = canvas.getContext('2d');
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+
+  canvas.addEventListener('mousedown', startDraw);
+  canvas.addEventListener('mousemove', draw);
+  canvas.addEventListener('mouseup', stopDraw);
+  canvas.addEventListener('mouseleave', stopDraw);
+  canvas.addEventListener('touchstart', e => { e.preventDefault(); startDraw(getTouchPos(e)); }, {passive:false});
+  canvas.addEventListener('touchmove', e => { e.preventDefault(); draw(getTouchPos(e)); }, {passive:false});
+  canvas.addEventListener('touchend', e => { e.preventDefault(); stopDraw(); }, {passive:false});
+}
+
+function getTouchPos(e) {
+  const rect = canvas.getBoundingClientRect();
+  const t = e.touches[0];
+  return { offsetX: (t.clientX - rect.left) * (canvas.width / rect.width), offsetY: (t.clientY - rect.top) * (canvas.height / rect.height) };
+}
+
+function startDraw(e) {
+  isDrawing = true;
+  const x = e.offsetX / canvas.width, y = e.offsetY / canvas.height;
+  currentStroke = { points: [{x, y}], color: isErasing ? '#ffffff' : brushColor, size: isErasing ? brushSize*3 : brushSize, group: currentGroup };
+  ctx.beginPath();
+  ctx.strokeStyle = currentStroke.color;
+  ctx.lineWidth = currentStroke.size;
+  ctx.moveTo(e.offsetX, e.offsetY);
+}
+
+function draw(e) {
+  if (!isDrawing || !currentStroke) return;
+  const x = e.offsetX / canvas.width, y = e.offsetY / canvas.height;
+  currentStroke.points.push({x, y});
+  ctx.lineTo(e.offsetX, e.offsetY);
+  ctx.stroke();
+}
+
+async function stopDraw() {
+  if (!isDrawing || !currentStroke) return;
+  isDrawing = false;
+  ctx.closePath();
+  if (currentStroke.points.length > 1) {
+    currentStroke.ts = Date.now();
+    const id = await fbPush('strokes', currentStroke);
+    allStrokes[id] = currentStroke;
+  }
+  currentStroke = null;
+}
+
+function drawStroke(stroke) {
+  if (!stroke || !stroke.points || stroke.points.length < 2) return;
+  ctx.beginPath();
+  ctx.strokeStyle = stroke.color;
+  ctx.lineWidth = stroke.size;
+  ctx.lineCap = 'round';
+  ctx.lineJoin = 'round';
+  const p0 = stroke.points[0];
+  ctx.moveTo(p0.x * canvas.width, p0.y * canvas.height);
+  for (let i = 1; i < stroke.points.length; i++) {
+    const p = stroke.points[i];
+    ctx.lineTo(p.x * canvas.width, p.y * canvas.height);
+  }
+  ctx.stroke();
+  ctx.closePath();
+}
+
+function redrawAllStrokes() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  const sorted = Object.values(allStrokes).sort((a,b) => (a.ts||0) - (b.ts||0));
+  sorted.forEach(drawStroke);
+}
+
+function setColor(color, btn) {
+  brushColor = color; isErasing = false;
+  document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('eraser-btn').classList.remove('active');
+  btn.classList.add('active');
+}
+
+function toggleEraser() {
+  isErasing = !isErasing;
+  document.getElementById('eraser-btn').classList.toggle('active', isErasing);
+  if (isErasing) document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
+}
+
+async function clearCanvas() {
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  allStrokes = {};
+  await fbDelete('strokes');
+}
+
+function downloadDrawing() {
+  const link = document.createElement('a');
+  link.download = 'pesach_drawing.png';
+  link.href = canvas.toDataURL();
+  link.click();
+}
+
+// ===== PRESENCE =====
+async function registerPresence() {
+  const id = 'g' + currentGroup + '_' + Date.now();
+  await fbWrite('presence/' + id, { group: currentGroup, ts: Date.now() });
+  // Heartbeat
+  setInterval(() => fbWrite('presence/' + id, { group: currentGroup, ts: Date.now() }), 30000);
+  // Cleanup on close
+  window.addEventListener('beforeunload', () => {
+    navigator.sendBeacon(`${firebaseUrl}/rooms/${roomCode}/presence/${id}.json`, 'null');
+  });
+}
+
+function updateOnlineCount(data) {
+  if (!data) { document.getElementById('online-count').textContent = '🟢 1 מחוברים'; return; }
+  const now = Date.now();
+  const active = Object.values(data).filter(p => now - p.ts < 60000);
+  const groups = [...new Set(active.map(p => p.group))];
+  document.getElementById('online-count').textContent = `🟢 ${groups.length} קבוצות מחוברות`;
+}
+
+// ===== REAL-TIME LISTENING =====
+function startListening() {
+  if (eventSource) eventSource.close();
+
+  eventSource = fbListen('', (type, msg) => {
+    if (!msg || !msg.path) return;
+    const path = msg.path;
+    const data = msg.data;
+
+    if (path === '/') {
+      // Full data load
+      if (data) {
+        if (data.concepts) renderConcepts(data.concepts);
+        if (data.know) renderCards('know-board', data.know);
+        if (data.want) renderCards('want-board', data.want);
+        if (data.strokes) { allStrokes = data.strokes; redrawAllStrokes(); }
+        if (data.presence) updateOnlineCount(data.presence);
+      }
+      return;
     }
 
-    // Mouse events
-    canvas.addEventListener('mousedown', startDraw);
-    canvas.addEventListener('mousemove', draw);
-    canvas.addEventListener('mouseup', stopDraw);
-    canvas.addEventListener('mouseleave', stopDraw);
+    // Incremental updates
+    if (path.startsWith('/concepts')) {
+      fbRead('concepts').then(renderConcepts);
+    } else if (path.startsWith('/know')) {
+      fbRead('know').then(d => renderCards('know-board', d));
+    } else if (path.startsWith('/want')) {
+      fbRead('want').then(d => renderCards('want-board', d));
+    } else if (path.startsWith('/strokes')) {
+      if (data === null) {
+        allStrokes = {};
+        redrawAllStrokes();
+      } else if (path === '/strokes') {
+        allStrokes = data || {};
+        redrawAllStrokes();
+      } else {
+        // Single stroke added
+        const strokeId = path.split('/')[2];
+        if (strokeId && data && !allStrokes[strokeId]) {
+          allStrokes[strokeId] = data;
+          drawStroke(data);
+        }
+      }
+    } else if (path.startsWith('/presence')) {
+      fbRead('presence').then(updateOnlineCount);
+    }
+  });
+}
 
-    // Touch events
-    canvas.addEventListener('touchstart', e => { e.preventDefault(); startDraw(getTouchPos(e)); });
-    canvas.addEventListener('touchmove', e => { e.preventDefault(); draw(getTouchPos(e)); });
-    canvas.addEventListener('touchend', e => { e.preventDefault(); stopDraw(); });
-  }
+function goBack() {
+  if (eventSource) eventSource.close();
+  document.getElementById('status-bar').style.display = 'none';
+  showScreen('group-screen');
+}
 
-  function getTouchPos(e) {
-    const rect = canvas.getBoundingClientRect();
-    const touch = e.touches[0];
-    return {
-      offsetX: (touch.clientX - rect.left) * (canvas.width / rect.width),
-      offsetY: (touch.clientY - rect.top) * (canvas.height / rect.height),
-      preventDefault: () => {}
-    };
-  }
+// ===== AUTO-JOIN FROM URL =====
+(async function init() {
+  const params = new URLSearchParams(window.location.search);
+  const urlRoom = params.get('room');
+  const urlFb = params.get('fb');
 
-  function startDraw(e) {
-    isDrawing = true;
-    ctx.beginPath();
-    const x = e.offsetX !== undefined ? e.offsetX : e.offsetX;
-    const y = e.offsetY !== undefined ? e.offsetY : e.offsetY;
-    ctx.moveTo(x, y);
-  }
-
-  function draw(e) {
-    if (!isDrawing) return;
-    ctx.strokeStyle = isErasing ? '#ffffff' : brushColor;
-    ctx.lineWidth = isErasing ? brushSize * 3 : brushSize;
-    const x = e.offsetX !== undefined ? e.offsetX : e.offsetX;
-    const y = e.offsetY !== undefined ? e.offsetY : e.offsetY;
-    ctx.lineTo(x, y);
-    ctx.stroke();
-  }
-
-  function stopDraw() {
-    if (isDrawing) {
-      isDrawing = false;
-      ctx.closePath();
-      autoSave();
+  if (urlRoom && urlFb) {
+    firebaseUrl = decodeURIComponent(urlFb).replace(/\/+$/, '');
+    roomCode = urlRoom.toUpperCase();
+    localStorage.setItem('pesach_fb_url', firebaseUrl);
+    localStorage.setItem('pesach_room', roomCode);
+    goToGroups();
+  } else {
+    // Check localStorage for previous session
+    const savedUrl = localStorage.getItem('pesach_fb_url');
+    if (savedUrl) {
+      document.getElementById('firebase-url').value = savedUrl;
+      validateUrl();
     }
   }
-
-  function setColor(color, btn) {
-    brushColor = color;
-    isErasing = false;
-    document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-    document.querySelectorAll('.tool-btn').forEach(b => b.classList.remove('active'));
-    btn.classList.add('active');
-  }
-
-  function toggleEraser() {
-    isErasing = !isErasing;
-    const btn = event.target;
-    btn.classList.toggle('active');
-    if (isErasing) {
-      document.querySelectorAll('.color-btn').forEach(b => b.classList.remove('active'));
-    }
-  }
-
-  function clearCanvas() {
-    if (confirm('בטוח שרוצים למחוק את כל הציור?')) {
-      ctx.clearRect(0, 0, canvas.width, canvas.height);
-      autoSave();
-    }
-  }
-
-  function downloadDrawing() {
-    const link = document.createElement('a');
-    link.download = 'ציור_פסח_קבוצה_' + currentGroup + '.png';
-    link.href = canvas.toDataURL();
-    link.click();
-  }
-
-  // ===== SAVE / LOAD =====
-  let saveTimeout;
-  function autoSave() {
-    clearTimeout(saveTimeout);
-    saveTimeout = setTimeout(() => {
-      if (!currentGroup) return;
-      const data = {
-        whatWeKnow: document.getElementById('what-we-know').value,
-        whatWeWant: document.getElementById('what-we-want').value,
-        drawing: canvas.toDataURL(),
-        timestamp: new Date().toISOString()
-      };
-      localStorage.setItem(STORAGE_PREFIX + currentGroup, JSON.stringify(data));
-
-      // Show save indicator
-      const indicator = document.getElementById('save-indicator');
-      indicator.classList.add('show');
-      setTimeout(() => indicator.classList.remove('show'), 1500);
-    }, 500);
-  }
-
-  function loadGroupData() {
-    const saved = localStorage.getItem(STORAGE_PREFIX + currentGroup);
-    if (saved) {
-      const data = JSON.parse(saved);
-      document.getElementById('what-we-know').value = data.whatWeKnow || '';
-      document.getElementById('what-we-want').value = data.whatWeWant || '';
-    }
-  }
-
-  // ===== TEACHER VIEW =====
-  function openTeacherView() {
-    document.getElementById('group-select').style.display = 'none';
-    document.getElementById('teacher-view').style.display = 'block';
-    refreshTeacher();
-  }
-
-  function refreshTeacher() {
-    const container = document.getElementById('teacher-groups');
-    const groupNames = ['', 'קבוצה 1 🌟', 'קבוצה 2 ⭐', 'קבוצה 3 💫', 'קבוצה 4 ✨', 'קבוצה 5 🌙', 'קבוצה 6 ☀️'];
-    let html = '';
-
-    for (let i = 1; i <= 6; i++) {
-      const saved = localStorage.getItem(STORAGE_PREFIX + i);
-      const data = saved ? JSON.parse(saved) : {};
-      const hasData = data.whatWeKnow || data.whatWeWant || data.drawing;
-
-      html += `
-        <div class="teacher-group-card">
-          <h3>${groupNames[i]}</h3>
-          ${!hasData ? '<p style="color:#999;font-style:italic">הקבוצה עדיין לא התחילה</p>' : `
-            <div class="label">🧠 מה יודעים:</div>
-            <div class="content">${data.whatWeKnow || '—'}</div>
-            <div class="label">❓ מה רוצים לדעת:</div>
-            <div class="content">${data.whatWeWant || '—'}</div>
-            ${data.drawing ? `
-              <div class="label">🎨 ציור:</div>
-              <img src="${data.drawing}" style="max-width:100%;border-radius:10px;margin-top:5px;border:1px solid #eee">
-            ` : ''}
-          `}
-        </div>
-      `;
-    }
-    container.innerHTML = html;
-  }
-
-  function goBack() {
-    document.getElementById('worksheet').style.display = 'none';
-    document.getElementById('teacher-view').style.display = 'none';
-    document.getElementById('group-select').style.display = 'flex';
-  }
-
-  // ===== URL GROUP PARAM =====
-  const urlParams = new URLSearchParams(window.location.search);
-  const groupParam = urlParams.get('group');
-  if (groupParam && groupParam >= 1 && groupParam <= 6) {
-    selectGroup(parseInt(groupParam));
-  } else if (groupParam === 'teacher') {
-    openTeacherView();
-  }
+})();
 </script>
-
 </body>
 </html>
